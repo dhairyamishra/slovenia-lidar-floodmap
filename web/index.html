@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLSS Slovenia — Flood &amp; Forest Analysis</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">&#9650;</span>
+      <span class="topbar-title">CLSS Slovenia</span>
+      <span class="topbar-subtitle">Flood &amp; Forest Risk Analysis</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-meta">Tile 478_73 &nbsp;·&nbsp; GKOT · 23.6M pts · 2m voxel grid</span>
+    </div>
+  </header>
+
+  <!-- Map -->
+  <div id="map"></div>
+
+  <!-- Side panel -->
+  <aside class="panel" id="panel">
+    <div class="panel-section">
+      <h3 class="panel-heading">Layers</h3>
+
+      <!-- Flood susceptibility -->
+      <div class="layer-row">
+        <label class="layer-toggle">
+          <input type="checkbox" id="toggle-susc" checked>
+          <span class="toggle-track"></span>
+        </label>
+        <span class="layer-name">Flood Susceptibility</span>
+      </div>
+      <div class="legend-bar" id="legend-susc">
+        <div class="legend-gradient" style="background: linear-gradient(to right, #4575b4, #91bfdb, #e0f3f8, #ffffbf, #fee090, #fc8d59, #d73027);"></div>
+        <div class="legend-labels"><span>Low</span><span>High</span></div>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Opacity</span>
+        <input type="range" id="opacity-susc" min="0" max="100" value="75" class="slider">
+        <span class="slider-val" id="val-susc">75%</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- NDVI / Forest -->
+      <div class="layer-row">
+        <label class="layer-toggle">
+          <input type="checkbox" id="toggle-ndvi">
+          <span class="toggle-track"></span>
+        </label>
+        <span class="layer-name">Forest Coverage (NDVI)</span>
+      </div>
+      <div class="legend-bar" id="legend-ndvi">
+        <div class="legend-gradient" style="background: linear-gradient(to right, #a50026, #f46d43, #fee08b, #d9ef8b, #66bd63, #1a9850);"></div>
+        <div class="legend-labels"><span>Stressed</span><span>Healthy</span></div>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Opacity</span>
+        <input type="range" id="opacity-ndvi" min="0" max="100" value="75" class="slider">
+        <span class="slider-val" id="val-ndvi">75%</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Classification -->
+      <div class="layer-row">
+        <label class="layer-toggle">
+          <input type="checkbox" id="toggle-cls">
+          <span class="toggle-track"></span>
+        </label>
+        <span class="layer-name">Land Classification</span>
+      </div>
+      <div class="legend-cls" id="legend-cls">
+        <div class="cls-item"><span class="cls-swatch" style="background:#c29a6c;"></span>Ground</div>
+        <div class="cls-item"><span class="cls-swatch" style="background:#9ae666;"></span>Low veg</div>
+        <div class="cls-item"><span class="cls-swatch" style="background:#33b433;"></span>Mid veg</div>
+        <div class="cls-item"><span class="cls-swatch" style="background:#006600;"></span>High veg</div>
+        <div class="cls-item"><span class="cls-swatch" style="background:#e63333;"></span>Building</div>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Opacity</span>
+        <input type="range" id="opacity-cls" min="0" max="100" value="80" class="slider">
+        <span class="slider-val" id="val-cls">80%</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Risk points -->
+      <div class="layer-row">
+        <label class="layer-toggle">
+          <input type="checkbox" id="toggle-risk" checked>
+          <span class="toggle-track"></span>
+        </label>
+        <span class="layer-name">High-Risk Locations</span>
+      </div>
+      <p class="layer-hint">Top 20 flood-risk cells &mdash; click for details</p>
+    </div>
+
+    <div class="panel-section panel-section--info">
+      <h3 class="panel-heading">About</h3>
+      <p class="info-text">
+        Four-factor flood susceptibility model computed from 23.6 million LiDAR points
+        (CLSS national scan, tile 478_73). Factors: topographic wetness index,
+        3D canopy interception, vegetation health (NDVI), terrain roughness.
+      </p>
+      <p class="info-text">
+        <strong>Data:</strong> Geodetska uprava RS &mdash; CLSS programme<br>
+        <strong>CRS:</strong> EPSG:3794 &rarr; EPSG:4326<br>
+        <strong>Grid:</strong> 2 m &times; 2 m &times; 2 m voxels
+      </p>
+    </div>
+  </aside>
+
+  <!-- Popup template (filled by JS) -->
+  <div id="popup-content" style="display:none;"></div>
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

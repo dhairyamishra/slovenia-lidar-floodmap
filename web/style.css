@@ -1,0 +1,309 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  background: #0d1117;
+  color: #e6edf3;
+  overflow: hidden;
+}
+
+/* ── Top bar ─────────────────────────────────────────────────────────────── */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 48px;
+  background: rgba(13, 17, 23, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 100;
+}
+
+.topbar-left { display: flex; align-items: center; gap: 10px; }
+
+.topbar-logo {
+  color: #3b82f6;
+  font-size: 14px;
+}
+
+.topbar-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f0f6fc;
+  letter-spacing: 0.02em;
+}
+
+.topbar-subtitle {
+  font-size: 12px;
+  color: #8b949e;
+  padding-left: 10px;
+  border-left: 1px solid rgba(255,255,255,0.12);
+}
+
+.topbar-meta {
+  font-size: 11px;
+  color: #8b949e;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Map ─────────────────────────────────────────────────────────────────── */
+#map {
+  position: fixed;
+  top: 48px; left: 0; right: 0; bottom: 0;
+}
+
+/* ── Side panel ──────────────────────────────────────────────────────────── */
+.panel {
+  position: fixed;
+  top: 58px;
+  left: 12px;
+  width: 272px;
+  max-height: calc(100vh - 70px);
+  background: rgba(13, 17, 23, 0.92);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 10px;
+  overflow-y: auto;
+  z-index: 50;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.15) transparent;
+}
+
+.panel-section {
+  padding: 14px 16px;
+}
+
+.panel-section--info {
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.panel-heading {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8b949e;
+  margin-bottom: 12px;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 12px 0;
+}
+
+/* ── Layer toggle row ────────────────────────────────────────────────────── */
+.layer-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.layer-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #e6edf3;
+}
+
+.layer-hint {
+  font-size: 11px;
+  color: #8b949e;
+  margin-top: -4px;
+  margin-bottom: 2px;
+}
+
+/* Toggle switch */
+.layer-toggle { position: relative; display: inline-block; width: 34px; height: 18px; flex-shrink: 0; }
+.layer-toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0.12);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 14px; height: 14px;
+  background: #8b949e;
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+}
+.layer-toggle input:checked + .toggle-track { background: #1d4ed8; }
+.layer-toggle input:checked + .toggle-track::after { transform: translateX(16px); background: #fff; }
+
+/* ── Legend bars ─────────────────────────────────────────────────────────── */
+.legend-bar { margin-bottom: 6px; }
+
+.legend-gradient {
+  height: 8px;
+  border-radius: 4px;
+  margin-bottom: 3px;
+}
+
+.legend-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #8b949e;
+}
+
+.legend-cls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 8px;
+  margin-bottom: 6px;
+}
+
+.cls-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #8b949e;
+}
+
+.cls-swatch {
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ── Opacity slider ──────────────────────────────────────────────────────── */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.slider-label {
+  font-size: 11px;
+  color: #8b949e;
+  width: 44px;
+  flex-shrink: 0;
+}
+
+.slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.15);
+  outline: none;
+  cursor: pointer;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  border: 2px solid #0d1117;
+}
+.slider::-moz-range-thumb {
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  border: 2px solid #0d1117;
+}
+
+.slider-val {
+  font-size: 11px;
+  color: #8b949e;
+  width: 30px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Info text ───────────────────────────────────────────────────────────── */
+.info-text {
+  font-size: 11px;
+  color: #8b949e;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.info-text strong { color: #e6edf3; font-weight: 500; }
+
+/* ── Risk markers (DOM) ──────────────────────────────────────────────────── */
+.risk-marker {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2.5px solid #ef4444;
+  box-shadow: 0 0 0 3px rgba(13,17,23,0.55), 0 2px 6px rgba(0,0,0,0.5);
+  color: #0d1117;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.risk-marker:hover {
+  transform: scale(1.18);
+  z-index: 10;
+}
+
+/* ── MapLibre popup ──────────────────────────────────────────────────────── */
+.maplibregl-popup-content {
+  background: rgba(13,17,23,0.96) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  border-radius: 8px !important;
+  color: #e6edf3 !important;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 12px !important;
+  padding: 12px 14px !important;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+}
+.maplibregl-popup-tip { border-top-color: rgba(13,17,23,0.96) !important; }
+.maplibregl-popup-close-button {
+  color: #8b949e !important;
+  font-size: 16px !important;
+  padding: 4px 8px !important;
+}
+
+.popup-rank {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f97316;
+  margin-bottom: 4px;
+}
+.popup-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.popup-row:last-child { border-bottom: none; }
+.popup-key { color: #8b949e; }
+.popup-val { color: #f0f6fc; font-weight: 500; font-variant-numeric: tabular-nums; }
+
+/* ── MapLibre controls ───────────────────────────────────────────────────── */
+.maplibregl-ctrl-group {
+  background: rgba(13,17,23,0.92) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  border-radius: 8px !important;
+}
+.maplibregl-ctrl-group button {
+  color: #8b949e !important;
+  border-bottom-color: rgba(255,255,255,0.08) !important;
+}
+.maplibregl-ctrl-group button:hover { background: rgba(255,255,255,0.06) !important; }
+.maplibregl-ctrl-attrib { background: rgba(13,17,23,0.7) !important; color: #8b949e !important; font-size: 10px !important; }
+.maplibregl-ctrl-attrib a { color: #8b949e !important; }

@@ -1,0 +1,21 @@
+# Large raw data — never commit
+data/
+
+# Regenerable analysis outputs
+output/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
+
+# Claude Code local config
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
