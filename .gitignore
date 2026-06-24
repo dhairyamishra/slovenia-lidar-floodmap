@@ -1,5 +1,5 @@
 # Large raw data — never commit
-data/
+/data/
 
 # Regenerable analysis outputs
 output/

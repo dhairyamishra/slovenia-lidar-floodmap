@@ -1,0 +1,345 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.728729121709843,
+          45.80237027596458
+        ]
+      },
+      "properties": {
+        "rank": 1,
+        "risk_score": 1.0,
+        "elevation_m": 422.9,
+        "easting_3794": 478913.9,
+        "northing_3794": 73647.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.727857297028203,
+          45.80175634154538
+        ]
+      },
+      "properties": {
+        "rank": 2,
+        "risk_score": 1.0,
+        "elevation_m": 423.0,
+        "easting_3794": 478845.9,
+        "northing_3794": 73579.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.72614814663986,
+          45.80400174763998
+        ]
+      },
+      "properties": {
+        "rank": 3,
+        "risk_score": 1.0,
+        "elevation_m": 423.3,
+        "easting_3794": 478713.9,
+        "northing_3794": 73829.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.724471066390365,
+          45.80493350329859
+        ]
+      },
+      "properties": {
+        "rank": 4,
+        "risk_score": 1.0,
+        "elevation_m": 423.6,
+        "easting_3794": 478583.9,
+        "northing_3794": 73933.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.725577486215911,
+          45.804936165945605
+        ]
+      },
+      "properties": {
+        "rank": 5,
+        "risk_score": 1.0,
+        "elevation_m": 422.4,
+        "easting_3794": 478669.9,
+        "northing_3794": 73933.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.72819448982027,
+          45.801199270589414
+        ]
+      },
+      "properties": {
+        "rank": 6,
+        "risk_score": 1.0,
+        "elevation_m": 423.4,
+        "easting_3794": 478871.9,
+        "northing_3794": 73517.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.727864626862276,
+          45.805535501105325
+        ]
+      },
+      "properties": {
+        "rank": 7,
+        "risk_score": 1.0,
+        "elevation_m": 422.0,
+        "easting_3794": 478847.9,
+        "northing_3794": 73999.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.726375137814298,
+          45.80493807888237
+        ]
+      },
+      "properties": {
+        "rank": 8,
+        "risk_score": 1.0,
+        "elevation_m": 422.5,
+        "easting_3794": 478731.9,
+        "northing_3794": 73933.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.726296095023566,
+          45.80531580368303
+        ]
+      },
+      "properties": {
+        "rank": 9,
+        "risk_score": 1.0,
+        "elevation_m": 422.2,
+        "easting_3794": 478725.9,
+        "northing_3794": 73975.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.725294448571331,
+          45.80493548582312
+        ]
+      },
+      "properties": {
+        "rank": 10,
+        "risk_score": 1.0,
+        "elevation_m": 422.6,
+        "easting_3794": 478647.9,
+        "northing_3794": 73933.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.72972674297526,
+          45.80357836651372
+        ]
+      },
+      "properties": {
+        "rank": 11,
+        "risk_score": 1.0,
+        "elevation_m": 423.2,
+        "easting_3794": 478991.9,
+        "northing_3794": 73781.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.72924937810384,
+          45.80120177509573
+        ]
+      },
+      "properties": {
+        "rank": 12,
+        "risk_score": 1.0,
+        "elevation_m": 423.4,
+        "easting_3794": 478953.9,
+        "northing_3794": 73517.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.729584899598368,
+          45.80098661857329
+        ]
+      },
+      "properties": {
+        "rank": 13,
+        "risk_score": 1.0,
+        "elevation_m": 423.5,
+        "easting_3794": 478979.9,
+        "northing_3794": 73493.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.72668989022667,
+          45.80371511013133
+        ]
+      },
+      "properties": {
+        "rank": 14,
+        "risk_score": 1.0,
+        "elevation_m": 422.9,
+        "easting_3794": 478755.9,
+        "northing_3794": 73797.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.724339483899476,
+          45.80552705095393
+        ]
+      },
+      "properties": {
+        "rank": 15,
+        "risk_score": 1.0,
+        "elevation_m": 423.7,
+        "easting_3794": 478573.9,
+        "northing_3794": 73999.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.723927788473723,
+          45.80552605698267
+        ]
+      },
+      "properties": {
+        "rank": 16,
+        "risk_score": 1.0,
+        "elevation_m": 426.3,
+        "easting_3794": 478541.9,
+        "northing_3794": 73999.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.729372185500322,
+          45.8024077927062
+        ]
+      },
+      "properties": {
+        "rank": 17,
+        "risk_score": 1.0,
+        "elevation_m": 423.2,
+        "easting_3794": 478963.9,
+        "northing_3794": 73651.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.727236546180272,
+          45.80242071041104
+        ]
+      },
+      "properties": {
+        "rank": 18,
+        "risk_score": 1.0,
+        "elevation_m": 422.9,
+        "easting_3794": 478797.9,
+        "northing_3794": 73653.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.728445834699544,
+          45.80242359081068
+        ]
+      },
+      "properties": {
+        "rank": 19,
+        "risk_score": 1.0,
+        "elevation_m": 422.8,
+        "easting_3794": 478891.9,
+        "northing_3794": 73653.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.728607464109285,
+          45.80093031338598
+        ]
+      },
+      "properties": {
+        "rank": 20,
+        "risk_score": 1.0,
+        "elevation_m": 423.2,
+        "easting_3794": 478903.9,
+        "northing_3794": 73487.9
+      }
+    }
+  ]
+}
