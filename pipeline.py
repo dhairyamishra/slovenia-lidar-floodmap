@@ -106,9 +106,9 @@ def process_tile(laz_path: Path) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     t0 = time.time()
-    print(f"\n{'─' * 60}")
+    print(f"\n{'-' * 60}")
     print(f"  Tile {tile_name}  ({laz_path.name})")
-    print(f"{'─' * 60}")
+    print(f"{'-' * 60}")
 
     # ── Load ─────────────────────────────────────────────────────────────────
     print("  Loading...", end=" ", flush=True)
@@ -284,7 +284,7 @@ def process_tile(laz_path: Path) -> dict:
             break
 
     elapsed = time.time() - t0
-    print(f"  ✓ {tile_name} in {elapsed:.0f}s")
+    print(f"  [done] {tile_name} in {elapsed:.0f}s")
 
     tile_prefix = f"tiles/{tile_name}"
     return {
