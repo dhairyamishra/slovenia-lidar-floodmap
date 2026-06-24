@@ -38,14 +38,14 @@ fetch('data/bounds.json')
   });
 
 function initMap(bounds) {
-  const center = bounds.center;   // [lon, lat]
-  const corners = bounds.corners; // [[lon,lat] x4] TL TR BR BL
+  const center  = bounds.center;   // [lon, lat]
+  const corners = bounds.corners;  // [[lon,lat] x4] TL TR BR BL
 
   const map = window._map = new maplibregl.Map({
     container: 'map',
     style: BASEMAP_STYLE,
     center: center,
-    zoom: 13,           // temporary — fitBounds overrides this on load
+    zoom: 13,
     maxZoom: 20,
     minZoom: 5,
     attributionControl: false,
@@ -55,15 +55,13 @@ function initMap(bounds) {
   map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
   map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-left');
 
-  // DOM markers don't depend on the style/basemap — attach them immediately.
-  addRiskPoints(map);
-
   map.on('load', () => {
     map.fitBounds(
       [[bounds.west, bounds.south], [bounds.east, bounds.north]],
       { padding: 60, duration: 0 }
     );
     addOverlays(map, corners);
+    addRiskPoints(map);
     wireControls(map);
   });
 }
@@ -94,58 +92,87 @@ function addOverlays(map, corners) {
 }
 
 // ── Risk point markers ────────────────────────────────────────────────────────
-// DOM markers (not a GeoJSON layer) — render immediately, no vector-tile worker,
-// guaranteed visible for a small fixed set of points.
-const riskMarkers = [];
-
+// Canvas-rendered GeoJSON layers (added inside map.on('load')) so markers are
+// always geo-referenced and move correctly with pan / zoom.
 function addRiskPoints(map) {
-  const popup = new maplibregl.Popup({ offset: 18, closeButton: true });
+  const popup = new maplibregl.Popup({ offset: 14, closeButton: true });
 
-  RISK_POINTS.features.forEach(f => {
+  map.addSource('risk-source', {
+    type: 'geojson',
+    data: RISK_POINTS,
+  });
+
+  // White circle with red stroke
+  map.addLayer({
+    id: 'risk-circles',
+    type: 'circle',
+    source: 'risk-source',
+    paint: {
+      'circle-radius': 11,
+      'circle-color': '#ffffff',
+      'circle-stroke-width': 2.5,
+      'circle-stroke-color': '#ef4444',
+      'circle-opacity': 1,
+    },
+  });
+
+  // Rank number label centred on each circle
+  map.addLayer({
+    id: 'risk-labels',
+    type: 'symbol',
+    source: 'risk-source',
+    layout: {
+      'text-field': ['to-string', ['get', 'rank']],
+      'text-size': 11,
+      'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+      'text-allow-overlap': true,
+      'text-ignore-placement': true,
+    },
+    paint: {
+      'text-color': '#0d1117',
+    },
+  });
+
+  // Popup on click
+  map.on('click', 'risk-circles', e => {
+    const f = e.features[0];
     const p = f.properties;
     const [lng, lat] = f.geometry.coordinates;
 
-    const el = document.createElement('div');
-    el.className = 'risk-marker';
-    el.textContent = p.rank;
+    const html = `
+      <div class="popup-rank">Risk location #${p.rank}</div>
+      <div class="popup-row">
+        <span class="popup-key">Risk score</span>
+        <span class="popup-val">${(p.risk_score * 100).toFixed(1)}%</span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-key">Elevation</span>
+        <span class="popup-val">${p.elevation_m} m</span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-key">Easting (3794)</span>
+        <span class="popup-val">${Number(p.easting_3794).toFixed(0)}</span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-key">Northing (3794)</span>
+        <span class="popup-val">${Number(p.northing_3794).toFixed(0)}</span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-key">WGS84</span>
+        <span class="popup-val">${lat.toFixed(5)}°N, ${lng.toFixed(5)}°E</span>
+      </div>`;
 
-    el.addEventListener('click', () => {
-      const html = `
-        <div class="popup-rank">Risk location #${p.rank}</div>
-        <div class="popup-row">
-          <span class="popup-key">Risk score</span>
-          <span class="popup-val">${(p.risk_score * 100).toFixed(1)}%</span>
-        </div>
-        <div class="popup-row">
-          <span class="popup-key">Elevation</span>
-          <span class="popup-val">${p.elevation_m} m</span>
-        </div>
-        <div class="popup-row">
-          <span class="popup-key">Easting (3794)</span>
-          <span class="popup-val">${p.easting_3794.toFixed(0)}</span>
-        </div>
-        <div class="popup-row">
-          <span class="popup-key">Northing (3794)</span>
-          <span class="popup-val">${p.northing_3794.toFixed(0)}</span>
-        </div>
-        <div class="popup-row">
-          <span class="popup-key">WGS84</span>
-          <span class="popup-val">${lat.toFixed(5)}°N, ${lng.toFixed(5)}°E</span>
-        </div>`;
-      popup.setLngLat([lng, lat]).setHTML(html).addTo(map);
-    });
-
-    const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
-      .setLngLat([lng, lat])
-      .addTo(map);
-    riskMarkers.push(marker);
+    popup.setLngLat([lng, lat]).setHTML(html).addTo(map);
   });
+
+  map.on('mouseenter', 'risk-circles', () => { map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', 'risk-circles', () => { map.getCanvas().style.cursor = ''; });
 }
 
-function setRiskVisible(visible) {
-  riskMarkers.forEach(m => {
-    m.getElement().style.display = visible ? '' : 'none';
-  });
+function setRiskVisible(map, visible) {
+  const v = visible ? 'visible' : 'none';
+  map.setLayoutProperty('risk-circles', 'visibility', v);
+  map.setLayoutProperty('risk-labels',  'visibility', v);
 }
 
 // ── UI controls ───────────────────────────────────────────────────────────────
@@ -153,13 +180,11 @@ function wireControls(map) {
   const layers = ['susc', 'ndvi', 'cls'];
 
   layers.forEach(id => {
-    // Visibility toggle
     const chk = document.getElementById(`toggle-${id}`);
     chk.addEventListener('change', () => {
       map.setLayoutProperty(`layer-${id}`, 'visibility', chk.checked ? 'visible' : 'none');
     });
 
-    // Opacity slider
     const slider = document.getElementById(`opacity-${id}`);
     const valEl  = document.getElementById(`val-${id}`);
     slider.addEventListener('input', () => {
@@ -169,7 +194,6 @@ function wireControls(map) {
     });
   });
 
-  // Risk points toggle
   const riskChk = document.getElementById('toggle-risk');
-  riskChk.addEventListener('change', () => setRiskVisible(riskChk.checked));
+  riskChk.addEventListener('change', () => setRiskVisible(map, riskChk.checked));
 }
