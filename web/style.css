@@ -249,10 +249,14 @@ html, body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.12s ease;
+  /* Do NOT transition 'transform' here — MapLibre sets translate() on this
+     element every render frame; a transition would cause visible pan lag. */
+  transition: scale 0.12s ease;
 }
 .risk-marker:hover {
-  transform: scale(1.18);
+  /* Use 'scale' (individual transform) so hover animation is independent
+     of the translate() MapLibre injects via the 'transform' property. */
+  scale: 1.18;
   z-index: 10;
 }
 
