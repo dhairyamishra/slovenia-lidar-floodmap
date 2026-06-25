@@ -28,12 +28,13 @@ Four-factor susceptibility model rendered as MapLibre GL image overlays on a dar
 ## Common pitfalls
 - **Deleting tiles manually**: If you delete a LAZ file and its PNG dir, you must also purge its entry from `manifest.json`. The pipeline merge logic keeps old entries for tiles it doesn't re-process. Purge with: `python -c "import json; m=json.load(open('web/data/manifest.json')); m['tiles']=[t for t in m['tiles'] if t['name'] not in {'TILE_ID'}]; m['tile_count']=len(m['tiles']); json.dump(m,open('web/data/manifest.json','w'),indent=2)"`
 - **Pipeline print says wrong tile count**: The `manifest.json — N tile(s)` line shows tiles processed this run, not total tiles in the merged manifest. Check `manifest.json` directly to confirm total.
-- **Subset run scope**: `python pipeline.py 460_100` only processes that one tile. Risk points in `risk_points.geojson` are ranked only from tiles processed in that run — run all tiles for a globally accurate ranking.
+- **Subset run scope**: `python pipeline.py 460_100` processes that one tile. The global `web/data/candidates.json` is updated by stripping that tile's old entries and inserting the new ones — so `risk_points.geojson` always reflects all tiles as long as a full run has been done at least once.
 
 ## Pipeline outputs (per tile)
 - `web/data/tiles/<name>/susceptibility.png` — composite flood risk (RdYlBu_r)
 - `web/data/tiles/<name>/ndvi.png` — forest health (RdYlGn, percentile-stretched)
 - `web/data/tiles/<name>/classification.png` — land cover classes
+- `web/data/candidates.json` — global ranked list of top-500 risk candidates (raw susc scores), used for subset-run safety and future UI features
 - `web/data/manifest.json` — tile registry consumed by web app
 - `web/data/risk_points.geojson` — top-20 globally ranked flood risk points
 

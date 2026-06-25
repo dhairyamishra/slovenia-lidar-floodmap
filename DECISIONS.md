@@ -102,4 +102,22 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 ---
 
+### D13 — Per-tile candidates.json + raw susc scoring for global risk ranking
+**Decision:** Each processed tile now writes `web/data/tiles/<name>/candidates.json` with its top-60 risk candidates scored by raw `susc`. The global ranking in `main()` loads ALL existing `candidates.json` files (not just tiles in the current run) before selecting the top-20 globally.
+**Why:** Two bugs caused all 20 risk points to cluster in a single tile:
+1. `risk_points.geojson` was rebuilt only from tiles in the current pipeline run — a prior subset run on `456_100` left all 20 points in that one tile.
+2. Candidates were scored with `susc_n` (per-tile re-normalised to [0,1]) so every tile's best candidates scored 1.0, making cross-tile comparison meaningless.
+**Fix:** Candidates now use raw `susc` (weighted composite before renormalisation). `susc_n` is still used for PNG display. Persisting `candidates.json` per tile means subset runs stay accurate globally.
+**Limitation:** Raw `susc` is still built from per-tile normalised factors (TWI, curvature, etc.), so cross-tile comparability is approximate rather than absolute. This is a known model constraint — a truly flat tile will produce candidates that score similarly to a hilly tile if both happen to have the same relative factor values.
+**Reversible:** Remove the `candidates.json` write and the `processed_names`/load loop in `main()`, and revert `order`/`score` back to `susc_n`.
+
+---
+
+### D14 — Single global candidates.json replaces per-tile files
+**Decision:** Replaced 81 per-tile `candidates.json` files with a single `web/data/candidates.json` capped at 500 entries (GLOBAL_CANDS_N). The pipeline loads this file, strips stale entries for any tiles in the current run, merges in fresh candidates, sorts by score, truncates to 500, and writes it back.
+**Why:** Per-tile files produced 81 × 542 = ~44,000 lines of generated JSON — too large to commit comfortably. A single capped file is ~4,500 lines, small enough to commit, and carries the same subset-run safety (old tile entries are removed by tile name before new ones are inserted).
+**Reversible:** Revert main() to write per-tile candidates.json and load from tile directories. See D13 for the previous approach.
+
+---
+
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

@@ -35,6 +35,7 @@ VOXEL_H  = 2.0    # m — vertical voxel slice
 OUT_SIZE = 1000   # pixels per exported PNG side
 TOP_N    = 20     # globally-ranked risk points to emit
 SEP_M    = 50     # minimum separation between risk points (metres)
+GLOBAL_CANDS_N = 500  # max entries kept in the global candidates file
 
 XFORM = Transformer.from_crs("EPSG:3794", "EPSG:4326", always_xy=True)
 
@@ -272,8 +273,11 @@ def process_tile(laz_path: Path) -> dict:
     print("ok")
 
     # ── Risk candidates (kept for global ranking) ─────────────────────────────
-    order      = np.argsort(-susc_n.ravel())
-    used       = np.zeros(susc_n.shape, dtype=bool)
+    # Use raw susc (not susc_n) so scores are comparable across tiles.
+    # susc_n re-normalises per-tile to [0,1], collapsing every tile's best
+    # candidates to 1.0 and making cross-tile ranking meaningless.
+    order      = np.argsort(-susc.ravel())
+    used       = np.zeros(susc.shape, dtype=bool)
     sep_cells  = max(1, int(SEP_M / GRID_RES))
     candidates = []
     for flat_idx in order:
@@ -283,7 +287,7 @@ def process_tile(laz_path: Path) -> dict:
             ey  = float(y0 + r_i * GRID_RES)
             lon, lat = XFORM.transform(ex, ey)
             candidates.append({
-                "score":         float(susc_n[r_i, c_i]),
+                "score":         float(susc[r_i, c_i]),
                 "elevation_m":   round(float(dtm[r_i, c_i]), 1),
                 "easting_3794":  round(ex, 1),
                 "northing_3794": round(ey, 1),
@@ -365,6 +369,24 @@ def main(tile_ids: list[str] | None = None):
     for meta in new_metas:
         existing_tiles[meta["name"]] = meta
     tile_metas = sorted(existing_tiles.values(), key=lambda t: t["name"])
+
+    # Merge with global candidates file (subset-run safety).
+    # Load the existing global list, drop stale entries for tiles we just
+    # re-processed, add fresh candidates, keep the top GLOBAL_CANDS_N by score.
+    global_cands_path = WEBDATA / "candidates.json"
+    processed_names   = {laz.stem.replace("GKOT_", "") for laz in laz_files}
+    if global_cands_path.exists():
+        try:
+            kept = [c for c in json.loads(global_cands_path.read_text(encoding="utf-8"))
+                    if c["tile"] not in processed_names]
+            all_candidates.extend(kept)
+        except Exception:
+            pass
+    all_candidates.sort(key=lambda c: c["score"], reverse=True)
+    all_candidates = all_candidates[:GLOBAL_CANDS_N]
+    global_cands_path.write_text(
+        json.dumps(all_candidates, indent=2), encoding="utf-8")
+    print(f"Global candidates: {len(all_candidates)} entries saved.")
 
     # Global risk ranking — sort by score, de-duplicate across tile boundaries
     all_candidates.sort(key=lambda c: c["score"], reverse=True)
