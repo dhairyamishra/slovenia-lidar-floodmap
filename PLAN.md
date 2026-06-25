@@ -98,6 +98,13 @@ The riverine factors (TWI, canopy) **cannot** represent sea-level-rise flooding,
 - **Savinja:** overlay the documented **Aug 2023 flood footprint** and check the model fires on the valley floor / Savinja channel corridor. Baseline the **current** model first (run as-is on the new tiles) so we can show before/after of the redesign.
 - **Both:** overlay **ARSO official flood-hazard zones** (EU Floods Directive). This moves from "nice to have" to "expected" given the sledilnik audience.
 
+### C3-RESULT — Savinja baseline run (DONE, current model + Ljubljana calibration)
+Ran the **current** model on the 25 Savinja tiles (806 s, ~32 s/tile; 92 M pts/tile) to baseline against the documented **Aug-2023 flood** footprint. **The model fails to identify the flood valley — strongest evidence yet for the redesign:**
+- **Quantitative:** of the global **top-500** risk cells, only **4 are in Savinja** (496 Ljubljana); **0 of the top-20** (`risk_points.geojson` unchanged — `464_102` still sweeps it). Savinja max susc **0.9058** vs Ljubljana **0.9307**.
+- **Absurdity check:** one of the 4 Savinja "risk" cells is at **1215 m elevation** (alpine `490_136`) — a physically impossible flood site, flagged only because it's flat + treeless.
+- **Visual (heatmaps):** on valley-floor tile `488_132` the model paints **steep slopes red (high) and the river corridor / valley floor blue (low)** — *inverted*. The Ljubno center tile `488_134` is **almost entirely blue** — i.e. "no risk" exactly where the 2023 flood hit.
+- **Honest caveats:** Savinja was scored against **Ljubljana calibration** (cross-region mismatch suppresses scores — per-region calib D16 needed to fully isolate), and per-tile D8 truncates valley drainage at edges (HAND-on-mosaic fixes). **But** the inverted *within-tile* pattern (slopes hot, valleys cool) is **model-structural** (the 45% vegetation/flatness weighting), robust to calibration. The redesign (HAND + elevation + slope; demote vegetation) should flip this and light up the valley floor — that's the "after" to produce next.
+
 ---
 
 ## Part D — Performance (multiprocessing + Numba + GPU, honest take)
