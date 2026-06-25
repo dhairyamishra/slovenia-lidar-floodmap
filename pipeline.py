@@ -11,9 +11,14 @@ Usage:
     python pipeline.py                   # process every GKOT tile in data/
     python pipeline.py 478_73            # one specific tile
     python pipeline.py 478_73 478_74     # explicit list
+    python pipeline.py --calibrate       # derive global constants (run once)
+
+Scores use GLOBAL fixed-range normalisation so they are comparable across tiles.
+The ranges live in calibration.json, derived by --calibrate. The normal pipeline
+warns if the dataset in data/ has changed since calibration (see DECISIONS.md D15).
 """
 
-import sys, json, time, warnings
+import sys, json, time, hashlib, warnings
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -37,6 +42,22 @@ TOP_N    = 20     # globally-ranked risk points to emit
 SEP_M    = 50     # minimum separation between risk points (metres)
 GLOBAL_CANDS_N = 500  # max entries kept in the global candidates file
 
+# Global normalisation constants (see DECISIONS.md D15). Each factor is scaled
+# against a FIXED dataset-wide range so scores are comparable across tiles, not
+# re-curved per tile. Derived once by `python pipeline.py --calibrate`, which
+# writes calibration.json. These DEFAULTs are placeholders used only when no
+# calibration.json exists yet — run --calibrate for real values.
+CALIB_PATH = Path("calibration.json")
+CALIB_PCTL = (2, 98)   # percentiles used to derive each factor's [lo, hi]
+DEFAULT_CONSTANTS = {
+    "twi":    [4.0, 15.0],
+    "interc": [0.0, 5.0],
+    "ndvi":   [0.0, 0.15],
+    "curv":   [-0.5, 0.5],
+    "rough":  [0.0, 1.2],
+}
+DEFAULT_DISPLAY = {"susc": [0.2, 0.8]}
+
 XFORM = Transformer.from_crs("EPSG:3794", "EPSG:4326", always_xy=True)
 
 CLASS_COLORS = {
@@ -52,9 +73,9 @@ CLASS_COLORS = {
 
 # ── Shared helpers ────────────────────────────────────────────────────────────
 
-def norm01(a, lo=2, hi=98):
-    pl, ph = np.percentile(a, lo), np.percentile(a, hi)
-    return np.clip((a - pl) / max(ph - pl, 1e-6), 0, 1)
+def norm_fixed(a, lo, hi):
+    """Scale against a FIXED [lo, hi] range (global ruler), clip to [0, 1]."""
+    return np.clip((a - lo) / max(hi - lo, 1e-6), 0, 1)
 
 
 def d8_accumulate(dem, res):
@@ -94,13 +115,12 @@ def colormap_to_rgba(arr, cmap_name, vmin=0, vmax=1, nodata_mask=None):
 
 # ── Per-tile processing ───────────────────────────────────────────────────────
 
-def process_tile(laz_path: Path) -> dict:
+def compute_factors(laz_path: Path) -> dict:
     """
-    Full pipeline for one GKOT tile.
-
-    Returns a dict with:
-      'meta'       — tile metadata for manifest.json
-      'candidates' — list of risk-point dicts for global ranking
+    Load one GKOT tile and compute the five RAW (un-normalised) risk factors
+    plus all grid metadata. Shared by both the normal pipeline and the
+    calibration pass — neither normalises here, so the raw values can be pooled
+    across tiles to derive the global constants.
     """
     tile_name = laz_path.stem.replace("GKOT_", "")
     out_dir   = TILES / tile_name
@@ -200,7 +220,6 @@ def process_tile(laz_path: Path) -> dict:
     n_lay      = (vox > 0).sum(axis=2).astype(np.float64)
     interc     = gaussian_filter(
         cover * (n_lay / max(n_z, 1)) * np.log1p(ic_3d), sigma=1.5)
-    interc_n   = interc / max(interc.max(), 1e-6)
     print("ok")
 
     # ── Factor 3: NDVI canopy health ─────────────────────────────────────────
@@ -216,11 +235,6 @@ def process_tile(laz_path: Path) -> dict:
                   if (nc_arr > 0).any() else 0.0
     mn_ndvi     = gaussian_filter(
         np.where(nc_arr > 0, ns / nc_arr, ndvi_fill), sigma=1.5)
-    # Risk: low NDVI = stressed/sparse canopy = higher flood risk.
-    # Use norm01 so the full relative range drives the factor — the raw
-    # NDVI values in this dataset are radiometrically compressed near 0,
-    # so clipping to [0,1] would collapse everything to ~1.0 (useless).
-    ndvi_risk   = 1.0 - norm01(mn_ndvi)
     print("ok")
 
     # ── Factor 4: terrain roughness ───────────────────────────────────────────
@@ -235,32 +249,64 @@ def process_tile(laz_path: Path) -> dict:
         mz  = np.where(gn2 > 0, gs2  / gn2, 0)
         mz2 = np.where(gn2 > 0, gs2s / gn2, 0)
     rough   = gaussian_filter(np.sqrt(np.clip(mz2 - mz**2, 0, None)), sigma=1.0)
-    rough_n = np.clip(rough / max(np.percentile(rough, 95), 1e-6), 0, 1)
     print("ok")
 
-    # ── Composite susceptibility ──────────────────────────────────────────────
-    curv_n = norm01(np.clip(plan_curv, -0.5, 0.5))
-    susc   = (0.40 * norm01(twi)
-            + 0.25 * (1 - interc_n)
-            + 0.15 * ndvi_risk
-            + 0.15 * curv_n
-            + 0.05 * (1 - rough_n))
-    susc   = gaussian_filter(susc, sigma=1.0)
-    susc_n = norm01(susc, lo=1, hi=99)
+    return {
+        "tile_name": tile_name, "out_dir": out_dir, "source": laz_path.name,
+        "rows": rows, "cols": cols, "x0": x0, "y0": y0, "t0": t0,
+        "bounds": bounds, "dtm": dtm,
+        # raw (un-normalised) factors:
+        "twi": twi, "interc": interc, "mn_ndvi": mn_ndvi,
+        "plan_curv": plan_curv, "rough": rough,
+        # display / classification helpers:
+        "nc_arr": nc_arr, "cls": cls, "xi": xi, "yi": yi,
+    }
+
+
+def export_tile(f: dict, const: dict, display: dict) -> dict:
+    """
+    Normalise a tile's raw factors against the GLOBAL constants, build the
+    composite, export PNGs, and return manifest meta + risk candidates.
+
+    Returns a dict with:
+      'meta'       — tile metadata for manifest.json
+      'candidates' — list of risk-point dicts for global ranking
+    """
+    tile_name, out_dir = f["tile_name"], f["out_dir"]
+    rows, cols         = f["rows"], f["cols"]
+    x0, y0, dtm        = f["x0"], f["y0"], f["dtm"]
+    nc_arr             = f["nc_arr"]
+
+    # ── Composite susceptibility (GLOBAL fixed-range normalisation) ───────────
+    twi_n    = norm_fixed(f["twi"],       *const["twi"])
+    interc_n = norm_fixed(f["interc"],    *const["interc"])
+    ndvi_n   = norm_fixed(f["mn_ndvi"],   *const["ndvi"])
+    curv_n   = norm_fixed(f["plan_curv"], *const["curv"])
+    rough_n  = norm_fixed(f["rough"],     *const["rough"])
+    susc     = (0.40 * twi_n
+              + 0.25 * (1 - interc_n)
+              + 0.15 * (1 - ndvi_n)
+              + 0.15 * curv_n
+              + 0.05 * (1 - rough_n))
+    susc     = gaussian_filter(susc, sigma=1.0)
+    # Display also uses a fixed range so heatmap colours mean the same thing
+    # across tiles. susc itself is now a global score, so candidates use it raw.
+    susc_disp = norm_fixed(susc, *display["susc"])
 
     # ── Export PNGs ───────────────────────────────────────────────────────────
     print("  Exporting PNGs...", end=" ", flush=True)
 
-    colormap_to_rgba(susc_n, "RdYlBu_r").save(out_dir / "susceptibility.png")
-    # Stretch display to p5–p95 of veg cells so forest/bare contrast is visible.
-    # Sensor NIR is radiometrically compressed; fixed vmin=0/vmax=0.85 placed
-    # healthy forest at only 9% of the scale, making everything appear red.
+    colormap_to_rgba(susc_disp, "RdYlBu_r").save(out_dir / "susceptibility.png")
+    # NDVI display keeps its per-tile p5–p95 veg-cell stretch (D08): this layer
+    # is a forest-health visualisation, not a cross-tile risk score.
+    mn_ndvi     = f["mn_ndvi"]
     veg_cells   = mn_ndvi[nc_arr > 0]
     ndvi_lo     = float(np.percentile(veg_cells, 5))
     ndvi_hi     = float(np.percentile(veg_cells, 95))
     colormap_to_rgba(mn_ndvi, "RdYlGn", vmin=ndvi_lo, vmax=ndvi_hi,
                      nodata_mask=(nc_arr == 0)).save(out_dir / "ndvi.png")
 
+    cls, xi, yi = f["cls"], f["xi"], f["yi"]
     cls_grid  = np.zeros((rows, cols), dtype=np.uint8)
     for c_val in [2, 3, 4, 5, 6, 1, 7, 18]:
         cls_grid[yi[cls == c_val], xi[cls == c_val]] = c_val
@@ -273,9 +319,8 @@ def process_tile(laz_path: Path) -> dict:
     print("ok")
 
     # ── Risk candidates (kept for global ranking) ─────────────────────────────
-    # Use raw susc (not susc_n) so scores are comparable across tiles.
-    # susc_n re-normalises per-tile to [0,1], collapsing every tile's best
-    # candidates to 1.0 and making cross-tile ranking meaningless.
+    # Score on raw susc, which is now built from globally-normalised factors —
+    # so the same terrain scores the same regardless of which tile it sits in.
     order      = np.argsort(-susc.ravel())
     used       = np.zeros(susc.shape, dtype=bool)
     sep_cells  = max(1, int(SEP_M / GRID_RES))
@@ -301,15 +346,15 @@ def process_tile(laz_path: Path) -> dict:
         if len(candidates) >= TOP_N * 3:
             break
 
-    elapsed = time.time() - t0
+    elapsed = time.time() - f["t0"]
     print(f"  [done] {tile_name} in {elapsed:.0f}s")
 
     tile_prefix = f"tiles/{tile_name}"
     return {
         "meta": {
             "name":   tile_name,
-            "source": laz_path.name,
-            "bounds": bounds,
+            "source": f["source"],
+            "bounds": f["bounds"],
             "files": {
                 "susceptibility": f"{tile_prefix}/susceptibility.png",
                 "ndvi":           f"{tile_prefix}/ndvi.png",
@@ -318,6 +363,129 @@ def process_tile(laz_path: Path) -> dict:
         },
         "candidates": candidates,
     }
+
+
+# ── Calibration & dataset fingerprint ──────────────────────────────────────────
+
+def dataset_fingerprint() -> dict:
+    """
+    Fingerprint the FULL dataset in data/ as a {tile_name: file_size} map plus a
+    short digest. Name + size catches tiles added, removed, or re-downloaded
+    (CDN content change → different byte size) without hashing 15 GB of LAZ.
+    """
+    tiles = {p.stem.replace("GKOT_", ""): p.stat().st_size
+             for p in sorted(DATA.glob("GKOT_*.laz"))}
+    blob   = json.dumps(tiles, sort_keys=True).encode()
+    digest = "sha256:" + hashlib.sha256(blob).hexdigest()[:16]
+    return {"digest": digest, "tiles": tiles}
+
+
+def load_constants() -> tuple[dict, dict]:
+    """Load global constants from calibration.json, or fall back to DEFAULTs."""
+    if CALIB_PATH.exists():
+        try:
+            c = json.loads(CALIB_PATH.read_text(encoding="utf-8"))
+            return (c.get("constants", DEFAULT_CONSTANTS),
+                    c.get("display", DEFAULT_DISPLAY))
+        except Exception:
+            pass
+    return DEFAULT_CONSTANTS, DEFAULT_DISPLAY
+
+
+def check_calibration() -> None:
+    """Warn if calibration is missing or the dataset changed since calibration."""
+    cur = dataset_fingerprint()
+    if not CALIB_PATH.exists():
+        print("\n" + "!" * 60)
+        print("  NO calibration.json — using DEFAULT constants (placeholders).")
+        print("  Run:  python pipeline.py --calibrate")
+        print("!" * 60)
+        return
+    try:
+        calib = json.loads(CALIB_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        print("  WARNING: calibration.json unreadable — using DEFAULT constants.")
+        return
+    old = calib.get("dataset_fingerprint", {})
+    if cur["digest"] == old.get("digest"):
+        gen = calib.get("generated", "?")[:10]
+        print(f"  Calibration OK — {calib.get('tile_count', '?')} tiles, {gen}.")
+        return
+    cur_t, old_t = cur["tiles"], old.get("tiles", {})
+    added   = sorted(set(cur_t) - set(old_t))
+    removed = sorted(set(old_t) - set(cur_t))
+    resized = sorted(k for k in cur_t if k in old_t and cur_t[k] != old_t[k])
+    print("\n" + "!" * 60)
+    print("  DATASET CHANGED since calibration — constants may be stale.")
+    if added:   print(f"    + added   ({len(added)}): {', '.join(added[:8])}{' …' if len(added) > 8 else ''}")
+    if removed: print(f"    - removed ({len(removed)}): {', '.join(removed[:8])}{' …' if len(removed) > 8 else ''}")
+    if resized: print(f"    ~ resized ({len(resized)}): {', '.join(resized[:8])}{' …' if len(resized) > 8 else ''}")
+    print("  Run:  python pipeline.py --calibrate   (recommended)")
+    print("!" * 60)
+
+
+def calibrate(sample_frac: float = 0.05) -> None:
+    """
+    One-time pass over the FULL dataset to derive global normalisation constants.
+    Subsamples raw factor cells per tile, pools them, and takes the p2/p98 of
+    each factor as its fixed [lo, hi]. Also derives the composite display range.
+    Writes calibration.json (constants + dataset fingerprint). Does NOT export.
+    """
+    laz_files = sorted(DATA.glob("GKOT_*.laz"))
+    if not laz_files:
+        print("No GKOT tiles in data/ — nothing to calibrate.")
+        return
+    print(f"Calibration: sampling {len(laz_files)} tiles "
+          f"({sample_frac:.0%} of cells each)")
+
+    rng     = np.random.default_rng(0)
+    cols_nm = ["twi", "interc", "ndvi", "curv", "rough"]
+    samples = []   # list of (k, 5) arrays
+    for laz in laz_files:
+        f    = compute_factors(laz)
+        flat = [f["twi"].ravel(), f["interc"].ravel(), f["mn_ndvi"].ravel(),
+                f["plan_curv"].ravel(), f["rough"].ravel()]
+        n    = flat[0].size
+        k    = max(1, int(n * sample_frac))
+        idx  = rng.choice(n, size=k, replace=False)
+        samples.append(np.column_stack([a[idx] for a in flat]).astype(np.float32))
+
+    pooled   = np.concatenate(samples, axis=0)
+    lo_p, hi_p = CALIB_PCTL
+    constants = {}
+    for i, nm in enumerate(cols_nm):
+        lo = float(np.percentile(pooled[:, i], lo_p))
+        hi = float(np.percentile(pooled[:, i], hi_p))
+        constants[nm] = [round(lo, 4), round(hi, 4)]
+
+    # Composite display range — apply the just-derived constants to the pooled
+    # samples, build the susc distribution, take p2/p98 for the PNG colour scale.
+    def nf(col, rng2):
+        lo, hi = rng2
+        return np.clip((pooled[:, col] - lo) / max(hi - lo, 1e-6), 0, 1)
+    susc_s  = (0.40 * nf(0, constants["twi"])
+             + 0.25 * (1 - nf(1, constants["interc"]))
+             + 0.15 * (1 - nf(2, constants["ndvi"]))
+             + 0.15 * nf(3, constants["curv"])
+             + 0.05 * (1 - nf(4, constants["rough"])))
+    display = {"susc": [round(float(np.percentile(susc_s, 2)), 4),
+                        round(float(np.percentile(susc_s, 98)), 4)]}
+
+    calib = {
+        "generated":           datetime.now(timezone.utc).isoformat(),
+        "tile_count":          len(laz_files),
+        "percentiles":         list(CALIB_PCTL),
+        "sample_frac":         sample_frac,
+        "constants":           constants,
+        "display":             display,
+        "dataset_fingerprint": dataset_fingerprint(),
+    }
+    CALIB_PATH.write_text(json.dumps(calib, indent=2), encoding="utf-8")
+    print("\nDerived global constants (p2–p98):")
+    for nm in cols_nm:
+        print(f"    {nm:7s} {constants[nm]}")
+    print(f"    susc(display) {display['susc']}")
+    print(f"\nWrote {CALIB_PATH}  ({len(laz_files)} tiles)")
 
 
 # ── Orchestrator ──────────────────────────────────────────────────────────────
@@ -345,13 +513,18 @@ def main(tile_ids: list[str] | None = None):
     for p in laz_files:
         print(f"  {p.stem}")
 
+    # Global normalisation constants + dataset-change check
+    const, display = load_constants()
+    check_calibration()
+
     # Process tiles
     new_metas      = []
     all_candidates = []
     total_t0       = time.time()
 
     for laz_path in laz_files:
-        result = process_tile(laz_path)
+        factors = compute_factors(laz_path)
+        result  = export_tile(factors, const, display)
         new_metas.append(result["meta"])
         all_candidates.extend(result["candidates"])
 
@@ -449,4 +622,8 @@ def main(tile_ids: list[str] | None = None):
 
 
 if __name__ == "__main__":
-    main(tile_ids=sys.argv[1:] or None)
+    args = sys.argv[1:]
+    if "--calibrate" in args:
+        calibrate()
+    else:
+        main(tile_ids=[a for a in args if not a.startswith("-")] or None)

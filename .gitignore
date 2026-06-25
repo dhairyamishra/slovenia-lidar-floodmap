@@ -4,6 +4,12 @@
 # Regenerable analysis outputs
 output/
 
+# Pipeline / calibration run logs (throwaway)
+*_run.log
+
+# Pre-change PNG/score snapshots for before/after comparison (throwaway)
+archive_*/
+
 # Python
 __pycache__/
 *.pyc

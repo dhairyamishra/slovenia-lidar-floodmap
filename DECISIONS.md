@@ -120,4 +120,17 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 ---
 
+## 2026-06-25
+
+### D15 — Global fixed-range normalisation with calibration + dataset fingerprint
+**Decision:** Replaced per-tile `norm01` normalisation of each factor with FIXED dataset-wide ranges (p2–p98) stored in `calibration.json`. Constants are derived once by `python pipeline.py --calibrate`, which subsamples ~5% of raw factor cells per tile, pools them, and computes global percentiles. The normal pipeline loads these constants and normalises every tile against the same ruler, so the composite `susc` (and therefore candidate scores) is comparable across tiles. The susceptibility PNG also uses a fixed display range so heatmap colours are consistent tile-to-tile.
+**Why:** Per-tile normalisation curved each tile to its own 0–1 range. A flat flood-plain tile and a steep hillside tile both produced a max score of 1.0, so the global risk ranking could not tell genuinely risky terrain from the least-bad cell of a benign tile. Global normalisation gives an honest cross-tile scale.
+**Calibration trigger:** `calibration.json` stores a dataset fingerprint — a `{tile_name: file_size}` map plus a short sha256 digest. Every normal run fingerprints the current `data/` and compares; if tiles were added, removed, or re-downloaded (size change), it prints a loud warning to re-run `--calibrate`. Name+size is used instead of content hashing to avoid hashing 15 GB on every run. Removal also warns even though it only makes constants slightly conservative.
+**Architecture:** `process_tile` was split into `compute_factors` (load + 5 raw factors, shared by calibration and normal runs) and `export_tile` (normalise against constants + composite + PNG + candidates). Unused `norm01` removed from pipeline.py (legacy copies remain in `export_web_assets.py` / `flood_susceptibility.py`).
+**Behaviour without calibration:** Falls back to DEFAULT_CONSTANTS (placeholders) and warns — never blocks. Optional future `--strict` flag could make a stale/missing calibration a hard stop.
+**Limitation:** Constants are tuned to the Ljubljana basin. Expanding into dramatically different terrain (Alps, coast) needs a recalibration, which the fingerprint check will prompt.
+**Reversible:** Revert `export_tile` to use `norm01` per-tile and drop the calibration/fingerprint functions. See D08 and D13 for prior normalisation/scoring behaviour.
+
+---
+
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

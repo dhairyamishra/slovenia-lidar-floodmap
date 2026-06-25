@@ -1,83 +1,66 @@
 # Handoff — Slovenia CLSS LiDAR Flood & Forest Demo
 
-**Status:** Web demo is built and working; risk markers just fixed (DOM-marker rewrite). Not yet committed to git. · **Goal:** Ship a polished, static, no-backend web app that overlays flood-susceptibility and forest-NDVI analysis (derived from Slovenia's national CLSS LiDAR) on an interactive dark map, deployable to GitHub Pages, to demo to a stakeholder named Aleks.
+**Status:** Built, committed, and deployed to GitHub Pages. Multi-tile pipeline working; risk-point ranking corrected and globally normalised. · **Goal:** A polished, static, no-backend web app that overlays flood-susceptibility and forest-NDVI analysis (derived from Slovenia's national CLSS LiDAR) on an interactive dark map, to demo to a stakeholder named Aleks.
+
+> For the authoritative, continuously-maintained context read [`CLAUDE.md`](CLAUDE.md) and the decision log [`DECISIONS.md`](DECISIONS.md). This handoff is a higher-level snapshot.
 
 ## Context
 
-This project uses Slovenia's national airborne LiDAR dataset (CLSS — *Ciklično lasersko skeniranje*, run by Geodetska uprava RS) to build flood-risk analytics that map onto a real, active national priority: the €2.3 B post-2023-flood reconstruction programme. A Python pipeline computes a four-factor flood-susceptibility model and per-point forest NDVI from a 23.6 M-point LiDAR tile, then exports georeferenced raster overlays + risk points for a MapLibre web viewer styled like the national viewer at <https://clss.si>.
+This project uses Slovenia's national airborne LiDAR dataset (CLSS — *Ciklično lasersko skeniranje*, run by Geodetska uprava RS) to build flood-risk analytics that map onto a real national priority: post-2023-flood reconstruction. A Python pipeline computes a four-factor flood-susceptibility model and per-cell forest NDVI from LiDAR point clouds, then exports georeferenced raster overlays + ranked risk points for a MapLibre web viewer styled like the national viewer at <https://clss.si>.
 
-"Done" for the current phase = the local web app cleanly shows the susceptibility overlay, the NDVI overlay, land classification, and the top-20 high-risk markers, then is committed to git and deployed to GitHub Pages so Aleks can open a public URL.
-
-## Current state / what's been done
+## Current state
 
 Verified working:
 
-- Full Python analysis pipeline runs and produces all `output/` figures and all `web/data/` web assets.
-- Web app loads in a real browser: dark basemap (OpenFreeMap), susceptibility overlay (blue→red), NDVI overlay (red→green), land classification, side panel with toggles + opacity sliders, geo-registration confirmed (village labels line up with the tile).
-- **Risk markers were broken and are now fixed.** They were a GeoJSON circle layer that silently failed to tile; rewrote them as DOM markers (`maplibregl.Marker`) — 20 numbered white/red pins, attached immediately on map creation (not gated behind the basemap load). Verified via DOM inspection that all 20 markers attach. See "Technical notes & gotchas" for why this was hard to diagnose.
+- **`pipeline.py` processes the full 81-tile dataset** and writes all `web/data/` assets (per-tile PNGs, `manifest.json`, `candidates.json`, `risk_points.geojson`).
+- Web app loads in a real browser: dark basemap (OpenFreeMap), susceptibility overlay (blue→red), NDVI overlay (red→green), land classification, side panel with toggles + opacity sliders, geo-registration confirmed.
+- **Risk markers** are DOM markers (`maplibregl.Marker`) — numbered pins, attached on map creation. See "Technical notes" for why DOM not GeoJSON.
+- **Git repo exists, committed, and auto-deploys** to GitHub Pages on push to `main` (`.github/workflows/deploy-pages.yml`). Live: https://dhairyamishra.github.io/slovenia-lidar-floodmap/
 
-Not done yet:
+## Dataset
 
-- No git repository exists (`git init` not run).
-- Not deployed.
-- No `.gitignore` or `README.md`.
+- **81 tiles**, contiguous **9 × 9 km block over Ljubljana** (EPSG:3794 easting 456–464 km × northing 96–104 km). WGS84 ≈ lon 14.431–14.548°, lat 46.002–46.084°.
+- All data is **EPSG:3794** (Slovenia 1996 / Slovene National Grid); web overlays reproject to EPSG:4326 via `pyproj`.
+- Raw `.laz` (~15 GB) lives in `data/` and is **gitignored**; the small `web/data/` overlays are committed.
 
-## Key facts & findings
+## Method
 
-Data (verified from `DATA_SAMPLES.md`):
+- Flood susceptibility = four factors: **TWI 40 % + 3D canopy interception 25 % + NDVI health 15 % + plan curvature 15 % + terrain roughness 5 %**. DTM is a pseudo-DTM from GKOT ground returns (class 2) at 2 m, with D8 flow accumulation for TWI. Canopy uses a 2 m voxel grid.
+- **Global normalisation (D15):** each factor is scaled against a fixed dataset-wide range stored in `calibration.json` (derived by `python pipeline.py --calibrate`), so scores are comparable across tiles rather than re-curved per tile.
+- **Risk points:** `risk_points.geojson` holds the **top-20 globally-ranked** cells, selected from `web/data/candidates.json` (top-500 pool, deduplicated to ≥50 m spacing). Scores now vary genuinely across tiles — the earlier all-`1.0` artefact (caused by per-tile renormalisation) is fixed (D13, D15).
 
-- Hero tile is `data/GKOT_478_73.laz` — 23,600,610 points, Z range 418–847 m (429 m relief), 57.9% high vegetation (class 5). LAS Point Format 8 → has RGB **and** NIR, colours are 16-bit (uint16, 0–65535).
-- All data is in **EPSG:3794** (Slovenia 1996 / Slovene National Grid). Web overlays reproject to EPSG:4326 via `pyproj`.
-- Tile `478_73` covers EPSG:3794 [478000–479000, 73000–74000]; WGS84 bbox lon [14.71700, 14.72982], lat [45.79651, 45.80554]; centre lon 14.72341, lat 45.80103.
-- The `data/` directory holds many CLSS products (GKOT/DMP/DMR/nDMP/PAS/POF/POFI tiles, .laz + .tif). These are large and should **not** be committed to git.
+## Recommended next steps / ideas
 
-Method:
+These are candidate improvements discussed for raising the tool's credibility and impact (none committed yet):
 
-- Flood susceptibility = four factors: TWI 40% + 3D canopy interception 25% + NDVI health 15% + plan curvature 15% + terrain roughness 5%. DTM is a pseudo-DTM built from GKOT ground returns (class 2) at 2 m, with D8 flow accumulation for TWI. Voxel grid is 2 m × 2 m × 2 m (501×501×215 for this tile).
-- `risk_points.geojson` holds the **top-20 ranked** high-risk cells. Note: every point's `risk_score` is `1.0` (they are all maxed), so ranking is the only differentiator — this is why the markers are now numbered pins rather than a colour ramp. If a varying score is wanted, `export_web_assets.py` must be changed to emit a normalized/continuous score.
+1. **Validate against ARSO official flood-hazard zones** (EU Floods Directive) as an overlay — does the model track documented reality?
+2. **Add HAND (Height Above Nearest Drainage)** as a factor — physically the strongest simple flood indicator, computable from the existing DTM + flow accumulation.
+3. **Urban vs. rural differentiation** using the building classification, to reduce false positives in dense urban areas.
+4. **Performance:** multiprocessing across tiles + Numba JIT on the D8 loop would cut a full run from ~27 min to a few minutes.
 
-Repo name (open decision — see below): leading recommendation is **`voxel-flood-slovenia`**.
-
-## Recommended next step(s)
-
-1. Confirm the repo name with the user (recommended `voxel-flood-slovenia`).
-2. `git init` in the project root.
-3. Add a `.gitignore` that excludes `data/` (large .laz/.tif), `output/` (regenerable figures), and Python cruft (`__pycache__/`, `*.pyc`, venv). Keep `web/data/` (small, deployable assets) tracked.
-4. Write a short `README.md` (what it is, how to run `python -m http.server 8765 --directory web`, how the pipeline regenerates assets, data source/credit to Geodetska uprava RS).
-5. Commit everything (Python pipeline + `web/`).
-6. Deploy to GitHub Pages. Because the app lives in `web/`, either set Pages to serve from `/web` on the default branch, or move `web/` contents to repo root. URL will be `https://<user>.github.io/<repo>`.
-
-## Open decisions / questions
-
-- **Repo name** — recommended `voxel-flood-slovenia`; alternatives: `clss-flood-risk`, `slovenia-lidar-floodmap`, `terra-voxel`, `floodlens-si`.
-- **Commit scope** — whole project (recommended, with `.gitignore` for `data/`) vs. only the deployable `web/` folder.
-- **Risk score** — keep all-`1.0` top-20 ranking, or update `export_web_assets.py` to emit a genuinely varying score so the ranking has spread.
-- **Deploy target** — GitHub Pages (planned) vs. Vercel (drag-drop `web/` also works).
+Framing for Aleks: this is a **terrain + vegetation susceptibility screening tool** (spatial triage — "where to look first"), not a hydraulic flood model. That positioning is honest and defensible.
 
 ## Technical notes & gotchas
 
-- **The `preview_*` (Claude Preview) tooling cannot verify this app.** The headless preview browser can't reach the OpenFreeMap basemap CDN (`tiles.openfreemap.org`), so `map.on('load')` never fires there and `preview_screenshot` / promise-based `preview_eval` calls time out (~30 s). This burned a lot of time. Verify in a **real browser** instead, or via non-blocking DOM checks (`document.querySelectorAll('.risk-marker').length`). Do **not** trust `queryRenderedFeatures` / `querySourceFeatures` from the headless instance — load never completes there, so they read 0 regardless of correctness.
-- **Why the markers are DOM, not a GeoJSON layer:** the original GeoJSON circle layer relied on MapLibre's vector-tile worker, which wasn't reliably indexing the inline source — circles silently never drew in the real browser. DOM markers (`maplibregl.Marker`) don't depend on the worker and render immediately. For a small fixed point set this is the more robust design. Relevant code: `RISK_POINTS` constant + `addRiskPoints()` + `setRiskVisible()` in `web/app.js`; `.risk-marker` styles in `web/style.css`.
-- `web/app.js` exposes the map as `window._map` (added for debugging) — harmless to keep, or remove before final commit.
-- The export pipeline flips rasters vertically (`np.flipud`) because numpy row-0 is south but image row-0 is north. MapLibre `ImageSource` corners are ordered [TL, TR, BR, BL] as `[lon, lat]`.
+- **The `preview_*` (Claude Preview) tooling cannot fully verify this app.** The headless preview browser can't reach the OpenFreeMap basemap CDN, so `map.on('load')` never fires and screenshot/promise-based `preview_eval` calls time out. Verify in a **real browser** or via non-blocking DOM checks (`document.querySelectorAll('.risk-marker').length`).
+- **Why markers are DOM, not a GeoJSON layer:** the original GeoJSON circle layer relied on MapLibre's vector-tile worker, which wasn't reliably indexing the inline source — circles silently never drew. DOM markers render immediately and don't slip during pan (see D02, D03). Code: `addRiskPoints()` / `setRiskVisible()` in `web/app.js`; `.risk-marker` in `web/style.css`.
+- **Manifest merge on subset runs (D06, D12):** subset runs merge into the existing `manifest.json` and global `candidates.json`. Deleting tiles manually requires purging their manifest entry — see "Common pitfalls" in `CLAUDE.md`.
+- The export flips rasters vertically (`np.flipud`) because numpy row-0 is south but image row-0 is north. MapLibre `ImageSource` corners are ordered [TL, TR, BR, BL] as `[lon, lat]`.
 
 ## File map
 
 | Path | Purpose |
 |---|---|
-| `inspect_data.py` | Profiles all data files → `DATA_SAMPLES.md` |
-| `gkot_ndvi.py` | Per-point NDVI pipeline (16-bit colour) → `output/` |
-| `probe_affordances.py` | Probes hidden data properties (returns, overlap, shadows) |
-| `flood_risk.py` | Channel-network logjam/overhang risk pipeline |
-| `flood_susceptibility.py` | Full four-factor susceptibility model + voxel cube |
-| `export_web_assets.py` | Reprojects + exports `web/data/` (PNGs, bounds.json, geojson) |
+| `pipeline.py` | Canonical multi-tile pipeline (factors → PNGs + manifest + candidates + risk points; `--calibrate`) |
+| `download_tiles.py` | CDN downloader with region auto-discovery + cache |
+| `calibration.json` | Global normalisation constants + dataset fingerprint (created by `--calibrate`) |
 | `web/index.html` | App shell — MapLibre CDN, topbar, side panel |
 | `web/style.css` | Dark theme + `.risk-marker` styles |
-| `web/app.js` | MapLibre init, overlays, DOM risk markers, controls |
-| `web/data/` | Deployable assets (keep in git): 3 PNG overlays, `bounds.json`, `risk_points.geojson` |
-| `.claude/launch.json` | Preview config (`python -m http.server 8765 --directory web`) |
-| `data/` | Raw CLSS LiDAR (large — exclude from git) |
-| `output/` | Generated figures (regenerable — exclude from git) |
+| `web/app.js` | MapLibre init, per-tile overlays, DOM risk markers, controls |
+| `web/data/` | Deployable assets (committed): per-tile PNGs, `manifest.json`, `candidates.json`, `risk_points.geojson` |
+| `data/` | Raw CLSS LiDAR (large — gitignored) |
+| `CLAUDE.md` / `DECISIONS.md` | Authoritative context + decision log |
+| Legacy scripts | `flood_susceptibility.py`, `export_web_assets.py`, `gkot_ndvi.py`, `flood_risk.py`, `probe_affordances.py`, `inspect_data.py` — early single-tile/exploratory work, superseded by `pipeline.py` |
 
 ## How to run locally
 
@@ -86,10 +69,4 @@ python -m http.server 8765 --directory web
 # then open http://localhost:8765
 ```
 
-To regenerate web assets after changing the analysis:
-
-```bash
-python export_web_assets.py
-```
-
-Requires `laspy`, `lazrs`, `numpy`, `scipy`, `pyproj`, `Pillow` (and `rasterio` for `inspect_data.py`).
+To regenerate analysis after changing the model: `python pipeline.py --calibrate` (once per dataset), then `python pipeline.py`. Requires `laspy`, `lazrs`, `numpy`, `scipy`, `pyproj`, `Pillow` (and `rasterio` for `inspect_data.py`).

@@ -22,7 +22,7 @@ Four-factor susceptibility model rendered as MapLibre GL image overlays on a dar
 ## Key scripts
 | Script | Purpose |
 |---|---|
-| `pipeline.py` | Process all `GKOT_*.laz` in `data/`, write PNGs + manifest. Run `python pipeline.py` (all tiles) or `python pipeline.py 460_100 461_100` (subset — merges into existing manifest). |
+| `pipeline.py` | Process all `GKOT_*.laz` in `data/`, write PNGs + manifest. Run `python pipeline.py` (all tiles) or `python pipeline.py 460_100 461_100` (subset — merges into existing manifest). `python pipeline.py --calibrate` derives the global normalisation constants (run once per dataset). |
 | `download_tiles.py` | Download tiles from CDN. `--center E N --radius R` for a square grid, `--bbox E_min N_min E_max N_max`, or `--tiles E_N ...`. `--pipeline` runs pipeline after download. `--dry-run` checks CDN availability without downloading. |
 
 ## Common pitfalls
@@ -44,6 +44,16 @@ Four-factor susceptibility model rendered as MapLibre GL image overlays on a dar
 - NDVI health: 15%
 - Plan curvature: 15%
 - Terrain roughness: 5%
+
+## Global normalisation (calibration.json)
+Each factor is normalised against a FIXED dataset-wide [lo, hi] range (p2–p98),
+not re-curved per tile — so risk scores are comparable across tiles. The ranges
+live in `calibration.json` (committed), derived once by `python pipeline.py --calibrate`.
+`calibration.json` also stores a dataset fingerprint (tile name + file size map).
+Normal pipeline runs compare the current `data/` against it and print a loud
+warning if tiles were added, removed, or re-downloaded — prompting a recalibration.
+If `calibration.json` is missing, the pipeline falls back to DEFAULT_CONSTANTS
+(placeholders) and warns. See DECISIONS.md D15.
 
 ## Critical NDVI fix (applied)
 The CLSS sensor NIR channel is radiometrically compressed — vegetation NDVI median ~0.09
