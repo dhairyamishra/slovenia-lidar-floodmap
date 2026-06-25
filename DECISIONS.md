@@ -85,4 +85,21 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 ---
 
+### D11 — `download_tiles.py` with region auto-discovery and cache
+**Decision:** Built a dedicated CDN downloader (`download_tiles.py`) that auto-discovers the correct region slug per tile via HEAD requests, caches results in `.tile_region_cache.json`, and supports `--center/--radius`, `--bbox`, `--tiles`, `--dry-run`, and `--pipeline` flags.
+**Why:** The CDN organises tiles under 16 region subdirectories (city-based names, not geographic/NUTS names). There is no direct coordinate→region lookup table — probing is required. Caching means each tile is probed at most once. The `--pipeline` flag enables a single command for the full download→process→deploy workflow.
+**Key detail:** The downloader tries the last successful region first for each new tile (geographic locality means adjacent tiles are almost always in the same region), so a square grid typically resolves every tile in one probe after the first.
+**Reversible:** Script can be deleted; tiles can still be downloaded manually from the CDN URL pattern.
+
+---
+
+### D12 — Manual tile deletion requires manifest purge
+**Decision:** When LAZ files and PNG directories are deleted manually, the `manifest.json` entry must be purged separately. The pipeline merge logic retains entries for tiles it did not process.
+**Why:** Discovered when 10 scattered tiles were deleted from disk but the pipeline re-run (which only processed the 81 remaining tiles) still produced a 91-entry manifest. The web app would then try to load PNGs that no longer existed.
+**Fix applied:** After the delete, ran a Python one-liner to filter the manifest to only tiles whose names were not in the removal set, then recalculated union bounds.
+**Going forward:** Any time tiles are deleted, immediately purge the manifest before the next pipeline run. See "Common pitfalls" in `CLAUDE.md` for the purge command.
+**Reversible:** Re-download deleted tiles with `download_tiles.py --tiles <IDs>` and re-run pipeline.
+
+---
+
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

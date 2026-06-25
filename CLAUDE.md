@@ -15,15 +15,20 @@ Four-factor susceptibility model rendered as MapLibre GL image overlays on a dar
 ## Data
 - **Source**: Flycom CLSS S3 CDN — `https://assets.flycom.si/clss/raw/<region>/zls/gkot/GKOT_E_N.laz`
 - **CRS**: EPSG:3794 (Slovene national grid), tile coords = km (e.g. `460_100` = easting 460km, northing 100km)
-- **Current dataset**: 81 tiles — contiguous 9×9 block covering Ljubljana (456–464 E × 96–104 N)
-- **LAZ files**: stored in `data/` (gitignored), ~170–200 MB each
-- **Total on disk**: ~15 GB
+- **Current dataset**: 81 tiles — contiguous 9×9 km² block covering Ljubljana (456–464 E × 96–104 N)
+- **LAZ files**: stored in `data/` (gitignored), ~170–200 MB each, ~15 GB total on disk
+- **Scattered outliers removed**: 10 tiles outside the Ljubljana block were deleted (D09)
 
 ## Key scripts
 | Script | Purpose |
 |---|---|
-| `pipeline.py` | Process all `GKOT_*.laz` in `data/`, write PNGs + manifest. Run `python pipeline.py` (all) or `python pipeline.py 460_100 461_100` (subset). Subset runs MERGE into existing manifest — does not overwrite. |
-| `download_tiles.py` | Download tiles from CDN. `--center E N --radius R` for grid, `--bbox`, or `--tiles`. `--pipeline` flag runs pipeline after download. `--dry-run` checks availability. |
+| `pipeline.py` | Process all `GKOT_*.laz` in `data/`, write PNGs + manifest. Run `python pipeline.py` (all tiles) or `python pipeline.py 460_100 461_100` (subset — merges into existing manifest). |
+| `download_tiles.py` | Download tiles from CDN. `--center E N --radius R` for a square grid, `--bbox E_min N_min E_max N_max`, or `--tiles E_N ...`. `--pipeline` runs pipeline after download. `--dry-run` checks CDN availability without downloading. |
+
+## Common pitfalls
+- **Deleting tiles manually**: If you delete a LAZ file and its PNG dir, you must also purge its entry from `manifest.json`. The pipeline merge logic keeps old entries for tiles it doesn't re-process. Purge with: `python -c "import json; m=json.load(open('web/data/manifest.json')); m['tiles']=[t for t in m['tiles'] if t['name'] not in {'TILE_ID'}]; m['tile_count']=len(m['tiles']); json.dump(m,open('web/data/manifest.json','w'),indent=2)"`
+- **Pipeline print says wrong tile count**: The `manifest.json — N tile(s)` line shows tiles processed this run, not total tiles in the merged manifest. Check `manifest.json` directly to confirm total.
+- **Subset run scope**: `python pipeline.py 460_100` only processes that one tile. Risk points in `risk_points.geojson` are ranked only from tiles processed in that run — run all tiles for a globally accurate ranking.
 
 ## Pipeline outputs (per tile)
 - `web/data/tiles/<name>/susceptibility.png` — composite flood risk (RdYlBu_r)
