@@ -1,5 +1,7 @@
 # Slovenia LiDAR Floodmap — Project Context
 
+> **Decision log:** All significant technical and data decisions are recorded in [`DECISIONS.md`](DECISIONS.md) with rationale and reversal instructions. Read it before making architectural changes and append to it after making new decisions.
+
 ## What this is
 A flood & forest risk analysis web app built on Slovenia's national CLSS LiDAR dataset.
 Four-factor susceptibility model rendered as MapLibre GL image overlays on a dark basemap.
