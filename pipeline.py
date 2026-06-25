@@ -54,12 +54,44 @@ CALIB_PATH = Path("calibration.json")
 CALIB_PCTL = (2, 98)   # percentiles used to derive each factor's [lo, hi]
 DEFAULT_CONSTANTS = {
     "twi":    [4.0, 15.0],
+    "elev":   [200.0, 1500.0],
+    "slope":  [0.0, 1.0],
     "interc": [0.0, 5.0],
     "ndvi":   [0.0, 0.15],
     "curv":   [-0.5, 0.5],
     "rough":  [0.0, 1.2],
 }
 DEFAULT_DISPLAY = {"susc": [0.2, 0.8]}
+
+# Susceptibility model (D17 redesign — interim, pre-HAND). Each factor is
+# normalised against PER-REGION fixed ranges, then combined with these weights.
+# `invert=True` means risk RISES as the factor falls — low elevation, flat slope,
+# and sparse canopy/vegetation are the risky end. Roughness is dropped (weight 0).
+# Weights sum to 1.0. HAND will be added next, reclaiming weight from TWI/veg.
+FACTOR_COLS = ["twi", "elev", "slope", "interc", "ndvi", "curv", "rough"]
+FACTOR_KEYS = {  # model-factor name -> compute_factors() output key
+    "twi": "twi", "elev": "dtm", "slope": "slope", "interc": "interc",
+    "ndvi": "mn_ndvi", "curv": "plan_curv", "rough": "rough",
+}
+SUSC_WEIGHTS = [  # (factor, weight, invert)
+    ("twi",    0.30, False),  # high topographic wetness
+    ("elev",   0.20, True),   # low elevation  -> high risk
+    ("slope",  0.20, True),   # flat terrain   -> high risk
+    ("curv",   0.10, False),  # concave plan curvature
+    ("interc", 0.10, True),   # less canopy interception
+    ("ndvi",   0.10, True),   # sparser vegetation
+]   # roughness intentionally weight 0
+
+
+def composite_susc(norm_of):
+    """Weighted susceptibility from a normaliser `norm_of(factor) -> [0,1] array`.
+    Shared by export_tile (full grids) and calibrate (pooled samples) so the
+    weights live in exactly one place."""
+    s = 0.0
+    for nm, w, inv in SUSC_WEIGHTS:
+        v = norm_of(nm)
+        s = s + w * ((1.0 - v) if inv else v)
+    return s
 
 XFORM = Transformer.from_crs("EPSG:3794", "EPSG:4326", always_xy=True)
 
@@ -238,9 +270,9 @@ def compute_factors(laz_path: Path) -> dict:
         "tile_name": tile_name, "out_dir": out_dir, "source": laz_path.name,
         "rows": rows, "cols": cols, "x0": x0, "y0": y0, "t0": t0,
         "bounds": bounds, "dtm": dtm,
-        # raw (un-normalised) factors:
+        # raw (un-normalised) factors ("dtm" above doubles as the elevation factor):
         "twi": twi, "interc": interc, "mn_ndvi": mn_ndvi,
-        "plan_curv": plan_curv, "rough": rough,
+        "plan_curv": plan_curv, "rough": rough, "slope": slope_rad,
         # display / classification helpers:
         "nc_arr": nc_arr, "cls": cls, "xi": xi, "yi": yi,
     }
@@ -260,17 +292,8 @@ def export_tile(f: dict, const: dict, display: dict) -> dict:
     x0, y0, dtm        = f["x0"], f["y0"], f["dtm"]
     nc_arr             = f["nc_arr"]
 
-    # ── Composite susceptibility (GLOBAL fixed-range normalisation) ───────────
-    twi_n    = norm_fixed(f["twi"],       *const["twi"])
-    interc_n = norm_fixed(f["interc"],    *const["interc"])
-    ndvi_n   = norm_fixed(f["mn_ndvi"],   *const["ndvi"])
-    curv_n   = norm_fixed(f["plan_curv"], *const["curv"])
-    rough_n  = norm_fixed(f["rough"],     *const["rough"])
-    susc     = (0.40 * twi_n
-              + 0.25 * (1 - interc_n)
-              + 0.15 * (1 - ndvi_n)
-              + 0.15 * curv_n
-              + 0.05 * (1 - rough_n))
+    # ── Composite susceptibility (PER-REGION fixed-range normalisation, D17) ──
+    susc     = composite_susc(lambda nm: norm_fixed(f[FACTOR_KEYS[nm]], *const[nm]))
     susc     = gaussian_filter(susc, sigma=1.0)
     # Display also uses a fixed range so heatmap colours mean the same thing
     # across tiles. susc itself is now a global score, so candidates use it raw.
@@ -368,8 +391,7 @@ def _calib_sample_one(args):
     cells is insensitive to the exact subsample)."""
     laz_path, sample_frac, seed = args
     f    = compute_factors(laz_path)
-    flat = [f["twi"].ravel(), f["interc"].ravel(), f["mn_ndvi"].ravel(),
-            f["plan_curv"].ravel(), f["rough"].ravel()]
+    flat = [f[FACTOR_KEYS[nm]].ravel() for nm in FACTOR_COLS]
     n    = flat[0].size
     k    = max(1, int(n * sample_frac))
     idx  = np.random.default_rng(seed).choice(n, size=k, replace=False)
@@ -401,6 +423,25 @@ def _default_workers() -> int:
 
 # ── Calibration & dataset fingerprint ──────────────────────────────────────────
 
+REGION_CACHE_PATH = Path(".tile_region_cache.json")
+
+
+def _region_cache() -> dict:
+    """tile_name -> CDN region slug (e.g. '05-ljubljana'). Built by download_tiles.py.
+    Used here as the calibration-region grouping (D17)."""
+    if REGION_CACHE_PATH.exists():
+        try:
+            return json.loads(REGION_CACHE_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {}
+
+
+def tile_region(tile_name: str, cache: dict | None = None) -> str:
+    cache = _region_cache() if cache is None else cache
+    return cache.get(tile_name, "default")
+
+
 def dataset_fingerprint() -> dict:
     """
     Fingerprint the FULL dataset in data/ as a {tile_name: file_size} map plus a
@@ -414,21 +455,29 @@ def dataset_fingerprint() -> dict:
     return {"digest": digest, "tiles": tiles}
 
 
-def load_constants() -> tuple[dict, dict]:
-    """Load global constants from calibration.json, or fall back to DEFAULTs."""
+def load_region_constants() -> tuple[dict, tuple]:
+    """
+    Return (region -> (constants, display) map, default (constants, display)).
+    Reads the per-region `regions` block in calibration.json (D17). Falls back to
+    the legacy flat format (treated as one default region) or DEFAULTs.
+    """
+    default = (DEFAULT_CONSTANTS, DEFAULT_DISPLAY)
     if CALIB_PATH.exists():
         try:
             c = json.loads(CALIB_PATH.read_text(encoding="utf-8"))
-            return (c.get("constants", DEFAULT_CONSTANTS),
-                    c.get("display", DEFAULT_DISPLAY))
+            regions = c.get("regions")
+            if regions:
+                rc = {r: (v["constants"], v["display"]) for r, v in regions.items()}
+                return rc, next(iter(rc.values()), default)
+            if "constants" in c:   # legacy single-region format
+                return {}, (c["constants"], c.get("display", DEFAULT_DISPLAY))
         except Exception:
             pass
-    return DEFAULT_CONSTANTS, DEFAULT_DISPLAY
+    return {}, default
 
 
 def check_calibration() -> None:
-    """Warn if calibration is missing or the dataset changed since calibration."""
-    cur = dataset_fingerprint()
+    """Warn if calibration is missing, legacy, or doesn't cover a region in data/."""
     if not CALIB_PATH.exists():
         print("\n" + "!" * 60)
         print("  NO calibration.json — using DEFAULT constants (placeholders).")
@@ -440,30 +489,37 @@ def check_calibration() -> None:
     except Exception:
         print("  WARNING: calibration.json unreadable — using DEFAULT constants.")
         return
-    old = calib.get("dataset_fingerprint", {})
-    if cur["digest"] == old.get("digest"):
-        gen = calib.get("generated", "?")[:10]
-        print(f"  Calibration OK — {calib.get('tile_count', '?')} tiles, {gen}.")
+    regions = calib.get("regions", {})
+    gen = calib.get("generated", "?")[:10]
+    if not regions:
+        print("  WARNING: legacy single-region calibration — run --calibrate to "
+              "refresh per-region (D17).")
         return
-    cur_t, old_t = cur["tiles"], old.get("tiles", {})
-    added   = sorted(set(cur_t) - set(old_t))
-    removed = sorted(set(old_t) - set(cur_t))
-    resized = sorted(k for k in cur_t if k in old_t and cur_t[k] != old_t[k])
-    print("\n" + "!" * 60)
-    print("  DATASET CHANGED since calibration — constants may be stale.")
-    if added:   print(f"    + added   ({len(added)}): {', '.join(added[:8])}{' …' if len(added) > 8 else ''}")
-    if removed: print(f"    - removed ({len(removed)}): {', '.join(removed[:8])}{' …' if len(removed) > 8 else ''}")
-    if resized: print(f"    ~ resized ({len(resized)}): {', '.join(resized[:8])}{' …' if len(resized) > 8 else ''}")
-    print("  Run:  python pipeline.py --calibrate   (recommended)")
-    print("!" * 60)
+    cache = _region_cache()
+    data_regions = sorted({tile_region(p.stem.replace("GKOT_", ""), cache)
+                           for p in DATA.glob("GKOT_*.laz")})
+    missing = [r for r in data_regions if r not in regions]
+    print(f"  Calibration: regions [{', '.join(sorted(regions))}] ({gen}).")
+    if missing:
+        print("\n" + "!" * 60)
+        print(f"  NO calibration for region(s) {missing} present in data/ "
+              f"— those tiles use DEFAULT constants.")
+        print("  Run:  python pipeline.py --calibrate   (calibrates all regions)")
+        print("!" * 60)
 
 
-def calibrate(sample_frac: float = 0.05, workers: int | None = None) -> None:
+def calibrate(sample_frac: float = 0.05, workers: int | None = None,
+              region: str | None = None) -> None:
     """
-    One-time pass over the FULL dataset to derive global normalisation constants.
-    Subsamples raw factor cells per tile, pools them, and takes the p2/p98 of
-    each factor as its fixed [lo, hi]. Also derives the composite display range.
-    Writes calibration.json (constants + dataset fingerprint). Does NOT export.
+    Derive PER-REGION normalisation constants (D17). Tiles are grouped by their
+    CDN region (from .tile_region_cache.json); each region's factor cells are
+    subsampled, pooled, and reduced to p2/p98 [lo, hi] per factor, plus a composite
+    display range. Disjoint regions (Ljubljana basin vs alpine Kamnik vs coastal
+    Koper) need their own rulers — one global elevation range would be meaningless.
+
+    `region=None` (re)calibrates every region present in data/; `region=NAME`
+    refreshes just that one. Other regions' constants in calibration.json are
+    preserved. Does NOT export tiles.
     """
     laz_files = sorted(DATA.glob("GKOT_*.laz"))
     if not laz_files:
@@ -471,54 +527,76 @@ def calibrate(sample_frac: float = 0.05, workers: int | None = None) -> None:
         return
     if workers is None:
         workers = _default_workers()
-    workers = max(1, min(workers, len(laz_files)))
-    print(f"Calibration: sampling {len(laz_files)} tiles "
-          f"({sample_frac:.0%} of cells each) across {workers} worker(s)")
 
-    cols_nm = ["twi", "interc", "ndvi", "curv", "rough"]
-    tasks   = [(laz, sample_frac, i) for i, laz in enumerate(laz_files)]
-    if workers == 1:
-        samples = [_calib_sample_one(t) for t in tasks]
+    cache = _region_cache()
+    by_region: dict[str, list] = {}
+    for laz in laz_files:
+        r = tile_region(laz.stem.replace("GKOT_", ""), cache)
+        by_region.setdefault(r, []).append(laz)
+
+    if region:
+        if region not in by_region:
+            print(f"No tiles for region '{region}' in data/. "
+                  f"Available: {sorted(by_region)}")
+            return
+        targets = [region]
     else:
-        with ProcessPoolExecutor(max_workers=workers) as ex:
-            samples = list(ex.map(_calib_sample_one, tasks))
+        targets = sorted(by_region)
 
-    pooled   = np.concatenate(samples, axis=0)
+    # Merge into existing calibration so untouched regions are preserved.
+    calib = {}
+    if CALIB_PATH.exists():
+        try:
+            calib = json.loads(CALIB_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            calib = {}
+    regions_out = calib.get("regions", {})
+
     lo_p, hi_p = CALIB_PCTL
-    constants = {}
-    for i, nm in enumerate(cols_nm):
-        lo = float(np.percentile(pooled[:, i], lo_p))
-        hi = float(np.percentile(pooled[:, i], hi_p))
-        constants[nm] = [round(lo, 4), round(hi, 4)]
+    colidx     = {nm: i for i, nm in enumerate(FACTOR_COLS)}
+    for r in targets:
+        rfiles = by_region[r]
+        w = max(1, min(workers, len(rfiles)))
+        print(f"\nCalibrating region '{r}': {len(rfiles)} tile(s) "
+              f"({sample_frac:.0%} of cells) across {w} worker(s)")
+        tasks = [(laz, sample_frac, i) for i, laz in enumerate(rfiles)]
+        if w == 1:
+            samples = [_calib_sample_one(t) for t in tasks]
+        else:
+            with ProcessPoolExecutor(max_workers=w) as ex:
+                samples = list(ex.map(_calib_sample_one, tasks))
+        pooled = np.concatenate(samples, axis=0)
 
-    # Composite display range — apply the just-derived constants to the pooled
-    # samples, build the susc distribution, take p2/p98 for the PNG colour scale.
-    def nf(col, rng2):
-        lo, hi = rng2
-        return np.clip((pooled[:, col] - lo) / max(hi - lo, 1e-6), 0, 1)
-    susc_s  = (0.40 * nf(0, constants["twi"])
-             + 0.25 * (1 - nf(1, constants["interc"]))
-             + 0.15 * (1 - nf(2, constants["ndvi"]))
-             + 0.15 * nf(3, constants["curv"])
-             + 0.05 * (1 - nf(4, constants["rough"])))
-    display = {"susc": [round(float(np.percentile(susc_s, 2)), 4),
-                        round(float(np.percentile(susc_s, 98)), 4)]}
+        constants = {}
+        for nm in FACTOR_COLS:
+            lo = float(np.percentile(pooled[:, colidx[nm]], lo_p))
+            hi = float(np.percentile(pooled[:, colidx[nm]], hi_p))
+            constants[nm] = [round(lo, 4), round(hi, 4)]
 
-    calib = {
+        def nf_pooled(nm):
+            lo, hi = constants[nm]
+            return np.clip((pooled[:, colidx[nm]] - lo) / max(hi - lo, 1e-6), 0, 1)
+        susc_s  = composite_susc(nf_pooled)
+        display = {"susc": [round(float(np.percentile(susc_s, 2)), 4),
+                            round(float(np.percentile(susc_s, 98)), 4)]}
+
+        regions_out[r] = {"constants": constants, "display": display,
+                          "tile_count": len(rfiles)}
+        print(f"  region '{r}' constants (p2–p98):")
+        for nm in FACTOR_COLS:
+            print(f"    {nm:7s} {constants[nm]}")
+        print(f"    susc(display) {display['susc']}")
+
+    out = {
         "generated":           datetime.now(timezone.utc).isoformat(),
-        "tile_count":          len(laz_files),
+        "model_version":       2,
         "percentiles":         list(CALIB_PCTL),
         "sample_frac":         sample_frac,
-        "constants":           constants,
-        "display":             display,
+        "regions":             regions_out,
         "dataset_fingerprint": dataset_fingerprint(),
     }
-    CALIB_PATH.write_text(json.dumps(calib, indent=2), encoding="utf-8")
-    print("\nDerived global constants (p2–p98):")
-    for nm in cols_nm:
-        print(f"    {nm:7s} {constants[nm]}")
-    print(f"    susc(display) {display['susc']}")
-    print(f"\nWrote {CALIB_PATH}  ({len(laz_files)} tiles)")
+    CALIB_PATH.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    print(f"\nWrote {CALIB_PATH}  (regions: {', '.join(sorted(regions_out))})")
 
 
 # ── Orchestrator ──────────────────────────────────────────────────────────────
@@ -546,8 +624,9 @@ def main(tile_ids: list[str] | None = None, workers: int | None = None):
     for p in laz_files:
         print(f"  {p.stem}")
 
-    # Global normalisation constants + dataset-change check
-    const, display = load_constants()
+    # Per-region normalisation constants (D17) + calibration coverage check
+    region_const, default_cd = load_region_constants()
+    cache = _region_cache()
     check_calibration()
 
     if workers is None:
@@ -559,7 +638,12 @@ def main(tile_ids: list[str] | None = None, workers: int | None = None):
     all_candidates = []
     total_t0       = time.time()
 
-    tasks = [(p, const, display) for p in laz_files]
+    # Resolve each tile's constants by its region before dispatch.
+    tasks = []
+    for p in laz_files:
+        cd = region_const.get(tile_region(p.stem.replace("GKOT_", ""), cache),
+                              default_cd)
+        tasks.append((p, cd[0], cd[1]))
     if workers == 1:
         print(f"\nProcessing {len(laz_files)} tile(s) serially")
         results = [_process_one(t) for t in tasks]
@@ -679,8 +763,18 @@ if __name__ == "__main__":
             print("--workers needs an integer, e.g. --workers 4")
             sys.exit(1)
 
+    region = None
+    if "--region" in args:
+        i = args.index("--region")
+        try:
+            region = args[i + 1]
+            del args[i:i + 2]
+        except IndexError:
+            print("--region needs a name, e.g. --region 08-kamnik")
+            sys.exit(1)
+
     if "--calibrate" in args:
-        calibrate(workers=workers)
+        calibrate(workers=workers, region=region)
     else:
         main(tile_ids=[a for a in args if not a.startswith("-")] or None,
              workers=workers)
