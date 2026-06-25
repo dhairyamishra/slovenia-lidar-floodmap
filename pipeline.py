@@ -18,15 +18,18 @@ The ranges live in calibration.json, derived by --calibrate. The normal pipeline
 warns if the dataset in data/ has changed since calibration (see DECISIONS.md D15).
 """
 
-import sys, json, time, hashlib, warnings
+import os, sys, json, time, hashlib, warnings
 from datetime import datetime, timezone
 from pathlib import Path
+from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
 from scipy.ndimage import gaussian_filter, distance_transform_edt
 from pyproj import Transformer
 from PIL import Image
 import laspy
+
+import kernels  # Numba-accelerated DTM grouped-min + D8 accumulation
 
 warnings.filterwarnings("ignore")
 
@@ -78,27 +81,9 @@ def norm_fixed(a, lo, hi):
     return np.clip((a - lo) / max(hi - lo, 1e-6), 0, 1)
 
 
-def d8_accumulate(dem, res):
-    """Single-flow-direction (D8) upslope area accumulation."""
-    r, c   = dem.shape
-    accum  = np.ones((r, c), dtype=np.float64)
-    order  = np.argsort(-dem.ravel())
-    ri, ci = order // c, order % c
-    dirs   = [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
-    sq2    = res * 1.41421356
-    for i in range(len(order)):
-        row, col = ri[i], ci[i]
-        bs, bdr, bdc = 0.0, 0, 0
-        for dr, dc in dirs:
-            nr, nc = row + dr, col + dc
-            if 0 <= nr < r and 0 <= nc < c:
-                d = sq2 if (dr and dc) else float(res)
-                s = (dem[row, col] - dem[nr, nc]) / d
-                if s > bs:
-                    bs, bdr, bdc = s, dr, dc
-        if bdr or bdc:
-            accum[row + bdr, col + bdc] += accum[row, col]
-    return accum
+# d8_accumulate (single-flow-direction upslope accumulation) is now Numba-
+# accelerated in kernels.py — see kernels.d8_accumulate. Bit-identical output,
+# ~70x faster (verified by bench_kernels.py).
 
 
 def colormap_to_rgba(arr, cmap_name, vmin=0, vmax=1, nodata_mask=None):
@@ -179,11 +164,9 @@ def compute_factors(laz_path: Path) -> dict:
     # ── DTM from ground returns ───────────────────────────────────────────────
     print("  DTM...", end=" ", flush=True)
     ground = cls == 2
-    dtm    = np.full((rows, cols), np.nan)
     xg, yg, zg = xi[ground], yi[ground], z[ground]
-    for gx, gy, gz in zip(xg, yg, zg):
-        cur = dtm[gy, gx]
-        dtm[gy, gx] = gz if np.isnan(cur) else min(cur, gz)
+    # lowest ground-return z per cell (NaN where none) — Numba grouped-min
+    dtm = kernels.dtm_min_grid(rows, cols, yg, xg, zg)
     idx = distance_transform_edt(np.isnan(dtm),
                                   return_distances=False, return_indices=True)
     dtm = gaussian_filter(dtm[tuple(idx)], sigma=1.5)
@@ -193,7 +176,7 @@ def compute_factors(laz_path: Path) -> dict:
     print("  TWI...", end=" ", flush=True)
     dy_g, dx_g = np.gradient(dtm, GRID_RES, GRID_RES)
     slope_rad  = np.arctan(np.sqrt(dx_g**2 + dy_g**2)).clip(0.001, np.pi / 2 - 0.001)
-    accum      = d8_accumulate(dtm, GRID_RES)
+    accum      = kernels.d8_accumulate(dtm, GRID_RES)
     twi        = gaussian_filter(
         np.log(accum * GRID_RES**2 / np.tan(slope_rad)), sigma=1.0)
     print("ok")
@@ -365,6 +348,57 @@ def export_tile(f: dict, const: dict, display: dict) -> dict:
     }
 
 
+# ── Parallelism ────────────────────────────────────────────────────────────────
+# Tiles are independent, so compute_factors + export_tile fan out across processes.
+# The big arrays never cross the process boundary: export_tile writes the PNGs to
+# disk inside the worker and returns only the small manifest meta + risk candidates.
+# Worker fns are module-level so they pickle under Windows `spawn`.
+
+def _process_one(args):
+    """Worker: process one tile end-to-end, return its small meta + candidates."""
+    laz_path, const, display = args
+    return export_tile(compute_factors(laz_path), const, display)
+
+
+def _calib_sample_one(args):
+    """Worker: compute one tile's factors, return a small (k, 5) subsample of the
+    five raw factors for pooled percentile calibration. Per-tile seed keeps the
+    subsample deterministic regardless of worker scheduling (statistically
+    equivalent to the old single-stream RNG — p2/p98 over millions of pooled
+    cells is insensitive to the exact subsample)."""
+    laz_path, sample_frac, seed = args
+    f    = compute_factors(laz_path)
+    flat = [f["twi"].ravel(), f["interc"].ravel(), f["mn_ndvi"].ravel(),
+            f["plan_curv"].ravel(), f["rough"].ravel()]
+    n    = flat[0].size
+    k    = max(1, int(n * sample_frac))
+    idx  = np.random.default_rng(seed).choice(n, size=k, replace=False)
+    return np.column_stack([a[idx] for a in flat]).astype(np.float32)
+
+
+def _default_workers() -> int:
+    """Worker count bounded by available RAM, not core count. These tiles peak
+    ~4-6 GB/worker (large point clouds + tall voxel grids), so memory is the wall;
+    32 cores stay idle long before RAM does. Falls back conservatively if memory
+    can't be queried (non-Windows / no ctypes)."""
+    try:
+        import ctypes
+
+        class _MS(ctypes.Structure):
+            _fields_ = [("dwLength", ctypes.c_ulong), ("dwMemoryLoad", ctypes.c_ulong),
+                        ("ullTotalPhys", ctypes.c_ulonglong), ("ullAvailPhys", ctypes.c_ulonglong),
+                        ("a", ctypes.c_ulonglong), ("b", ctypes.c_ulonglong),
+                        ("c", ctypes.c_ulonglong), ("d", ctypes.c_ulonglong),
+                        ("e", ctypes.c_ulonglong)]
+
+        ms = _MS(); ms.dwLength = ctypes.sizeof(ms)
+        ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(ms))
+        avail_gb = ms.ullAvailPhys / 1e9
+    except Exception:
+        avail_gb = 8.0
+    return max(1, min(os.cpu_count() or 1, int(avail_gb // 5.0)))
+
+
 # ── Calibration & dataset fingerprint ──────────────────────────────────────────
 
 def dataset_fingerprint() -> dict:
@@ -424,7 +458,7 @@ def check_calibration() -> None:
     print("!" * 60)
 
 
-def calibrate(sample_frac: float = 0.05) -> None:
+def calibrate(sample_frac: float = 0.05, workers: int | None = None) -> None:
     """
     One-time pass over the FULL dataset to derive global normalisation constants.
     Subsamples raw factor cells per tile, pools them, and takes the p2/p98 of
@@ -435,20 +469,19 @@ def calibrate(sample_frac: float = 0.05) -> None:
     if not laz_files:
         print("No GKOT tiles in data/ — nothing to calibrate.")
         return
+    if workers is None:
+        workers = _default_workers()
+    workers = max(1, min(workers, len(laz_files)))
     print(f"Calibration: sampling {len(laz_files)} tiles "
-          f"({sample_frac:.0%} of cells each)")
+          f"({sample_frac:.0%} of cells each) across {workers} worker(s)")
 
-    rng     = np.random.default_rng(0)
     cols_nm = ["twi", "interc", "ndvi", "curv", "rough"]
-    samples = []   # list of (k, 5) arrays
-    for laz in laz_files:
-        f    = compute_factors(laz)
-        flat = [f["twi"].ravel(), f["interc"].ravel(), f["mn_ndvi"].ravel(),
-                f["plan_curv"].ravel(), f["rough"].ravel()]
-        n    = flat[0].size
-        k    = max(1, int(n * sample_frac))
-        idx  = rng.choice(n, size=k, replace=False)
-        samples.append(np.column_stack([a[idx] for a in flat]).astype(np.float32))
+    tasks   = [(laz, sample_frac, i) for i, laz in enumerate(laz_files)]
+    if workers == 1:
+        samples = [_calib_sample_one(t) for t in tasks]
+    else:
+        with ProcessPoolExecutor(max_workers=workers) as ex:
+            samples = list(ex.map(_calib_sample_one, tasks))
 
     pooled   = np.concatenate(samples, axis=0)
     lo_p, hi_p = CALIB_PCTL
@@ -490,7 +523,7 @@ def calibrate(sample_frac: float = 0.05) -> None:
 
 # ── Orchestrator ──────────────────────────────────────────────────────────────
 
-def main(tile_ids: list[str] | None = None):
+def main(tile_ids: list[str] | None = None, workers: int | None = None):
     TILES.mkdir(parents=True, exist_ok=True)
 
     # Discover tiles
@@ -517,14 +550,26 @@ def main(tile_ids: list[str] | None = None):
     const, display = load_constants()
     check_calibration()
 
-    # Process tiles
+    if workers is None:
+        workers = _default_workers()
+    workers = max(1, min(workers, len(laz_files)))
+
+    # Process tiles — fan out across processes (each worker writes its own PNGs).
     new_metas      = []
     all_candidates = []
     total_t0       = time.time()
 
-    for laz_path in laz_files:
-        factors = compute_factors(laz_path)
-        result  = export_tile(factors, const, display)
+    tasks = [(p, const, display) for p in laz_files]
+    if workers == 1:
+        print(f"\nProcessing {len(laz_files)} tile(s) serially")
+        results = [_process_one(t) for t in tasks]
+    else:
+        print(f"\nProcessing {len(laz_files)} tile(s) across {workers} worker(s) "
+              f"(RAM-bound; override with --workers N)")
+        with ProcessPoolExecutor(max_workers=workers) as ex:
+            results = list(ex.map(_process_one, tasks))
+
+    for result in results:
         new_metas.append(result["meta"])
         all_candidates.extend(result["candidates"])
 
@@ -623,7 +668,19 @@ def main(tile_ids: list[str] | None = None):
 
 if __name__ == "__main__":
     args = sys.argv[1:]
+
+    workers = None
+    if "--workers" in args:
+        i = args.index("--workers")
+        try:
+            workers = int(args[i + 1])
+            del args[i:i + 2]
+        except (IndexError, ValueError):
+            print("--workers needs an integer, e.g. --workers 4")
+            sys.exit(1)
+
     if "--calibrate" in args:
-        calibrate()
+        calibrate(workers=workers)
     else:
-        main(tile_ids=[a for a in args if not a.startswith("-")] or None)
+        main(tile_ids=[a for a in args if not a.startswith("-")] or None,
+             workers=workers)

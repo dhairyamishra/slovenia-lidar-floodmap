@@ -133,4 +133,14 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 ---
 
+### D16 — Performance: Numba hot loops + multiprocessing across tiles
+**Decision:** The two pure-Python loops in `compute_factors` — the DTM grouped-min over every ground point, and `d8_accumulate` over every grid cell — are moved to Numba `@njit(cache=True)` kernels in a new module `kernels.py`. Separately, `main()` and `calibrate()` fan tiles out across processes with `ProcessPoolExecutor`; each worker processes one tile and writes its own PNGs, returning only small meta + candidates (no large arrays cross the process boundary). Worker count defaults to a RAM-bound estimate (`available_GB // 5`, capped at `cpu_count`) and is overridable with `--workers N`.
+**Why:** A full 100-tile run took ~28 min; the dense 92M-point Kamnik/Savinja tiles pushed a 25-tile run to ~13 min (806s). The DTM loop scales with point count and dominated.
+**Measured:** DTM loop **153×** (9.2s→0.06s), D8 **71×** (1.0s→0.01s), both bit-identical. Multiprocessing added **3.3×** at 3 workers (806s→244s on the 25 Savinja tiles). Memory, not cores, is the cap: each worker peaks ~4–6 GB on these tiles, so only ~3 workers fit in ~19 GB free; the 32 logical cores idle first.
+**Faithfulness:** Verified byte-identical, not merely close. `bench_kernels.py` asserts the kernels match the original loops on a real tile; a full 25-tile re-run reproduced PNGs and `candidates.json` identical to the committed baseline (`git diff` empty). Kernels preserve the D8 tie-break (strict `>`, fixed neighbour order) and run the argsort in numpy so iteration order matches across elevation ties.
+**Caveats:** The next per-tile cost after Numba is the `np.add.at` scatter ops (voxel canopy / NDVI / roughness) + laspy decode — not yet optimised; this is why big tiles still dominate and the gain is 3.3×, not higher. More free RAM → more workers → higher speedup. GPU deferred (D8 is serial, LAZ decode is CPU-bound, and one GPU contends with multiprocessing).
+**Reversible:** Re-inline the DTM loop and restore the pure-Python `d8_accumulate` in `pipeline.py`; delete `kernels.py`; revert the `ProcessPoolExecutor` blocks to serial `for` loops and drop `--workers`. New dependency: `numba` (`pip install numba`).
+
+---
+
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

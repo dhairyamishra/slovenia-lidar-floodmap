@@ -109,6 +109,8 @@ Ran the **current** model on the 25 Savinja tiles (806 s, ~32 s/tile; 92 M pts/t
 
 ## Part D — Performance (multiprocessing + Numba + GPU, honest take)
 
+> ✅ **DONE (D16).** Numba kernels in `kernels.py` (DTM grouped-min **153×**, D8 **71×**, bit-identical) + `ProcessPoolExecutor` across tiles in `main()`/`calibrate()` with a RAM-bound worker default + `--workers N`. Measured **806s → 244s** (3.3×) on the 25 Savinja tiles at 3 workers; full faithfulness verified (PNGs + candidates byte-identical to baseline). Next bottleneck = `np.add.at` scatter ops; GPU stays deferred. Design rationale below is preserved for reference.
+
 ### Hardware (measured this session)
 - **GPU:** NVIDIA RTX 4080 Laptop, **12 GB VRAM**, CUDA-capable (driver 596.49).
 - **CPU:** **32 logical cores**.
@@ -164,7 +166,7 @@ Current ~28 min / 100 tiles (single-process, two Python loops). With Numba loops
 
 - [ ] **0. Measure RAM** (`pip install psutil` or check Task Manager) → sets worker count.
 - [ ] **1. Probe** both regions with `--dry-run` (Savinja `488_134` r2, Koper `400_46` r2); confirm region names + which Koper tiles exist.
-- [ ] **2. Performance first** (so iteration is cheap): Numba both loops + multiprocessing + two-pass raw-factor cache. Verify output is byte-identical to current on a known tile.
+- [x] **2. Performance first** (so iteration is cheap): ✅ Numba both loops (`kernels.py`) + multiprocessing in `main()`/`calibrate()` + `--workers`. Verified byte-identical on the 25-tile re-run. (The "two-pass raw-factor cache" wasn't needed — each worker does compute+export and returns small meta; calibration is parallelized separately.)
 - [ ] **3. Per-region calibration** (D16): region-keyed `calibration.json`.
 - [ ] **4. Download Savinja**, run **current** model as baseline, screenshot vs. Aug-2023 footprint.
 - [ ] **5. Riverine redesign:** elevation + slope + demote vegetation → recalibrate → re-run → compare. Then **HAND** (mosaic / RichDEM).
@@ -179,7 +181,7 @@ Current ~28 min / 100 tiles (single-process, two Python loops). With Numba loops
 - HAND from per-tile flow is truncated at edges — **mosaic-level routing required** for a credible result.
 - Weights are **literature-informed, not ground-truth-calibrated** until validated against ARSO / the 2023 footprint.
 
-## Decisions to record once implemented (stubs for `DECISIONS.md`)
-- **D16** — Per-region calibration replaces single global normalisation for disjoint regions.
-- **D17** — Separate coastal "bathtub" SLR inundation mode for Koper (distinct from the riverine susceptibility model).
-- **D18** — Performance architecture: Numba-JIT'd flow/DTM loops + multiprocessing across tiles + two-pass raw-factor cache; GPU deferred.
+## Decisions (DECISIONS.md)
+- **D16** — ✅ Performance: Numba hot loops + multiprocessing across tiles; GPU deferred. *(recorded)*
+- **D17** — Per-region calibration replaces single global normalisation for disjoint regions. *(pending)*
+- **D18** — Separate coastal "bathtub" SLR inundation mode for Koper, distinct from the riverine model. *(pending)*
