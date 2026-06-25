@@ -6,16 +6,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.725377490560774,
-          46.301844678995025
+          13.719453460933522,
+          46.295354425434596
         ]
       },
       "properties": {
         "rank": 1,
         "risk_score": 1.0,
-        "elevation_m": 1777.8,
-        "easting_3794": 401812.0,
-        "northing_3794": 129914.0,
+        "elevation_m": 1860.8,
+        "easting_3794": 401344.0,
+        "northing_3794": 129200.0,
         "tile": "401_129"
       }
     },
@@ -24,16 +24,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.723439934798837,
-          46.30031151945425
+          13.727867990446734,
+          46.297445763395885
         ]
       },
       "properties": {
         "rank": 2,
         "risk_score": 1.0,
-        "elevation_m": 1812.3,
-        "easting_3794": 401660.0,
-        "northing_3794": 129746.0,
+        "elevation_m": 1875.3,
+        "easting_3794": 401996.0,
+        "northing_3794": 129422.0,
         "tile": "401_129"
       }
     },
@@ -42,16 +42,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.717578925887942,
-          46.30114565033731
+          13.7279003160044,
+          46.298291866522725
         ]
       },
       "properties": {
         "rank": 3,
         "risk_score": 1.0,
-        "elevation_m": 1763.4,
-        "easting_3794": 401210.0,
-        "northing_3794": 129846.0,
+        "elevation_m": 1889.5,
+        "easting_3794": 402000.0,
+        "northing_3794": 129516.0,
         "tile": "401_129"
       }
     },
@@ -60,16 +60,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.71501462116413,
-          46.295340607796255
+          13.71792509007356,
+          46.30188730877995
         ]
       },
       "properties": {
         "rank": 4,
         "risk_score": 1.0,
-        "elevation_m": 1771.3,
-        "easting_3794": 401002.0,
-        "northing_3794": 129204.0,
+        "elevation_m": 1785.5,
+        "easting_3794": 401238.0,
+        "northing_3794": 129928.0,
         "tile": "401_129"
       }
     },
@@ -78,16 +78,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.723794079602017,
-          46.29959569194304
+          13.726718784219083,
+          46.30110385531165
         ]
       },
       "properties": {
         "rank": 5,
         "risk_score": 1.0,
-        "elevation_m": 1874.3,
-        "easting_3794": 401686.0,
-        "northing_3794": 129666.0,
+        "elevation_m": 1828.4,
+        "easting_3794": 401914.0,
+        "northing_3794": 129830.0,
         "tile": "401_129"
       }
     },
@@ -96,16 +96,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.723987591540372,
-          46.302440988158175
+          13.726343033966598,
+          46.298274527599645
         ]
       },
       "properties": {
         "rank": 6,
         "risk_score": 1.0,
-        "elevation_m": 1750.5,
-        "easting_3794": 401706.0,
-        "northing_3794": 129982.0,
+        "elevation_m": 1927.4,
+        "easting_3794": 401880.0,
+        "northing_3794": 129516.0,
         "tile": "401_129"
       }
     },
@@ -114,16 +114,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.72780572157563,
-          46.30237557303312
+          13.718058311246665,
+          46.300629185342245
         ]
       },
       "properties": {
         "rank": 7,
         "risk_score": 1.0,
-        "elevation_m": 1797.9,
-        "easting_3794": 402000.0,
-        "northing_3794": 129970.0,
+        "elevation_m": 1791.3,
+        "easting_3794": 401246.0,
+        "northing_3794": 129788.0,
         "tile": "401_129"
       }
     },
@@ -132,16 +132,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.71864137300505,
-          46.30234520256339
+          13.723358304244318,
+          46.300472558729474
         ]
       },
       "properties": {
         "rank": 8,
         "risk_score": 1.0,
-        "elevation_m": 1798.5,
-        "easting_3794": 401294.0,
-        "northing_3794": 129978.0,
+        "elevation_m": 1804.1,
+        "easting_3794": 401654.0,
+        "northing_3794": 129764.0,
         "tile": "401_129"
       }
     },
@@ -150,16 +150,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.726850232590778,
-          46.301033341124075
+          13.715252828322207,
+          46.2951453449368
         ]
       },
       "properties": {
         "rank": 9,
         "risk_score": 1.0,
-        "elevation_m": 1831.8,
-        "easting_3794": 401924.0,
-        "northing_3794": 129822.0,
+        "elevation_m": 1783.5,
+        "easting_3794": 401020.0,
+        "northing_3794": 129182.0,
         "tile": "401_129"
       }
     },
@@ -168,16 +168,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.723064844148624,
-          46.30081117743802
+          13.726469378035041,
+          46.29730422986759
         ]
       },
       "properties": {
         "rank": 10,
         "risk_score": 1.0,
-        "elevation_m": 1791.8,
-        "easting_3794": 401632.0,
-        "northing_3794": 129802.0,
+        "elevation_m": 1918.6,
+        "easting_3794": 401888.0,
+        "northing_3794": 129408.0,
         "tile": "401_129"
       }
     },
@@ -186,16 +186,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.72462726287759,
-          46.30172834484728
+          13.718804860505278,
+          46.29867614953753
         ]
       },
       "properties": {
         "rank": 11,
         "risk_score": 1.0,
-        "elevation_m": 1780.2,
-        "easting_3794": 401754.0,
-        "northing_3794": 129902.0,
+        "elevation_m": 1780.6,
+        "easting_3794": 401300.0,
+        "northing_3794": 129570.0,
         "tile": "401_129"
       }
     },
@@ -204,16 +204,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.719315253565366,
-          46.296828430271766
+          13.719062007378298,
+          46.29655567481039
         ]
       },
       "properties": {
         "rank": 12,
         "risk_score": 1.0,
-        "elevation_m": 1809.4,
-        "easting_3794": 401336.0,
-        "northing_3794": 129364.0,
+        "elevation_m": 1803.9,
+        "easting_3794": 401316.0,
+        "northing_3794": 129334.0,
         "tile": "401_129"
       }
     },
@@ -222,16 +222,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.720299692318438,
-          46.30137407811588
+          13.7207983765777,
+          46.29779874610123
         ]
       },
       "properties": {
         "rank": 13,
         "risk_score": 1.0,
-        "elevation_m": 1862.6,
-        "easting_3794": 401420.0,
-        "northing_3794": 129868.0,
+        "elevation_m": 1872.2,
+        "easting_3794": 401452.0,
+        "northing_3794": 129470.0,
         "tile": "401_129"
       }
     },
@@ -240,16 +240,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.716349360302885,
-          46.297101073884924
+          13.717725429390848,
+          46.29598286009011
         ]
       },
       "properties": {
         "rank": 14,
         "risk_score": 1.0,
-        "elevation_m": 1744.4,
-        "easting_3794": 401108.0,
-        "northing_3794": 129398.0,
+        "elevation_m": 1811.8,
+        "easting_3794": 401212.0,
+        "northing_3794": 129272.0,
         "tile": "401_129"
       }
     },
@@ -258,16 +258,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.726627188794604,
-          46.29721601502595
+          13.72569564607143,
+          46.30156031327721
         ]
       },
       "properties": {
         "rank": 15,
         "risk_score": 1.0,
-        "elevation_m": 1915.7,
-        "easting_3794": 401900.0,
-        "northing_3794": 129398.0,
+        "elevation_m": 1799.5,
+        "easting_3794": 401836.0,
+        "northing_3794": 129882.0,
         "tile": "401_129"
       }
     },
@@ -276,16 +276,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.718613017268849,
-          46.29354555291472
+          13.718682706869338,
+          46.297235217028586
         ]
       },
       "properties": {
         "rank": 16,
         "risk_score": 1.0,
-        "elevation_m": 1862.1,
-        "easting_3794": 401276.0,
-        "northing_3794": 129000.0,
+        "elevation_m": 1784.3,
+        "easting_3794": 401288.0,
+        "northing_3794": 129410.0,
         "tile": "401_129"
       }
     },
@@ -294,16 +294,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.718673827406095,
-          46.29872866461699
+          13.72391139378886,
+          46.302368159542006
         ]
       },
       "properties": {
         "rank": 17,
         "risk_score": 1.0,
-        "elevation_m": 1777.7,
-        "easting_3794": 401290.0,
-        "northing_3794": 129576.0,
+        "elevation_m": 1753.2,
+        "easting_3794": 401700.0,
+        "northing_3794": 129974.0,
         "tile": "401_129"
       }
     },
@@ -312,16 +312,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.715356508178163,
-          46.29626217222858
+          13.723793661567672,
+          46.29961368181348
         ]
       },
       "properties": {
         "rank": 18,
         "risk_score": 1.0,
-        "elevation_m": 1745.1,
-        "easting_3794": 401030.0,
-        "northing_3794": 129306.0,
+        "elevation_m": 1873.9,
+        "easting_3794": 401686.0,
+        "northing_3794": 129668.0,
         "tile": "401_129"
       }
     },
@@ -330,16 +330,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.716622977060325,
-          46.29872365481805
+          13.719989436046598,
+          46.30243228211761
         ]
       },
       "properties": {
         "rank": 19,
         "risk_score": 1.0,
-        "elevation_m": 1740.1,
-        "easting_3794": 401132.0,
-        "northing_3794": 129578.0,
+        "elevation_m": 1803.9,
+        "easting_3794": 401398.0,
+        "northing_3794": 129986.0,
         "tile": "401_129"
       }
     },
@@ -348,16 +348,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.718294307986255,
-          46.29607921216572
+          13.720092882138097,
+          46.30133577388619
         ]
       },
       "properties": {
         "rank": 20,
         "risk_score": 1.0,
-        "elevation_m": 1811.6,
-        "easting_3794": 401256.0,
-        "northing_3794": 129282.0,
+        "elevation_m": 1863.8,
+        "easting_3794": 401404.0,
+        "northing_3794": 129864.0,
         "tile": "401_129"
       }
     }

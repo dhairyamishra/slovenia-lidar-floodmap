@@ -209,9 +209,17 @@ def process_tile(laz_path: Path) -> dict:
     valid       = ~np.isnan(veg_ndvi)
     np.add.at(ns,     (yv[valid], xv[valid]), veg_ndvi[valid])
     np.add.at(nc_arr, (yv[valid], xv[valid]), 1)
+    # Fill cells with no veg returns with the tile median before smoothing
+    # so gaussian_filter doesn't spread nan. Cells are masked for display later.
+    ndvi_fill   = float(np.nanmedian(ns[nc_arr > 0] / nc_arr[nc_arr > 0])) \
+                  if (nc_arr > 0).any() else 0.0
     mn_ndvi     = gaussian_filter(
-        np.where(nc_arr > 0, ns / nc_arr, 0.5), sigma=1.5)
-    ndvi_risk   = 1.0 - np.clip(mn_ndvi, 0, 1)
+        np.where(nc_arr > 0, ns / nc_arr, ndvi_fill), sigma=1.5)
+    # Risk: low NDVI = stressed/sparse canopy = higher flood risk.
+    # Use norm01 so the full relative range drives the factor — the raw
+    # NDVI values in this dataset are radiometrically compressed near 0,
+    # so clipping to [0,1] would collapse everything to ~1.0 (useless).
+    ndvi_risk   = 1.0 - norm01(mn_ndvi)
     print("ok")
 
     # ── Factor 4: terrain roughness ───────────────────────────────────────────
@@ -243,7 +251,13 @@ def process_tile(laz_path: Path) -> dict:
     print("  Exporting PNGs...", end=" ", flush=True)
 
     colormap_to_rgba(susc_n, "RdYlBu_r").save(out_dir / "susceptibility.png")
-    colormap_to_rgba(mn_ndvi, "RdYlGn", vmin=0, vmax=0.85,
+    # Stretch display to p5–p95 of veg cells so forest/bare contrast is visible.
+    # Sensor NIR is radiometrically compressed; fixed vmin=0/vmax=0.85 placed
+    # healthy forest at only 9% of the scale, making everything appear red.
+    veg_cells   = mn_ndvi[nc_arr > 0]
+    ndvi_lo     = float(np.percentile(veg_cells, 5))
+    ndvi_hi     = float(np.percentile(veg_cells, 95))
+    colormap_to_rgba(mn_ndvi, "RdYlGn", vmin=ndvi_lo, vmax=ndvi_hi,
                      nodata_mask=(nc_arr == 0)).save(out_dir / "ndvi.png")
 
     cls_grid  = np.zeros((rows, cols), dtype=np.uint8)
