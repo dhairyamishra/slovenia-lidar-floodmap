@@ -328,14 +328,29 @@ def main(tile_ids: list[str] | None = None):
         print(f"  {p.stem}")
 
     # Process tiles
-    tile_metas     = []
+    new_metas      = []
     all_candidates = []
     total_t0       = time.time()
 
     for laz_path in laz_files:
         result = process_tile(laz_path)
-        tile_metas.append(result["meta"])
+        new_metas.append(result["meta"])
         all_candidates.extend(result["candidates"])
+
+    # Merge with existing manifest so partial runs don't lose old tiles
+    manifest_path = WEBDATA / "manifest.json"
+    existing_tiles: dict[str, dict] = {}
+    if manifest_path.exists():
+        try:
+            old = json.loads(manifest_path.read_text(encoding="utf-8"))
+            existing_tiles = {t["name"]: t for t in old.get("tiles", [])}
+        except Exception:
+            pass
+
+    # New tiles overwrite old entries with the same name; others are kept
+    for meta in new_metas:
+        existing_tiles[meta["name"]] = meta
+    tile_metas = sorted(existing_tiles.values(), key=lambda t: t["name"])
 
     # Global risk ranking — sort by score, de-duplicate across tile boundaries
     all_candidates.sort(key=lambda c: c["score"], reverse=True)
@@ -370,7 +385,7 @@ def main(tile_ids: list[str] | None = None):
         json.dumps({"type": "FeatureCollection", "features": features}, indent=2))
     print(f"\nRisk points: {len(features)} globally-ranked points written.")
 
-    # Union bounds (for map fitBounds)
+    # Union bounds across ALL tiles in the merged manifest
     union = {
         "west":   min(m["bounds"]["west"]  for m in tile_metas),
         "east":   max(m["bounds"]["east"]  for m in tile_metas),
@@ -380,14 +395,15 @@ def main(tile_ids: list[str] | None = None):
     union["center"] = [(union["west"] + union["east"]) / 2,
                        (union["south"] + union["north"]) / 2]
 
-    # Write manifest
+    # Write merged manifest
     manifest = {
         "generated":    datetime.now(timezone.utc).isoformat(),
         "tile_count":   len(tile_metas),
         "union_bounds": union,
         "tiles":        tile_metas,
     }
-    (WEBDATA / "manifest.json").write_text(json.dumps(manifest, indent=2))
+    (WEBDATA / "manifest.json").write_text(
+        json.dumps(manifest, indent=2), encoding="utf-8")
 
     total_elapsed = time.time() - total_t0
     print(f"\nmanifest.json — {len(tile_metas)} tile(s).")
