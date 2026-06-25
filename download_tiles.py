@@ -90,15 +90,22 @@ HEADERS = {"User-Agent": "CLSS-Downloader/1.0"}
 
 
 def _probe(url: str, timeout: int = 8) -> int:
-    """Return HTTP status for a Range: bytes=0-1 request (fast existence check)."""
+    """Return HTTP status for a Range: bytes=0-1 request (fast existence check).
+
+    Retries once with a longer timeout on a network hiccup. A read timeout is a
+    raw TimeoutError (not wrapped in URLError), so it must be caught explicitly —
+    otherwise one slow region probe aborts the whole grid run.
+    """
     req = Request(url, headers={**HEADERS, "Range": "bytes=0-1"})
-    try:
-        with urlopen(req, timeout=timeout) as r:
-            return r.status          # 200 or 206
-    except HTTPError as ex:
-        return ex.code
-    except URLError:
-        return 0                     # network error
+    for attempt in range(2):
+        try:
+            with urlopen(req, timeout=timeout * (attempt + 1)) as r:
+                return r.status          # 200 or 206
+        except HTTPError as ex:
+            return ex.code              # definitive answer (e.g. 404) — don't retry
+        except (URLError, TimeoutError, OSError):
+            continue                     # transient — retry once, then give up
+    return 0                              # unreachable after retries
 
 
 def find_region(e: int, n: int, cache: dict, prefer: str | None = None) -> str | None:
