@@ -15,8 +15,9 @@ Four-factor susceptibility model rendered as MapLibre GL image overlays on a dar
 ## Data
 - **Source**: Flycom CLSS S3 CDN — `https://assets.flycom.si/clss/raw/<region>/zls/gkot/GKOT_E_N.laz`
 - **CRS**: EPSG:3794 (Slovene national grid), tile coords = km (e.g. `460_100` = easting 460km, northing 100km)
-- **Current dataset**: 81 tiles — contiguous 9×9 km² block covering Ljubljana (456–464 E × 96–104 N)
-- **LAZ files**: stored in `data/` (gitignored), ~170–200 MB each, ~15 GB total on disk
+- **Current dataset**: **146 tiles across 3 regions** — 100 Ljubljana (455–464 E × 96–105 N, `05-ljubljana`), 25 Savinja (486–490 E × 132–136 N, `08-kamnik`, alpine riverine), 21 Koper (398–402 E × 44–48 N, `01-koper`, coastal). Each region has its own calibration (D17). Koper is a **riverine baseline** only — coastal bathtub SLR mode pending (D19).
+- **LAZ files**: stored in `data/` (gitignored), ~170–800 MB each (alpine/coastal tiles are denser), ~50 GB total on disk
+- **Coastal no-data**: cells with no ground return (sea) render transparent and are excluded from calibration + risk candidates (D18). Tile `400_48` is entirely sea (0 ground points) → fully transparent PNG.
 - **Scattered outliers removed**: 10 tiles outside the Ljubljana block were deleted (D09)
 
 ## Key scripts
@@ -47,22 +48,30 @@ Four-factor susceptibility model rendered as MapLibre GL image overlays on a dar
 - `web/data/manifest.json` — tile registry consumed by web app
 - `web/data/risk_points.geojson` — top-20 globally ranked flood risk points
 
-## Susceptibility model weights
-- TWI (topographic wetness index): 40%
-- 3D canopy interception: 25%
-- NDVI health: 15%
-- Plan curvature: 15%
-- Terrain roughness: 5%
+## Susceptibility model weights (D17 redesign)
+- TWI (topographic wetness index): 30%
+- Elevation: 20% (inverted — low elevation → high risk)
+- Slope: 20% (inverted — flat terrain → high risk)
+- Plan curvature: 10%
+- 3D canopy interception: 10% (inverted)
+- NDVI health: 10% (inverted)
+- Terrain roughness: dropped (was 5%, near-zero signal)
 
-## Global normalisation (calibration.json)
-Each factor is normalised against a FIXED dataset-wide [lo, hi] range (p2–p98),
-not re-curved per tile — so risk scores are comparable across tiles. The ranges
-live in `calibration.json` (committed), derived once by `python pipeline.py --calibrate`.
-`calibration.json` also stores a dataset fingerprint (tile name + file size map).
-Normal pipeline runs compare the current `data/` against it and print a loud
-warning if tiles were added, removed, or re-downloaded — prompting a recalibration.
-If `calibration.json` is missing, the pipeline falls back to DEFAULT_CONSTANTS
-(placeholders) and warns. See DECISIONS.md D15.
+Weights + factor wiring live in `SUSC_WEIGHTS` / `FACTOR_KEYS` in `pipeline.py`. The
+pre-D17 weights (TWI 40 / canopy 25 / NDVI 15 / curv 15 / rough 5) produced inverted
+heatmaps on alpine terrain (slopes red, valley floors blue) — see DECISIONS.md D17.
+
+## Per-region normalisation (calibration.json, D17)
+Each factor is normalised against a FIXED [lo, hi] range (p2–p98) derived **per CDN
+region**, not globally — Ljubljana basin (285–417 m), alpine Savinja (402–1269 m), and
+coastal Koper (~0 m) have disjoint elevation regimes, so a single ruler is meaningless.
+`calibration.json` is `model_version: 2` with a `regions` dict keyed by region slug, each
+holding its own `constants` + `display`. Derive with `python pipeline.py --calibrate`
+(all regions) or `--calibrate --region 01-koper` (one region, merges + preserves others).
+Each tile's region comes from `.tile_region_cache.json`. Calibration samples only
+ground-covered, finite cells (D18) so sea / no-data doesn't skew ranges. The file also
+stores a dataset fingerprint (tile name + size); normal runs warn if `data/` changed.
+Missing/region-less → DEFAULT_CONSTANTS fallback with a warning. See DECISIONS.md D15, D17, D18.
 
 ## Critical NDVI fix (applied)
 The CLSS sensor NIR channel is radiometrically compressed — vegetation NDVI median ~0.09

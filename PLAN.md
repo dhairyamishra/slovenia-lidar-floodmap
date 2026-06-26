@@ -183,5 +183,6 @@ Current ~28 min / 100 tiles (single-process, two Python loops). With Numba loops
 
 ## Decisions (DECISIONS.md)
 - **D16** — ✅ Performance: Numba hot loops + multiprocessing across tiles; GPU deferred. *(recorded)*
-- **D17** — Per-region calibration replaces single global normalisation for disjoint regions. *(pending)*
-- **D18** — Separate coastal "bathtub" SLR inundation mode for Koper, distinct from the riverine model. *(pending)*
+- **D17** — ✅ Per-region calibration + model redesign (elevation/slope factors). Flipped Savinja valley to #1. *(recorded)*
+- **D18** — ✅ Ground-coverage no-data mask: sea / no-ground cells render transparent, are excluded from calibration + candidates. Koper riverine **baseline** processed (21 tiles, region 01-koper). *(recorded)*
+- **D19** — Separate coastal "bathtub" SLR inundation mode for Koper, distinct from the riverine model. *(pending)*

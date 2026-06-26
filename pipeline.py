@@ -199,6 +199,11 @@ def compute_factors(laz_path: Path) -> dict:
     xg, yg, zg = xi[ground], yi[ground], z[ground]
     # lowest ground-return z per cell (NaN where none) — Numba grouped-min
     dtm = kernels.dtm_min_grid(rows, cols, yg, xg, zg)
+    # Cells with a real ground return BEFORE gap-fill. On inland tiles this is
+    # ~everything; on coastal tiles the sea has none. Used downstream to confine
+    # calibration + scoring to actual terrain and render no-data (sea) as
+    # transparent instead of extrapolating a fake elevation over water (D18).
+    ground_cov = ~np.isnan(dtm)
     idx = distance_transform_edt(np.isnan(dtm),
                                   return_distances=False, return_indices=True)
     dtm = gaussian_filter(dtm[tuple(idx)], sigma=1.5)
@@ -269,7 +274,7 @@ def compute_factors(laz_path: Path) -> dict:
     return {
         "tile_name": tile_name, "out_dir": out_dir, "source": laz_path.name,
         "rows": rows, "cols": cols, "x0": x0, "y0": y0, "t0": t0,
-        "bounds": bounds, "dtm": dtm,
+        "bounds": bounds, "dtm": dtm, "ground_cov": ground_cov,
         # raw (un-normalised) factors ("dtm" above doubles as the elevation factor):
         "twi": twi, "interc": interc, "mn_ndvi": mn_ndvi,
         "plan_curv": plan_curv, "rough": rough, "slope": slope_rad,
@@ -295,6 +300,11 @@ def export_tile(f: dict, const: dict, display: dict) -> dict:
     # ── Composite susceptibility (PER-REGION fixed-range normalisation, D17) ──
     susc     = composite_susc(lambda nm: norm_fixed(f[FACTOR_KEYS[nm]], *const[nm]))
     susc     = gaussian_filter(susc, sigma=1.0)
+    # Confine scoring + display to cells with real ground returns. Sea / no-data
+    # cells (coastal tiles) become NaN -> transparent in the PNG and excluded
+    # from candidates, rather than painting extrapolated terrain over water.
+    ground_cov = f["ground_cov"]
+    susc       = np.where(ground_cov, susc, np.nan)
     # Display also uses a fixed range so heatmap colours mean the same thing
     # across tiles. susc itself is now a global score, so candidates use it raw.
     susc_disp = norm_fixed(susc, *display["susc"])
@@ -302,13 +312,17 @@ def export_tile(f: dict, const: dict, display: dict) -> dict:
     # ── Export PNGs ───────────────────────────────────────────────────────────
     print("  Exporting PNGs...", end=" ", flush=True)
 
-    colormap_to_rgba(susc_disp, "RdYlBu_r").save(out_dir / "susceptibility.png")
+    colormap_to_rgba(susc_disp, "RdYlBu_r",
+                     nodata_mask=~ground_cov).save(out_dir / "susceptibility.png")
     # NDVI display keeps its per-tile p5–p95 veg-cell stretch (D08): this layer
     # is a forest-health visualisation, not a cross-tile risk score.
     mn_ndvi     = f["mn_ndvi"]
     veg_cells   = mn_ndvi[nc_arr > 0]
-    ndvi_lo     = float(np.percentile(veg_cells, 5))
-    ndvi_hi     = float(np.percentile(veg_cells, 95))
+    if veg_cells.size:
+        ndvi_lo = float(np.percentile(veg_cells, 5))
+        ndvi_hi = float(np.percentile(veg_cells, 95))
+    else:                       # no vegetation returns (e.g. open-sea tile)
+        ndvi_lo, ndvi_hi = 0.0, 0.15
     colormap_to_rgba(mn_ndvi, "RdYlGn", vmin=ndvi_lo, vmax=ndvi_hi,
                      nodata_mask=(nc_arr == 0)).save(out_dir / "ndvi.png")
 
@@ -333,6 +347,8 @@ def export_tile(f: dict, const: dict, display: dict) -> dict:
     candidates = []
     for flat_idx in order:
         r_i, c_i = flat_idx // cols, flat_idx % cols
+        if not np.isfinite(susc[r_i, c_i]):
+            break               # NaN (sea / no-data) cells sort to the end
         if not used[r_i, c_i]:
             ex  = float(x0 + c_i * GRID_RES)
             ey  = float(y0 + r_i * GRID_RES)
@@ -392,6 +408,15 @@ def _calib_sample_one(args):
     laz_path, sample_frac, seed = args
     f    = compute_factors(laz_path)
     flat = [f[FACTOR_KEYS[nm]].ravel() for nm in FACTOR_COLS]
+    # Calibrate on real terrain only: cells with a ground return AND finite
+    # factors. Excludes coastal no-data (sea) so ranges aren't skewed by
+    # gap-fill-extrapolated water; all-sea tiles contribute nothing.
+    valid = f["ground_cov"].ravel().copy()
+    for a in flat:
+        valid &= np.isfinite(a)
+    if not valid.any():
+        return np.empty((0, len(FACTOR_COLS)), dtype=np.float32)
+    flat = [a[valid] for a in flat]
     n    = flat[0].size
     k    = max(1, int(n * sample_frac))
     idx  = np.random.default_rng(seed).choice(n, size=k, replace=False)
@@ -565,20 +590,25 @@ def calibrate(sample_frac: float = 0.05, workers: int | None = None,
         else:
             with ProcessPoolExecutor(max_workers=w) as ex:
                 samples = list(ex.map(_calib_sample_one, tasks))
+        samples = [s for s in samples if s.shape[0] > 0]
+        if not samples:
+            print(f"  region '{r}': no ground-covered cells — skipped.")
+            continue
         pooled = np.concatenate(samples, axis=0)
 
+        # nan-safe: stray no-data cells must not collapse a range to NaN.
         constants = {}
         for nm in FACTOR_COLS:
-            lo = float(np.percentile(pooled[:, colidx[nm]], lo_p))
-            hi = float(np.percentile(pooled[:, colidx[nm]], hi_p))
+            lo = float(np.nanpercentile(pooled[:, colidx[nm]], lo_p))
+            hi = float(np.nanpercentile(pooled[:, colidx[nm]], hi_p))
             constants[nm] = [round(lo, 4), round(hi, 4)]
 
         def nf_pooled(nm):
             lo, hi = constants[nm]
             return np.clip((pooled[:, colidx[nm]] - lo) / max(hi - lo, 1e-6), 0, 1)
         susc_s  = composite_susc(nf_pooled)
-        display = {"susc": [round(float(np.percentile(susc_s, 2)), 4),
-                            round(float(np.percentile(susc_s, 98)), 4)]}
+        display = {"susc": [round(float(np.nanpercentile(susc_s, 2)), 4),
+                            round(float(np.nanpercentile(susc_s, 98)), 4)]}
 
         regions_out[r] = {"constants": constants, "display": display,
                           "tile_count": len(rfiles)}
