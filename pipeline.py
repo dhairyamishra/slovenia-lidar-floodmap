@@ -41,8 +41,17 @@ TILES   = WEBDATA / "tiles"
 GRID_RES = 2.0    # m — horizontal grid cell
 VOXEL_H  = 2.0    # m — vertical voxel slice
 OUT_SIZE = 1000   # pixels per exported PNG side
+# A no-ground cell counts as no-data (transparent, excluded from calib/candidates)
+# only if it is farther than this many cells from any ground return. Within it,
+# gap-fill is well-constrained — keeps forest/building holes filled, masks only
+# genuine large gaps (open water / sea). Tuned on real tiles (D19).
+NODATA_FILL_CELLS = 8   # 16 m at 2 m resolution
 TOP_N    = 20     # globally-ranked risk points to emit
 SEP_M    = 50     # minimum separation between risk points (metres)
+REGION_CAP = 7    # max risk points from any one CDN region. Scores are per-region
+                  # normalised (D17), so the global top-N otherwise floods with the
+                  # region holding the largest maximally-low-flat patch (e.g. Koper
+                  # port). Capping de-clusters so every region's worst spots show.
 GLOBAL_CANDS_N = 500  # max entries kept in the global candidates file
 
 # Global normalisation constants (see DECISIONS.md D15). Each factor is scaled
@@ -52,8 +61,15 @@ GLOBAL_CANDS_N = 500  # max entries kept in the global candidates file
 # calibration.json exists yet — run --calibrate for real values.
 CALIB_PATH = Path("calibration.json")
 CALIB_PCTL = (2, 98)   # percentiles used to derive each factor's [lo, hi]
+# Contributing-area threshold (m²) that defines the channel network for HAND.
+# Tuned on real tiles (D19): ~0% streams on flat floodplains (HAND falls back to
+# height-above-outlet, correctly ~uniformly low), 0.3–0.7% on valley/alpine tiles
+# (sane drainage density). Per-tile accumulation is edge-truncated, so this is
+# lower than a regional-DEM threshold would be.
+STREAM_AREA_M2 = 10_000.0
 DEFAULT_CONSTANTS = {
     "twi":    [4.0, 15.0],
+    "hand":   [0.0, 60.0],
     "elev":   [200.0, 1500.0],
     "slope":  [0.0, 1.0],
     "interc": [0.0, 5.0],
@@ -63,24 +79,26 @@ DEFAULT_CONSTANTS = {
 }
 DEFAULT_DISPLAY = {"susc": [0.2, 0.8]}
 
-# Susceptibility model (D17 redesign — interim, pre-HAND). Each factor is
-# normalised against PER-REGION fixed ranges, then combined with these weights.
-# `invert=True` means risk RISES as the factor falls — low elevation, flat slope,
-# and sparse canopy/vegetation are the risky end. Roughness is dropped (weight 0).
-# Weights sum to 1.0. HAND will be added next, reclaiming weight from TWI/veg.
-FACTOR_COLS = ["twi", "elev", "slope", "interc", "ndvi", "curv", "rough"]
+# Susceptibility model (D19 — HAND added). Each factor is normalised against
+# PER-REGION fixed ranges, then combined with these weights. `invert=True` means
+# risk RISES as the factor falls — low HAND (near the channel), low elevation,
+# flat slope, and sparse canopy/vegetation are the risky ends. Roughness dropped.
+# Weights match the flood-literature consensus (HANDOFF.md) and sum to 1.0.
+# Land-cover/imperviousness (~5%) is still pending — would reclaim veg weight.
+FACTOR_COLS = ["twi", "hand", "elev", "slope", "interc", "ndvi", "curv", "rough"]
 FACTOR_KEYS = {  # model-factor name -> compute_factors() output key
-    "twi": "twi", "elev": "dtm", "slope": "slope", "interc": "interc",
-    "ndvi": "mn_ndvi", "curv": "plan_curv", "rough": "rough",
+    "twi": "twi", "hand": "hand", "elev": "dtm", "slope": "slope",
+    "interc": "interc", "ndvi": "mn_ndvi", "curv": "plan_curv", "rough": "rough",
 }
 SUSC_WEIGHTS = [  # (factor, weight, invert)
-    ("twi",    0.30, False),  # high topographic wetness
-    ("elev",   0.20, True),   # low elevation  -> high risk
-    ("slope",  0.20, True),   # flat terrain   -> high risk
+    ("hand",   0.25, True),   # low height-above-drainage -> high risk (#1 factor)
+    ("twi",    0.20, False),  # high topographic wetness
+    ("elev",   0.15, True),   # low elevation  -> high risk
+    ("slope",  0.15, True),   # flat terrain   -> high risk
     ("curv",   0.10, False),  # concave plan curvature
-    ("interc", 0.10, True),   # less canopy interception
-    ("ndvi",   0.10, True),   # sparser vegetation
-]   # roughness intentionally weight 0
+    ("interc", 0.075, True),  # less canopy interception
+    ("ndvi",   0.075, True),  # sparser vegetation
+]   # roughness intentionally weight 0; sums to 1.0
 
 
 def composite_susc(norm_of):
@@ -199,13 +217,16 @@ def compute_factors(laz_path: Path) -> dict:
     xg, yg, zg = xi[ground], yi[ground], z[ground]
     # lowest ground-return z per cell (NaN where none) — Numba grouped-min
     dtm = kernels.dtm_min_grid(rows, cols, yg, xg, zg)
-    # Cells with a real ground return BEFORE gap-fill. On inland tiles this is
-    # ~everything; on coastal tiles the sea has none. Used downstream to confine
-    # calibration + scoring to actual terrain and render no-data (sea) as
-    # transparent instead of extrapolating a fake elevation over water (D18).
-    ground_cov = ~np.isnan(dtm)
-    idx = distance_transform_edt(np.isnan(dtm),
-                                  return_distances=False, return_indices=True)
+    # Gap-fill every empty cell from its nearest ground return, and record how far
+    # that fill reached. A cell counts as having data if it had a ground return or
+    # sits within NODATA_FILL_CELLS of one (forest/building holes — gap-fill is
+    # well-constrained there). Cells far from any ground return (open water / sea)
+    # stay no-data: rendered transparent and kept out of calibration + candidates
+    # (D18 mask, refined D19 to a distance threshold so dense canopy / urban tiles
+    # don't get salt-and-pepper holes).
+    dist, idx = distance_transform_edt(np.isnan(dtm),
+                                       return_distances=True, return_indices=True)
+    ground_cov = dist <= NODATA_FILL_CELLS
     dtm = gaussian_filter(dtm[tuple(idx)], sigma=1.5)
     print("ok")
 
@@ -216,6 +237,15 @@ def compute_factors(laz_path: Path) -> dict:
     accum      = kernels.d8_accumulate(dtm, GRID_RES)
     twi        = gaussian_filter(
         np.log(accum * GRID_RES**2 / np.tan(slope_rad)), sigma=1.0)
+    print("ok")
+
+    # ── Factor 2: HAND (Height Above Nearest Drainage) ────────────────────────
+    # Per-tile cut (D19): stream net from the D8 accumulation above, then each
+    # cell's height above the channel it drains to. Flow is routed within the
+    # tile, so paths crossing a tile edge terminate there (known approximation).
+    print("  HAND...", end=" ", flush=True)
+    hand = gaussian_filter(
+        kernels.hand_grid(dtm, accum, GRID_RES, STREAM_AREA_M2), sigma=1.0)
     print("ok")
 
     # ── Factor 2: 3D canopy interception ─────────────────────────────────────
@@ -276,7 +306,7 @@ def compute_factors(laz_path: Path) -> dict:
         "rows": rows, "cols": cols, "x0": x0, "y0": y0, "t0": t0,
         "bounds": bounds, "dtm": dtm, "ground_cov": ground_cov,
         # raw (un-normalised) factors ("dtm" above doubles as the elevation factor):
-        "twi": twi, "interc": interc, "mn_ndvi": mn_ndvi,
+        "twi": twi, "hand": hand, "interc": interc, "mn_ndvi": mn_ndvi,
         "plan_curv": plan_curv, "rough": rough, "slope": slope_rad,
         # display / classification helpers:
         "nc_arr": nc_arr, "cls": cls, "xi": xi, "yi": yi,
@@ -720,10 +750,16 @@ def main(tile_ids: list[str] | None = None, workers: int | None = None):
         json.dumps(all_candidates, indent=2), encoding="utf-8")
     print(f"Global candidates: {len(all_candidates)} entries saved.")
 
-    # Global risk ranking — sort by score, de-duplicate across tile boundaries
+    # Global risk ranking — sort by score, de-duplicate across tile boundaries,
+    # and cap per CDN region (REGION_CAP) so per-region-normalised scores don't
+    # let one region's large flat-low patch monopolise the global top-N.
     all_candidates.sort(key=lambda c: c["score"], reverse=True)
     selected = []
+    region_counts: dict[str, int] = {}
     for cand in all_candidates:
+        region = tile_region(cand["tile"], cache)
+        if region_counts.get(region, 0) >= REGION_CAP:
+            continue
         too_close = any(
             (cand["easting_3794"]  - sel["easting_3794"])**2 +
             (cand["northing_3794"] - sel["northing_3794"])**2 < SEP_M**2
@@ -731,6 +767,7 @@ def main(tile_ids: list[str] | None = None, workers: int | None = None):
         )
         if not too_close:
             selected.append(cand)
+            region_counts[region] = region_counts.get(region, 0) + 1
         if len(selected) >= TOP_N:
             break
 

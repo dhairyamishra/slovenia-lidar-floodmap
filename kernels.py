@@ -88,3 +88,93 @@ def d8_accumulate(dem, res):
     dem = np.ascontiguousarray(dem, dtype=np.float64)
     order = np.argsort(-dem.ravel())
     return _d8_core(dem, np.float64(res), order)
+
+
+# ── HAND (Height Above Nearest Drainage) ──────────────────────────────────────
+# HAND = a cell's elevation minus the elevation of the stream cell it drains to,
+# following the D8 steepest-descent flow path. The #1 research-backed flood
+# factor (proximity/height above the channel network). This is the PER-TILE cut:
+# flow is routed within the tile, so paths leaving a tile edge terminate there
+# (a known approximation — a true HAND needs whole-mosaic routing).
+
+@njit(cache=True)
+def _d8_receivers(dem, res):
+    """For each cell, the flat index of its steepest-descent neighbour, or -1
+    if none is lower (pit / outlet). Identical neighbour order + strict-`>`
+    tie-break to _d8_core, so receivers are consistent with the accumulation."""
+    r, c = dem.shape
+    recv = np.full(r * c, -1, dtype=np.int64)
+    sq2 = res * _SQRT2
+    drs = np.array([-1, -1, -1, 0, 0, 1, 1, 1], dtype=np.int64)
+    dcs = np.array([-1, 0, 1, -1, 1, -1, 0, 1], dtype=np.int64)
+    for row in range(r):
+        for col in range(c):
+            bs = 0.0
+            brc = -1
+            for j in range(8):
+                dr = drs[j]
+                dc = dcs[j]
+                nr = row + dr
+                nc = col + dc
+                if 0 <= nr < r and 0 <= nc < c:
+                    d = sq2 if (dr != 0 and dc != 0) else res
+                    s = (dem[row, col] - dem[nr, nc]) / d
+                    if s > bs:
+                        bs = s
+                        brc = nr * c + nc
+            recv[row * c + col] = brc
+    return recv
+
+
+@njit(cache=True)
+def _hand_core(dem_flat, recv, is_stream):
+    """Walk each cell downstream along `recv` to the first stream cell and record
+    that stream's elevation as the cell's drainage base. Path memoisation makes
+    it O(n) amortised. Pits/outlets that never reach a stream drain to
+    themselves (HAND 0 there)."""
+    n = dem_flat.size
+    drain_z = np.full(n, np.nan)
+    stack = np.empty(n, dtype=np.int64)
+    for start in range(n):
+        if not np.isnan(drain_z[start]):
+            continue
+        sp = 0
+        cur = start
+        while np.isnan(drain_z[cur]):
+            if is_stream[cur]:
+                drain_z[cur] = dem_flat[cur]
+                break
+            rcv = recv[cur]
+            if rcv < 0:                       # interior pit / tile-edge outlet
+                drain_z[cur] = dem_flat[cur]
+                break
+            stack[sp] = cur
+            sp += 1
+            cur = rcv
+        dz = drain_z[cur]
+        for k in range(sp):
+            drain_z[stack[k]] = dz
+    hand = dem_flat - drain_z
+    for i in range(n):                        # clamp tiny negatives from ties
+        if hand[i] < 0.0:
+            hand[i] = 0.0
+    return hand
+
+
+def hand_grid(dem, accum, res, stream_area_m2):
+    """
+    Height Above Nearest Drainage for every cell (metres).
+
+    dem            : 2-D gap-filled DTM (same array fed to d8_accumulate)
+    accum          : 2-D D8 upslope-cell-count grid from d8_accumulate(dem, res)
+    res            : cell size (m)
+    stream_area_m2 : contributing-area threshold defining the channel network;
+                     a cell is "stream" when accum * res**2 >= this.
+    """
+    dem = np.ascontiguousarray(dem, dtype=np.float64)
+    rows, cols = dem.shape
+    recv = _d8_receivers(dem, np.float64(res))
+    thresh_cells = stream_area_m2 / (res * res)
+    is_stream = (accum.ravel() >= thresh_cells)
+    hand = _hand_core(dem.ravel(), recv, is_stream)
+    return hand.reshape(rows, cols)

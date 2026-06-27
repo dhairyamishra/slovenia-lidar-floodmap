@@ -74,21 +74,23 @@ Consensus across AHP / frequency-ratio / ML feature-importance studies — the d
 
 **Our model vs consensus:** we over-weight vegetation (~45% vs ~5–15%) and **omit the strongest research-backed factors entirely** — no HAND/distance-to-drainage, no standalone elevation, no standalone slope. We have no rainfall/soil (data we lack). What we get right: TWI is a legit top factor; concave plan curvature is directionally correct.
 
-### Proposed iterative re-weighting (DISCUSSED, NOT IMPLEMENTED)
+### Re-weighting — IMPLEMENTED (D17 elevation/slope, D19 HAND)
 
-| Factor | Current | Proposed | Feasibility |
-|---|---|---|---|
-| **HAND** | — | **25%** | New. From DTM + existing D8 flow accumulation (threshold → stream net → height above nearest stream). Highest-ROI add. ⚠ per-tile flow accumulation is truncated at tile edges; a proper HAND wants whole-mosaic accumulation (bigger change). Per-tile approx is a fine first cut. |
-| TWI | 40% | **20%** | already computed |
-| **Elevation** (low) | — | **15%** | New. Free from DTM (normalise, low=high). |
-| **Slope** (flat) | — | **15%** | New. Already computed for TWI. |
-| Plan curvature | 15% | **10%** | keep |
-| **Land cover / imperviousness** | — | **5%** | New. From LiDAR classification (buildings/bare) — a real LULC factor replacing the vegetation backdoor. |
-| NDVI health | 15% | **5%** | demote |
-| Canopy interception | 25% | **5%** | demote |
-| Roughness | 5% | **0%** | drop (weak proxy) |
+| Factor | Pre-D17 | Target | **Shipped (D19)** | Status |
+|---|---|---|---|---|
+| **HAND** | — | **25%** | **25%** | ✅ D19. Per-tile cut (`kernels.hand_grid`, `STREAM_AREA_M2=10k`). ⚠ edge-truncated — whole-mosaic routing is the upgrade. |
+| TWI | 40% | 20% | **20%** | ✅ |
+| **Elevation** (low) | — | 15% | **15%** | ✅ D17 |
+| **Slope** (flat) | — | 15% | **15%** | ✅ D17 |
+| Plan curvature | 15% | 10% | **10%** | ✅ |
+| **Land cover / imperviousness** | — | 5% | **0%** | ❌ still pending — veg absorbs it |
+| NDVI health | 15% | 5% | **7.5%** | ✅ demoted (holds the unbuilt land-cover 5%) |
+| Canopy interception | 25% | 5% | **7.5%** | ✅ demoted |
+| Roughness | 5% | 0% | **0%** | ✅ dropped |
 
-Rebalances from "45% vegetation" → "~75% hydro/topographic, ~15% vegetation, ~5% land cover," pulling risk toward genuine low-lying near-channel terrain (Sava corridor, the marsh) instead of the urban footprint.
+Rebalanced from "45% vegetation" → ~80% hydro/topographic, ~15% vegetation. HAND pulls risk
+onto genuine near-channel terrain. Remaining gap vs. the research target: **land-cover/
+imperviousness (~5%)** from the LiDAR classification, still unbuilt. See DECISIONS.md D19.
 
 **Recommended starting point:** add **elevation + slope** and demote the vegetation cluster first (trivial — both already computed, ~15 min + a recalibrate + run). Then prototype **HAND** separately (the involved one). Validate against **ARSO official flood-hazard zones** (EU Floods Directive) when possible — that's the real credibility step.
 

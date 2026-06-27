@@ -24,7 +24,7 @@ Four-factor susceptibility model rendered as MapLibre GL image overlays on a dar
 | Script | Purpose |
 |---|---|
 | `pipeline.py` | Process all `GKOT_*.laz` in `data/`, write PNGs + manifest. Run `python pipeline.py` (all tiles) or `python pipeline.py 460_100 461_100` (subset — merges into existing manifest). `python pipeline.py --calibrate` derives the global normalisation constants (run once per dataset). Tiles run in parallel; `--workers N` overrides the RAM-bound default (works with both modes). |
-| `kernels.py` | Numba `@njit(cache=True)` hot loops (`dtm_min_grid`, `d8_accumulate`) — bit-identical to the old pure-Python loops, ~70–150× faster (D16). |
+| `kernels.py` | Numba `@njit(cache=True)` hot loops: `dtm_min_grid`, `d8_accumulate` (bit-identical to the old pure-Python loops, ~70–150× faster, D16) + `hand_grid`/`_d8_receivers`/`_hand_core` (HAND, D19). |
 | `bench_kernels.py` | Correctness + speed gate: asserts the Numba kernels match the originals on one real tile. `python bench_kernels.py [TILE_ID]`. |
 | `download_tiles.py` | Download tiles from CDN. `--center E N --radius R` for a square grid, `--bbox E_min N_min E_max N_max`, or `--tiles E_N ...`. `--pipeline` runs pipeline after download. `--dry-run` checks CDN availability without downloading. |
 
@@ -48,18 +48,28 @@ Four-factor susceptibility model rendered as MapLibre GL image overlays on a dar
 - `web/data/manifest.json` — tile registry consumed by web app
 - `web/data/risk_points.geojson` — top-20 globally ranked flood risk points
 
-## Susceptibility model weights (D17 redesign)
-- TWI (topographic wetness index): 30%
-- Elevation: 20% (inverted — low elevation → high risk)
-- Slope: 20% (inverted — flat terrain → high risk)
+## Susceptibility model weights (D19 — HAND added, research-weighted)
+- **HAND (height above nearest drainage): 25%** (inverted — near the channel → high risk). The #1 flood-literature factor. Per-tile cut (edge-truncated); whole-mosaic routing is the upgrade.
+- TWI (topographic wetness index): 20%
+- Elevation: 15% (inverted — low elevation → high risk)
+- Slope: 15% (inverted — flat terrain → high risk)
 - Plan curvature: 10%
-- 3D canopy interception: 10% (inverted)
-- NDVI health: 10% (inverted)
-- Terrain roughness: dropped (was 5%, near-zero signal)
+- 3D canopy interception: 7.5% (inverted)
+- NDVI health: 7.5% (inverted)
+- Terrain roughness: dropped (near-zero signal). Land-cover/imperviousness (~5%): still pending.
 
-Weights + factor wiring live in `SUSC_WEIGHTS` / `FACTOR_KEYS` in `pipeline.py`. The
-pre-D17 weights (TWI 40 / canopy 25 / NDVI 15 / curv 15 / rough 5) produced inverted
-heatmaps on alpine terrain (slopes red, valley floors blue) — see DECISIONS.md D17.
+Weights + factor wiring live in `SUSC_WEIGHTS` / `FACTOR_KEYS` in `pipeline.py`; HAND in
+`kernels.hand_grid` (`STREAM_AREA_M2` threshold). Weights follow the flood-literature
+consensus (HANDOFF.md). History: pre-D17 (TWI 40 / canopy 25 / NDVI 15 / curv 15 / rough 5)
+inverted alpine heatmaps; D17 added elevation+slope and demoted veg; D19 added HAND and
+pulled TWI back from its inflated 30% stand-in. See DECISIONS.md D17, D19.
+
+## Risk-point selection (D19)
+`risk_points.geojson` is the global top-20 by raw `susc`, de-duplicated at `SEP_M` (50 m)
+and **capped at `REGION_CAP` (7) per CDN region** — per-region normalisation makes scores
+non-cross-comparable, so without the cap one region's largest flat-low patch (Koper port)
+monopolised the list. Capped split is balanced (Savinja 6 / Koper 7 / Ljubljana 7), Savinja
+flood valley at #1.
 
 ## Per-region normalisation (calibration.json, D17)
 Each factor is normalised against a FIXED [lo, hi] range (p2–p98) derived **per CDN
