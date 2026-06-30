@@ -92,6 +92,32 @@ The `web/` directory is published to GitHub Pages on every push to `main` via `.
 - [`CLAUDE.md`](CLAUDE.md) — full technical context (stack, data, pipeline, applied fixes).
 - [`DECISIONS.md`](DECISIONS.md) — chronological decision log with rationale and reversal notes.
 
+## Verified Maintenance Notes
+
+Reviewed on 2026-06-30.
+
+This repository is the Git-backed version of the Slovenia LiDAR floodmap work.
+It has the canonical multi-tile pipeline (`pipeline.py`), downloader
+(`download_tiles.py`), calibration state (`calibration.json`), static web app
+(`web/`), and GitHub Pages workflow configuration.
+
+Current top-level implementation files:
+
+| Path | Purpose |
+|---|---|
+| `pipeline.py` | Main calibrated multi-tile processing pipeline. |
+| `kernels.py` | Shared numerical kernels used by the pipeline. |
+| `download_tiles.py` | CLSS tile downloader and region probing helper. |
+| `bench_kernels.py` | Kernel benchmark script. |
+| `web/index.html` | Static app shell. |
+| `web/app.js` | MapLibre map, overlays, controls, and risk markers. |
+| `web/style.css` | Web app styling. |
+| `.github/` | Deployment workflow configuration. |
+
+Raw CLSS source data remains local under `data/` and should stay out of Git.
+Derived web assets under `web/data/` are the deployable outputs consumed by the
+static app.
+
 ## Data credit
 
 Raw LiDAR data: **Geodetska uprava RS** (CLSS programme), distributed under the Open Government Licence of the Republic of Slovenia. Tiles served via the Flycom CLSS CDN.
