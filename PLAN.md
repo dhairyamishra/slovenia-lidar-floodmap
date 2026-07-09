@@ -164,16 +164,19 @@ Current ~28 min / 100 tiles (single-process, two Python loops). With Numba loops
 
 ## Phased execution checklist
 
-- [ ] **0. Measure RAM** (`pip install psutil` or check Task Manager) → sets worker count.
-- [ ] **1. Probe** both regions with `--dry-run` (Savinja `488_134` r2, Koper `400_46` r2); confirm region names + which Koper tiles exist.
-- [x] **2. Performance first** (so iteration is cheap): ✅ Numba both loops (`kernels.py`) + multiprocessing in `main()`/`calibrate()` + `--workers`. Verified byte-identical on the 25-tile re-run. (The "two-pass raw-factor cache" wasn't needed — each worker does compute+export and returns small meta; calibration is parallelized separately.)
-- [ ] **3. Per-region calibration** (D16): region-keyed `calibration.json`.
-- [ ] **4. Download Savinja**, run **current** model as baseline, screenshot vs. Aug-2023 footprint.
-- [ ] **5. Riverine redesign:** elevation + slope + demote vegetation → recalibrate → re-run → compare. Then **HAND** (mosaic / RichDEM).
-- [ ] **6. Download Koper**, build the **coastal bathtub** SLR mode (+0.5/+1/+2 m), wire a scenario toggle in `web/app.js`.
+- [x] **0. Measure RAM / worker cap:** D16 made worker count RAM-bound automatically (`available_GB // 5`, override with `--workers N`).
+- [x] **1. Probe** both regions with `--dry-run` (Savinja `488_134` r2, Koper `400_46` r2); confirmed Savinja 25/25 and Koper 21/25.
+- [x] **2. Performance first** (so iteration is cheap): Numba both loops (`kernels.py`) + multiprocessing in `main()`/`calibrate()` + `--workers`. Verified byte-identical on the 25-tile re-run.
+- [x] **3. Per-region calibration** (D17): region-keyed `calibration.json`.
+- [x] **4. Download Savinja**, run the old model as baseline, and confirm it failed the Aug-2023 valley case before redesign.
+- [x] **5. Riverine redesign:** elevation + slope + demote vegetation, then HAND. D19 shipped per-tile HAND; mosaic HAND remains pending.
+- [x] **6. Download Koper**, build the coastal bathtub SLR mode (+0.5/+1/+2 m), and wire a scenario toggle in `web/app.js` (D20).
 - [ ] **7. Validation:** overlay ARSO flood-hazard zones (+ 2023 footprint for Savinja).
 - [ ] **8. Web app:** multi-region map (the side panel + `fitBounds` already fan out over `manifest.union_bounds`; with 3 disjoint blocks consider a region selector / per-region fit).
-- [ ] **9. Update `DECISIONS.md`** (D16 per-region calibration, D17 coastal mode, D18 perf architecture) and refresh `HANDOFF.md`.
+- [x] **9. Update `DECISIONS.md`** (D16-D20 recorded).
+- [ ] **10. Refresh `HANDOFF.md` after each major change.**
+- [ ] **11. Mosaic-level HAND / coastal connectivity:** replace per-tile routing/connectivity with stitched-region DEM logic.
+- [ ] **12. ERA5-Land hydroclimate trigger prototype:** use soil moisture / rolling water-input anomalies as a temporal multiplier over static LiDAR susceptibility.
 
 ## Risks & caveats to keep telling Aleks
 - Still a **screening tool**, not a hydraulic model. No rainfall, no soil, no calibrated channel network.
@@ -186,4 +189,4 @@ Current ~28 min / 100 tiles (single-process, two Python loops). With Numba loops
 - **D17** — ✅ Per-region calibration + model redesign (elevation/slope factors). Flipped Savinja valley to #1. *(recorded)*
 - **D18** — ✅ Ground-coverage no-data mask: sea / no-ground cells render transparent, are excluded from calibration + candidates. Koper riverine **baseline** processed (21 tiles, region 01-koper). *(recorded)*
 - **D19** — ✅ HAND factor (per-tile) + research-weighted model (HAND 25 / TWI 20 / elev 15 / slope 15 / curv 10 / interc 7.5 / ndvi 7.5) + no-data mask refined to a distance threshold (no forest/urban speckle) + per-region risk-point cap. *(recorded)*
-- **D20** — Separate coastal "bathtub" SLR inundation mode for Koper, distinct from the riverine model. *(pending)*
+- **D20** — Coastal "bathtub" SLR inundation mode for Koper, distinct from the riverine model. *(recorded)*

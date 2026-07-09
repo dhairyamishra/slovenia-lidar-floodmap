@@ -56,6 +56,12 @@ const LAYER_TYPES = [
   { key: 'classification', defaultOpacity: 0.80, defaultVisible: false },
 ];
 
+const COASTAL_SCENARIOS = [
+  { key: 'slr_0_5m', label: '+0.5 m' },
+  { key: 'slr_1_0m', label: '+1.0 m' },
+  { key: 'slr_2_0m', label: '+2.0 m' },
+];
+
 function addTileLayers(map, tile) {
   LAYER_TYPES.forEach(({ key, defaultOpacity, defaultVisible }) => {
     map.addSource(`src-${key}-${tile.name}`, {
@@ -71,6 +77,24 @@ function addTileLayers(map, tile) {
       layout: { visibility: defaultVisible ? 'visible' : 'none' },
     });
   });
+
+  if (tile.files.coastal) {
+    COASTAL_SCENARIOS.forEach(({ key }) => {
+      if (!tile.files.coastal[key]) return;
+      map.addSource(`src-coastal-${key}-${tile.name}`, {
+        type: 'image',
+        url:  `data/${tile.files.coastal[key]}`,
+        coordinates: tile.bounds.corners,
+      });
+      map.addLayer({
+        id:     `layer-coastal-${key}-${tile.name}`,
+        type:   'raster',
+        source: `src-coastal-${key}-${tile.name}`,
+        paint:  { 'raster-opacity': 0.70, 'raster-resampling': 'linear' },
+        layout: { visibility: 'none' },
+      });
+    });
+  }
 }
 
 // ── Risk markers ──────────────────────────────────────────────────────────────
@@ -158,4 +182,44 @@ function wireControls(map, tiles) {
 
   document.getElementById('toggle-risk')
     .addEventListener('change', e => setRiskVisible(e.target.checked));
+
+  const coastalTiles = tiles.filter(t => t.files.coastal);
+  const coastalToggle = document.getElementById('toggle-coastal');
+  const coastalScenario = document.getElementById('coastal-scenario');
+  const coastalOpacity = document.getElementById('opacity-coastal');
+  const coastalVal = document.getElementById('val-coastal');
+
+  function setCoastalVisibility() {
+    const activeKey = coastalScenario.value;
+    const visible = coastalToggle.checked;
+    coastalTiles.forEach(tile => {
+      COASTAL_SCENARIOS.forEach(({ key }) => {
+        if (!tile.files.coastal[key]) return;
+        map.setLayoutProperty(
+          `layer-coastal-${key}-${tile.name}`,
+          'visibility',
+          visible && key === activeKey ? 'visible' : 'none'
+        );
+      });
+    });
+  }
+
+  if (coastalTiles.length === 0) {
+    coastalToggle.disabled = true;
+    coastalScenario.disabled = true;
+    coastalOpacity.disabled = true;
+  } else {
+    coastalToggle.addEventListener('change', setCoastalVisibility);
+    coastalScenario.addEventListener('change', setCoastalVisibility);
+    coastalOpacity.addEventListener('input', () => {
+      const v = coastalOpacity.value / 100;
+      coastalTiles.forEach(tile => {
+        COASTAL_SCENARIOS.forEach(({ key }) => {
+          if (!tile.files.coastal[key]) return;
+          map.setPaintProperty(`layer-coastal-${key}-${tile.name}`, 'raster-opacity', v);
+        });
+      });
+      coastalVal.textContent = coastalOpacity.value + '%';
+    });
+  }
 }

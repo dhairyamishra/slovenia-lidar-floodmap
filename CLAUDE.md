@@ -15,7 +15,7 @@ Four-factor susceptibility model rendered as MapLibre GL image overlays on a dar
 ## Data
 - **Source**: Flycom CLSS S3 CDN — `https://assets.flycom.si/clss/raw/<region>/zls/gkot/GKOT_E_N.laz`
 - **CRS**: EPSG:3794 (Slovene national grid), tile coords = km (e.g. `460_100` = easting 460km, northing 100km)
-- **Current dataset**: **146 tiles across 3 regions** — 100 Ljubljana (455–464 E × 96–105 N, `05-ljubljana`), 25 Savinja (486–490 E × 132–136 N, `08-kamnik`, alpine riverine), 21 Koper (398–402 E × 44–48 N, `01-koper`, coastal). Each region has its own calibration (D17). Koper is a **riverine baseline** only — coastal bathtub SLR mode pending (D19).
+- **Current dataset**: **146 tiles across 3 regions** — 100 Ljubljana (455–464 E × 96–105 N, `05-ljubljana`), 25 Savinja (486–490 E × 132–136 N, `08-kamnik`, alpine riverine), 21 Koper (398–402 E × 44–48 N, `01-koper`, coastal). Each region has its own calibration (D17). Koper now has both the riverine baseline and a separate coastal bathtub SLR overlay (D20).
 - **LAZ files**: stored in `data/` (gitignored), ~170–800 MB each (alpine/coastal tiles are denser), ~50 GB total on disk
 - **Coastal no-data**: cells with no ground return (sea) render transparent and are excluded from calibration + risk candidates (D18). Tile `400_48` is entirely sea (0 ground points) → fully transparent PNG.
 - **Scattered outliers removed**: 10 tiles outside the Ljubljana block were deleted (D09)
@@ -44,6 +44,7 @@ Four-factor susceptibility model rendered as MapLibre GL image overlays on a dar
 - `web/data/tiles/<name>/susceptibility.png` — composite flood risk (RdYlBu_r)
 - `web/data/tiles/<name>/ndvi.png` — forest health (RdYlGn, percentile-stretched)
 - `web/data/tiles/<name>/classification.png` — land cover classes
+- `web/data/tiles/<name>/coastal_slr_0_5m.png`, `coastal_slr_1_0m.png`, `coastal_slr_2_0m.png` — Koper-only coastal bathtub sea-level-rise masks (D20)
 - `web/data/candidates.json` — global ranked list of top-500 risk candidates (raw susc scores), used for subset-run safety and future UI features
 - `web/data/manifest.json` — tile registry consumed by web app
 - `web/data/risk_points.geojson` — top-20 globally ranked flood risk points
@@ -63,6 +64,11 @@ Weights + factor wiring live in `SUSC_WEIGHTS` / `FACTOR_KEYS` in `pipeline.py`;
 consensus (HANDOFF.md). History: pre-D17 (TWI 40 / canopy 25 / NDVI 15 / curv 15 / rough 5)
 inverted alpine heatmaps; D17 added elevation+slope and demoted veg; D19 added HAND and
 pulled TWI back from its inflated 30% stand-in. See DECISIONS.md D17, D19.
+
+## Coastal SLR mode (D20)
+Koper has a separate coastal "bathtub" overlay for +0.5 m, +1.0 m, and +2.0 m sea-level scenarios. This is distinct from riverine susceptibility: a land cell is shaded only when its DTM elevation is below the scenario and it connects, within the same tile, to mapped sea/no-data cells. Sea/no-data remains transparent. The web app exposes this as the **Coastal Inundation** layer with a scenario selector.
+
+Caveat: this is first-order screening, not coastal hydraulics. It ignores surge, waves, drainage, defenses, groundwater, and cross-tile connectivity. A stitched Koper DEM should replace the per-tile connection test when higher credibility is needed.
 
 ## Risk-point selection (D19)
 `risk_points.geojson` is the global top-20 by raw `susc`, de-duplicated at `SEP_M` (50 m)

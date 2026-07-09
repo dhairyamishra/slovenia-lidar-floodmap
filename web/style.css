@@ -184,6 +184,13 @@ html, body {
   margin-bottom: 2px;
 }
 
+.select-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
 .slider-label {
   font-size: 11px;
   color: #8b949e;
@@ -222,6 +229,25 @@ html, body {
   width: 30px;
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+.scenario-select {
+  flex: 1;
+  min-width: 0;
+  height: 24px;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.08);
+  color: #e6edf3;
+  font-size: 11px;
+  padding: 0 8px;
+  outline: none;
+}
+.scenario-select:disabled,
+.layer-toggle input:disabled + .toggle-track,
+.slider:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 /* ── Info text ───────────────────────────────────────────────────────────── */

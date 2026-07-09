@@ -24,7 +24,7 @@ from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
-from scipy.ndimage import gaussian_filter, distance_transform_edt
+from scipy.ndimage import gaussian_filter, distance_transform_edt, binary_propagation
 from pyproj import Transformer
 from PIL import Image
 import laspy
@@ -53,6 +53,12 @@ REGION_CAP = 7    # max risk points from any one CDN region. Scores are per-regi
                   # region holding the largest maximally-low-flat patch (e.g. Koper
                   # port). Capping de-clusters so every region's worst spots show.
 GLOBAL_CANDS_N = 500  # max entries kept in the global candidates file
+COASTAL_REGION = "01-koper"
+COASTAL_SLR_SCENARIOS = {
+    "slr_0_5m": 0.5,
+    "slr_1_0m": 1.0,
+    "slr_2_0m": 2.0,
+}
 
 # Global normalisation constants (see DECISIONS.md D15). Each factor is scaled
 # against a FIXED dataset-wide range so scores are comparable across tiles, not
@@ -137,8 +143,12 @@ def norm_fixed(a, lo, hi):
 
 
 def colormap_to_rgba(arr, cmap_name, vmin=0, vmax=1, nodata_mask=None):
-    import matplotlib.cm as cm
-    cmap   = cm.get_cmap(cmap_name)
+    import matplotlib
+    try:
+        cmap = matplotlib.colormaps[cmap_name]
+    except AttributeError:  # older matplotlib
+        import matplotlib.cm as cm
+        cmap = cm.get_cmap(cmap_name)
     normed = np.clip((arr - vmin) / max(vmax - vmin, 1e-6), 0, 1)
     rgba   = (cmap(normed) * 255).astype(np.uint8)
     if nodata_mask is not None:
@@ -146,6 +156,31 @@ def colormap_to_rgba(arr, cmap_name, vmin=0, vmax=1, nodata_mask=None):
     # Row-0 in numpy = south; row-0 in image = north — flip vertically.
     return Image.fromarray(np.flipud(rgba), mode='RGBA').resize(
         (OUT_SIZE, OUT_SIZE), Image.LANCZOS)
+
+
+def coastal_mask_to_rgba(mask):
+    """Render a binary coastal-inundation mask as transparent/cyan RGBA."""
+    rgba = np.zeros((*mask.shape, 4), dtype=np.uint8)
+    rgba[mask] = (56, 189, 248, 210)
+    return Image.fromarray(np.flipud(rgba), mode='RGBA').resize(
+        (OUT_SIZE, OUT_SIZE), Image.NEAREST)
+
+
+def coastal_inundation_mask(dtm, ground_cov, sea_level_m):
+    """
+    First-order coastal bathtub mask for Koper (D20).
+
+    Land is flagged only when its DTM elevation is below the selected sea-level
+    scenario and it connects to a no-data/sea cell within the tile. This avoids
+    filling isolated inland depressions while keeping the implementation local
+    to the existing per-tile pipeline.
+    """
+    eligible = ground_cov & np.isfinite(dtm) & (dtm <= sea_level_m)
+    sea = ~ground_cov
+    if not sea.any() or not eligible.any():
+        return np.zeros(dtm.shape, dtype=bool)
+    connected = binary_propagation(sea, mask=(sea | eligible))
+    return connected & eligible
 
 
 # ── Per-tile processing ───────────────────────────────────────────────────────
@@ -313,7 +348,7 @@ def compute_factors(laz_path: Path) -> dict:
     }
 
 
-def export_tile(f: dict, const: dict, display: dict) -> dict:
+def export_tile(f: dict, const: dict, display: dict, region: str = "default") -> dict:
     """
     Normalise a tile's raw factors against the GLOBAL constants, build the
     composite, export PNGs, and return manifest meta + risk candidates.
@@ -366,6 +401,14 @@ def export_tile(f: dict, const: dict, display: dict) -> dict:
     Image.fromarray(np.flipud(rgba_cls), mode='RGBA').resize(
         (OUT_SIZE, OUT_SIZE), Image.NEAREST).save(out_dir / "classification.png")
 
+    coastal_files = {}
+    if region == COASTAL_REGION:
+        for key, sea_level_m in COASTAL_SLR_SCENARIOS.items():
+            mask = coastal_inundation_mask(dtm, ground_cov, sea_level_m)
+            filename = f"coastal_{key}.png"
+            coastal_mask_to_rgba(mask).save(out_dir / filename)
+            coastal_files[key] = f"tiles/{tile_name}/{filename}"
+
     print("ok")
 
     # ── Risk candidates (kept for global ranking) ─────────────────────────────
@@ -402,16 +445,20 @@ def export_tile(f: dict, const: dict, display: dict) -> dict:
     print(f"  [done] {tile_name} in {elapsed:.0f}s")
 
     tile_prefix = f"tiles/{tile_name}"
+    files = {
+        "susceptibility": f"{tile_prefix}/susceptibility.png",
+        "ndvi":           f"{tile_prefix}/ndvi.png",
+        "classification": f"{tile_prefix}/classification.png",
+    }
+    if coastal_files:
+        files["coastal"] = coastal_files
+
     return {
         "meta": {
             "name":   tile_name,
             "source": f["source"],
             "bounds": f["bounds"],
-            "files": {
-                "susceptibility": f"{tile_prefix}/susceptibility.png",
-                "ndvi":           f"{tile_prefix}/ndvi.png",
-                "classification": f"{tile_prefix}/classification.png",
-            },
+            "files": files,
         },
         "candidates": candidates,
     }
@@ -425,8 +472,8 @@ def export_tile(f: dict, const: dict, display: dict) -> dict:
 
 def _process_one(args):
     """Worker: process one tile end-to-end, return its small meta + candidates."""
-    laz_path, const, display = args
-    return export_tile(compute_factors(laz_path), const, display)
+    laz_path, const, display, region = args
+    return export_tile(compute_factors(laz_path), const, display, region)
 
 
 def _calib_sample_one(args):
@@ -701,9 +748,9 @@ def main(tile_ids: list[str] | None = None, workers: int | None = None):
     # Resolve each tile's constants by its region before dispatch.
     tasks = []
     for p in laz_files:
-        cd = region_const.get(tile_region(p.stem.replace("GKOT_", ""), cache),
-                              default_cd)
-        tasks.append((p, cd[0], cd[1]))
+        region = tile_region(p.stem.replace("GKOT_", ""), cache)
+        cd = region_const.get(region, default_cd)
+        tasks.append((p, cd[0], cd[1], region))
     if workers == 1:
         print(f"\nProcessing {len(laz_files)} tile(s) serially")
         results = [_process_one(t) for t in tasks]

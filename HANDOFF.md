@@ -1,152 +1,173 @@
-# Handoff — Slovenia CLSS LiDAR Flood & Forest Demo
+# Handoff - Slovenia CLSS LiDAR Flood & Coastal Demo
 
-**Status:** Built, committed, deployed. Now a **100-tile 10×10 grid** with **global fixed-range normalisation** live on GitHub Pages. The current open thread is a **flood-susceptibility model redesign** (see the deep-dive section below). · **Goal:** A polished, static, no-backend web app overlaying flood-susceptibility and forest-NDVI analysis (from Slovenia's national CLSS LiDAR) on an interactive dark map, to demo to a stakeholder named **Aleks**.
+**Status:** The app is a 146-tile, 3-region static MapLibre demo with D19 riverine susceptibility and D20 Koper coastal sea-level-rise overlays implemented. The active thread is now validation and credibility: compare against ARSO / Aug-2023 flood evidence, then improve per-tile approximations with mosaic-level routing.
 
-> Authoritative, continuously-maintained context: [`CLAUDE.md`](CLAUDE.md) + the decision log [`DECISIONS.md`](DECISIONS.md). This handoff is the higher-level snapshot and carries the latest analysis.
+**Goal:** A polished, honest screening tool for Aleks / sledilnik.org that shows where detailed flood/coastal investigation should start. It is not a hydraulic model.
+
+> Authoritative context: `AGENTS.md`, `CLAUDE.md`, `DECISIONS.md`, and `PLAN.md`. This handoff is the current snapshot plus the latest implementation notes.
 
 ## Context
 
-Slovenia's national airborne LiDAR (CLSS — *Ciklično lasersko skeniranje*, Geodetska uprava RS) feeds a Python pipeline that computes a multi-factor flood-susceptibility model + per-cell forest NDVI, then exports georeferenced raster overlays + ranked risk points for a MapLibre web viewer styled like the national viewer at <https://clss.si>. Ties to a real national priority: post-2023-flood reconstruction.
+This repository builds an interactive web map from Slovenia's CLSS airborne LiDAR data. `pipeline.py` reads local `data/GKOT_*.laz` files, computes terrain/vegetation factors, exports PNG overlays under `web/data/tiles/<tile>/`, and writes `web/data/manifest.json`, `web/data/candidates.json`, and `web/data/risk_points.geojson` for the static web app.
 
-## Current state (latest commits on `main`)
+The project started as a Ljubljana flood/forest demo. Aleks then provided two validation/extension sites: the Savinja valley flood area from Aug 2023 and Koper for sea-level-rise exposure. The dataset now covers all three.
 
-- `f48d50d` — **Expand to 100-tile 10×10 grid + global-normalised overlays** (current HEAD).
-- `1580216` — Global fixed-range normalisation + calibration (D15).
-- `f2e78b4` — Fix risk points to span all tiles; single global `candidates.json` (D13/D14).
+Live site: https://dhairyamishra.github.io/slovenia-lidar-floodmap/
 
-Verified working:
-- `pipeline.py` processes all 100 tiles → per-tile PNGs, `manifest.json` (100), `candidates.json` (top-500), `risk_points.geojson` (top-20).
-- Web app loads in a real browser: dark basemap (OpenFreeMap), susceptibility (blue→red), NDVI (red→green), classification, side-panel toggles + opacity sliders, geo-registration confirmed.
-- Risk markers are DOM markers (`maplibregl.Marker`), numbered pins (see Technical notes for why DOM not GeoJSON).
-- Auto-deploys to GitHub Pages on push to `main`. Live: https://dhairyamishra.github.io/slovenia-lidar-floodmap/
+## Current State
 
-## Dataset
+Latest known commits before this handoff:
 
-- **100 tiles**, contiguous **10 × 10 km block over Ljubljana** — EPSG:3794 easting **455–464 km × northing 96–105 km**. (Grown this session from the prior 9×9 / 81 tiles by adding the west column `455_96..455_105` and north row `456_105..464_105`, extending NW.)
-- All data EPSG:3794 (Slovene National Grid); overlays reproject to EPSG:4326 via `pyproj`.
-- Raw `.laz` (~19 GB) lives in `data/` and is **gitignored**; small `web/data/` overlays are committed. All 100 tiles are in CDN region `05-ljubljana`.
+- `770a7b5` - docs: update README
+- `1bccc73` - Add HAND flood factor (D19) - research-weighted model
+- `f9281d7` - Add Koper coastal baseline (21 tiles) + D18 no-data mask
+- `c6ea058` - Record D17: model redesign + per-region calibration
+- `3c5ec01` - Update calibration and risk assessment data
 
-## Method (as currently implemented)
+Current uncommitted work in this session:
 
-- **Composite weights:** TWI **40%** + 3D canopy interception **25%** + NDVI health **15%** + plan curvature **15%** + terrain roughness **5%**. DTM = pseudo-DTM from GKOT ground returns (class 2) at 2 m; D8 flow accumulation drives TWI; canopy uses a 2 m voxel grid.
-- **Global normalisation (D15):** each factor scaled against a FIXED dataset-wide [lo,hi] (p2–p98) in `calibration.json`, so scores are comparable across tiles. Pipeline split into `compute_factors` (raw factors, shared) + `export_tile` (normalise vs constants → composite → PNG + candidates). `--calibrate` derives constants; a dataset fingerprint (tile name+size) warns on change.
-- **Current 100-tile constants** (`calibration.json`, fingerprint `a4b004c6`): twi `[3.59, 9.22]`, interc `[0, 0.64]`, ndvi `[-0.146, 0.183]`, curv `[-0.0525, 0.0457]`, rough `[0.0001, 0.377]`, susc-display `[0.352, 0.857]`.
-- **Risk points:** top-20 globally-ranked cells from `candidates.json` (top-500 pool, deduped to ≥50 m). Scored on **raw `susc`** (the display range is cosmetic only — see below).
+- D20 coastal bathtub sea-level-rise mode added to `pipeline.py`.
+- Coastal UI controls added to `web/app.js`, `web/index.html`, and `web/style.css`.
+- Koper tiles regenerated; `web/data/manifest.json` now has 21 coastal-enabled tiles and 63 coastal scenario PNGs.
+- `DECISIONS.md` now records D20.
+- `PLAN.md` checklist updated so completed D16-D20 work is not shown as pending.
+- `HANDOFF.md` replaced with this current handoff.
+- Existing pre-session local changes remain: `README.md` was already modified and `AGENTS.md` was untracked before this session. Do not assume those are ours.
 
----
+Verified facts:
 
-## ⭐ Flood-susceptibility model — deep dive & redesign (THIS SESSION'S KEY WORK)
+- `web/data/manifest.json` still has `tile_count: 146`.
+- `.tile_region_cache.json` splits the data as 100 Ljubljana (`05-ljubljana`), 25 Savinja/Kamnik (`08-kamnik`), and 21 Koper (`01-koper`).
+- Coastal export count: 21 Koper tiles x 3 scenarios = 63 `coastal_slr_*.png` files.
+- `400_46` coastal visible pixels grow with scenario: about 58,895 at +0.5 m, 71,463 at +1.0 m, 127,669 at +2.0 m.
+- `400_48` is all sea/no-data and remains fully transparent for coastal scenarios.
+- Static checks passed: `py_compile` for `pipeline.py` / `kernels.py`, and `node --check web/app.js`.
+- Local browser smoke test confirmed the new "Coastal Inundation" control and scenario selector are present.
 
-This is the live open thread. Read this before touching the model.
+## Method
 
-### The symptom
+Current riverine model (D19):
 
-After moving to global normalisation on the 100-tile grid, the top-20 risk markers **concentrate 19-of-20 in a single tile (`464_102`, eastern Ljubljana)**, 1 in `461_103`. Candidate span dropped from 72 → 39 tiles. The susceptibility heatmap shows the **urban east as red (high), forested western hills as blue (low)**.
+- HAND: 25%, inverted - low height above drainage is high risk.
+- TWI: 20%.
+- Elevation: 15%, inverted.
+- Slope: 15%, inverted.
+- Plan curvature: 10%.
+- Canopy interception: 7.5%, inverted.
+- NDVI: 7.5%, inverted.
+- Roughness: computed but weight 0.
 
-### Diagnosis — it's faithful, NOT a bug
+Each factor is normalised by CDN region, not globally. `calibration.json` is `model_version: 2` and has one region block each for Ljubljana, Kamnik/Savinja, and Koper.
 
-Verified with code review + data:
-- **Display scale ≠ ranking.** The PNG colours via `norm_fixed(susc, 0.352, 0.857)`, but candidates score on **raw `susc`**. So the display range is purely cosmetic; it does **not** affect which pins win. The clustering is not a display artifact.
-- **Factor constants DO drive ranking** — intentionally (D15). Per-tile→global is the cause of the redistribution, and that's correct behaviour.
-- **`464_102` is a genuine broad hotspot, not an edge artifact:** its risk points span the full tile width (464018–465000) and elevation varies only 8 m across the km² (genuinely flat). The eastern urban half dominates candidates (E461:125, E463:94, E464:92, E462:88, E460:72) while the western forested/hill half is near-empty (E455:1, E457:2). It wins by a hair (top score 0.9307 vs ~0.923 for the next tiles — bunched within ~0.008).
-- **Refactor is faithful:** weights sum to 1.0, inversions (interc/ndvi/rough) preserved, no sign/index bug.
+Risk points:
 
-### Root cause — the model over-weights "absence of vegetation + flatness"
+- Global candidate pool is capped at 500.
+- Final top-20 is deduplicated at 50 m.
+- `REGION_CAP = 7` prevents one per-region-normalised region from monopolising the list. Current split is balanced by design, not because cross-region scores are absolute probabilities.
 
-Three inverted factors — canopy interception (25%) + NDVI (15%) + roughness (5%) = **45% of the weight** — all reward *bare + flat + smooth* terrain. Under per-tile normalisation this was masked (each tile stretched to its own 0–1). Under global normalisation, a uniformly flat-treeless (urban) tile scores ~0.79 everywhere while a forested hill scores ~0.21. The model is effectively a **"flat, treeless land" detector** — which is why the urban footprint lights up and `464_102` sweeps the ranking.
+Coastal D20 model:
 
-### What trusted research says (literature review, this session)
+- Applies only to CDN region `01-koper`.
+- Outputs three scenario masks per Koper tile:
+  - `coastal_slr_0_5m.png`
+  - `coastal_slr_1_0m.png`
+  - `coastal_slr_2_0m.png`
+- A land cell is shaded when its DTM elevation is below the scenario and it connects, within that tile, to sea/no-data cells.
+- Sea/no-data remains transparent. The overlay only shades exposed land.
 
-Consensus across AHP / frequency-ratio / ML feature-importance studies — the dominant predictors are **hydrological/topographic proximity to drainage, not vegetation**:
+Why D20 is separate:
 
-| Factor | Higher risk when… | Typical lit. weight |
-|---|---|---|
-| Distance-to-river / **HAND** | near channel / low height above drainage | 17–32% (often #1) |
-| **Elevation** | low | 10–16% |
-| **Slope** | flat / low | 12–20% |
-| **TWI** | high | 8–15% |
-| Drainage density | region-dependent | 9–22% |
-| Rainfall | high/intense | 7–16% |
-| Curvature | concave | ~5% |
-| Land use (LULC) | built-up / impervious / bare | **~2–5%** |
-| NDVI / tree cover | low vegetation | **<10%** |
-| Soil / lithology | clay / impermeable | ~3–5% |
+Koper sea-level rise is a coastal exposure mechanism. The riverine susceptibility factors can identify low-flat terrain, but they cannot honestly answer "which land is below +1 m sea level?" Keeping this as a separate overlay makes the limitation obvious and demo-friendly.
 
-**Our model vs consensus:** we over-weight vegetation (~45% vs ~5–15%) and **omit the strongest research-backed factors entirely** — no HAND/distance-to-drainage, no standalone elevation, no standalone slope. We have no rainfall/soil (data we lack). What we get right: TWI is a legit top factor; concave plan curvature is directionally correct.
+## Active Thread
 
-### Re-weighting — IMPLEMENTED (D17 elevation/slope, D19 HAND)
+The main open work is validation and model credibility.
 
-| Factor | Pre-D17 | Target | **Shipped (D19)** | Status |
-|---|---|---|---|---|
-| **HAND** | — | **25%** | **25%** | ✅ D19. Per-tile cut (`kernels.hand_grid`, `STREAM_AREA_M2=10k`). ⚠ edge-truncated — whole-mosaic routing is the upgrade. |
-| TWI | 40% | 20% | **20%** | ✅ |
-| **Elevation** (low) | — | 15% | **15%** | ✅ D17 |
-| **Slope** (flat) | — | 15% | **15%** | ✅ D17 |
-| Plan curvature | 15% | 10% | **10%** | ✅ |
-| **Land cover / imperviousness** | — | 5% | **0%** | ❌ still pending — veg absorbs it |
-| NDVI health | 15% | 5% | **7.5%** | ✅ demoted (holds the unbuilt land-cover 5%) |
-| Canopy interception | 25% | 5% | **7.5%** | ✅ demoted |
-| Roughness | 5% | 0% | **0%** | ✅ dropped |
+1. ARSO / official flood-hazard validation is still pending.
+   The model is literature-informed but not calibrated against observed flood footprints. This is the biggest credibility step for sledilnik-style technical stakeholders.
 
-Rebalanced from "45% vegetation" → ~80% hydro/topographic, ~15% vegetation. HAND pulls risk
-onto genuine near-channel terrain. Remaining gap vs. the research target: **land-cover/
-imperviousness (~5%)** from the LiDAR classification, still unbuilt. See DECISIONS.md D19.
+2. Savinja Aug-2023 validation is pending.
+   The D17/D19 redesign was motivated by Aleks's Savinja location. The model now highlights the valley floor, but it still needs comparison against a documented footprint or hazard layer.
 
-**Recommended starting point:** add **elevation + slope** and demote the vegetation cluster first (trivial — both already computed, ~15 min + a recalibrate + run). Then prototype **HAND** separately (the involved one). Validate against **ARSO official flood-hazard zones** (EU Floods Directive) when possible — that's the real credibility step.
+3. Per-tile HAND is still approximate.
+   D19 computes HAND inside each 1 km tile. Drainage paths that should cross tile boundaries terminate at tile edges, so channels are local. Whole-region / mosaic routing is the real upgrade.
 
-### Honest caveats to keep telling Aleks
-Still a **terrain/vegetation screening tool** (spatial triage — "where to look first"), not a hydraulic flood model. No rainfall, no soil, no real channel network yet. Weights are literature-informed, not ground-truth-calibrated.
+4. D20 coastal connectivity is also per-tile.
+   Coastal inundation only propagates from sea/no-data cells within the same tile. That avoids false filling of isolated inland depressions, but it misses cross-tile connectivity. A stitched Koper DEM is the upgrade.
 
----
+5. ERA5-Land hydroclimate is proposed, not implemented.
+   Aleks shared a Copernicus article about linking landslide activity and ERA5 hydroclimatic models. Useful direction: combine static LiDAR susceptibility ("where") with ERA5-Land soil moisture / rolling water-input anomalies ("when"). Start with an Aug-2023 Savinja hindcast.
 
-## Open decisions / next steps (pick up here)
+Recommended entry point:
 
-1. **Risk-marker distribution (display-level, cheap):** add a per-tile cap (~2/tile) or larger `SEP_M` so the top-20 spread across the region instead of 19-in-`464_102`. Does not require reprocessing tiles — only the ranking loop in `main()`.
-2. **Model redesign (the big one):** implement the proposed re-weighting + new factors (elevation/slope first, then HAND). Requires `--calibrate` + full pipeline re-run (~30 min each on 100 tiles).
-3. **Validation:** overlay ARSO flood-hazard zones to check the model tracks documented reality.
-4. **Performance:** multiprocessing across tiles + Numba JIT on the D8 loop (`d8_accumulate`) — would cut a full run from ~28 min to a few minutes. No ML/GPU involved; the bottleneck is the pure-Python D8 loop.
+Start with validation. Specifically, find or ingest ARSO flood-hazard zones / Aug-2023 Savinja footprint and compare against the current D19 risk layer. That gives the project credibility and tells whether mosaic HAND or ERA5 should be the next engineering investment.
 
-**Comparison asset:** `archive_preD15/` (gitignored) holds the pre-D15 per-tile-normalised susceptibility PNGs + old risk JSONs, for before/after diffing against the current global-normalised output.
+## Gotchas
 
-**Aleks message:** a short progress message + the live link is drafted (in session history). NOTE: the live site now reflects the 100-tile grid with the concentrated markers — decide whether to apply the per-tile cap before sharing.
+- `HANDOFF.md` and `PLAN.md` were stale before this session. Use `DECISIONS.md` as the decision source of truth.
+- Raw `.laz` files in `data/` are gitignored and large, about 50 GB total.
+- If you delete LAZ/PNG tiles manually, also purge them from `web/data/manifest.json`; subset runs merge and will keep old entries.
+- Pipeline subset runs update global candidates by removing stale entries for reprocessed tiles and merging fresh candidates.
+- `manifest.json - N tile(s)` in pipeline output reports total merged manifest count, while earlier docs warned about processed-run count; inspect the JSON directly if in doubt.
+- Long pipeline/calibration runs have previously died when the machine slept. Keep the machine awake.
+- Browser preview may not fully verify MapLibre if external basemap/sprite requests fail. DOM/static checks are still useful.
+- In this session, the desktop shell had no system `python`; the bundled runtime lacked SciPy/laspy/numba. Missing packages were installed into `C:\tmp\slovenia_pydeps` and the pipeline was run with `PYTHONPATH=C:\tmp\slovenia_pydeps` under escalation.
+- New Matplotlib removed `matplotlib.cm.get_cmap`; `pipeline.py` now uses `matplotlib.colormaps[...]` with a fallback.
 
-## Technical notes & gotchas
-
-- **`preview_*` (Claude Preview) can't fully verify this app** — the headless browser can't reach the OpenFreeMap CDN, so `map.on('load')` never fires; screenshot/promise `preview_eval` time out. Verify in a real browser or via DOM checks (`document.querySelectorAll('.risk-marker').length`).
-- **Markers are DOM not GeoJSON** — the inline GeoJSON circle layer wasn't reliably indexed by MapLibre's worker; DOM markers render immediately and don't slip on pan (D02, D03). Code: `addRiskPoints()` / `setRiskVisible()` in `web/app.js`; `.risk-marker` in `web/style.css`.
-- **Subset runs merge** into `manifest.json` + global `candidates.json` (D06, D12, D14). Manual tile deletion needs a manifest purge — see "Common pitfalls" in `CLAUDE.md`.
-- **Calibration dies silently on machine sleep** — twice this session a background `--calibrate` was sleep-killed mid-run with no traceback and no completion notification. Keep the machine awake during long runs; re-run is safe (calibration.json only writes at the end; downloads resume/skip).
-- Raster export flips vertically (`np.flipud`): numpy row-0 = south, image row-0 = north. MapLibre `ImageSource` corners ordered [TL, TR, BR, BL] as `[lon, lat]`.
-
-## File map
+## File Map
 
 | Path | Purpose |
 |---|---|
-| `pipeline.py` | Canonical pipeline. `compute_factors` + `export_tile`; `--calibrate`; subset runs. Composite weights + factor inversions live in `export_tile`. |
-| `download_tiles.py` | CDN downloader, region auto-discovery + cache. `--bbox/--center/--tiles/--dry-run/--pipeline`. Skips tiles already in `data/`. |
-| `calibration.json` | Global constants + dataset fingerprint (committed). |
-| `web/app.js` / `index.html` / `style.css` | MapLibre app: per-tile overlays, DOM markers, controls. |
-| `web/data/` | Committed assets: per-tile PNGs, `manifest.json`, `candidates.json`, `risk_points.geojson`. |
-| `data/` | Raw CLSS LiDAR (gitignored, ~19 GB). |
-| `archive_preD15/` | Pre-D15 susceptibility PNGs + risk JSONs for before/after (gitignored). |
-| `CLAUDE.md` / `DECISIONS.md` | Authoritative context + decision log (D01–D15). |
-| Legacy scripts | `flood_susceptibility.py`, `export_web_assets.py`, `gkot_ndvi.py`, `flood_risk.py`, `probe_affordances.py`, `inspect_data.py` — early single-tile/exploratory, superseded by `pipeline.py`. |
+| `pipeline.py` | Canonical LiDAR pipeline; D19 riverine model; D20 coastal export. |
+| `kernels.py` | Numba kernels for DTM min-grid, D8 accumulation, HAND. |
+| `download_tiles.py` | CLSS CDN downloader and tile-region cache helper. |
+| `calibration.json` | Per-region p2-p98 factor/display calibration. |
+| `.tile_region_cache.json` | Tile ID to CDN region mapping. |
+| `web/app.js` | MapLibre app, raster layers, risk markers, coastal scenario UI. |
+| `web/index.html` | Static app shell and layer panel. |
+| `web/style.css` | App styling. |
+| `web/data/manifest.json` | Tile registry consumed by the app. |
+| `web/data/tiles/<tile>/coastal_slr_*.png` | D20 Koper coastal scenario overlays. |
+| `web/data/risk_points.geojson` | Top-20 balanced risk markers. |
+| `DECISIONS.md` | Chronological decision log; append here for significant changes. |
+| `PLAN.md` | Multi-region execution plan and current open checklist. |
 
-## How to run locally
+## How To Run
 
-```bash
-python -m http.server 8765 --directory web   # open http://localhost:8765
+Local web app:
+
+```powershell
+python -m http.server 8765 --directory web
 ```
 
-Regenerate analysis after a model change: `python pipeline.py --calibrate` (once per dataset), then `python pipeline.py`. Requires `laspy`, `lazrs`, `numpy`, `scipy`, `pyproj`, `Pillow` (and `rasterio` for `inspect_data.py`).
+If `python` is unavailable in this desktop environment, use the bundled runtime:
 
-## Research sources (flood-factor literature, this session)
+```powershell
+C:\Users\dhair\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -m http.server 8765 --directory web
+```
 
-- [Flood susceptibility AHP + frequency ratio review (ScienceDirect, 2025)](https://www.sciencedirect.com/science/article/pii/S0921818125001407)
-- [Integrated GIS + AHP multi-criteria flood framework (MDPI Water, 2025)](https://www.mdpi.com/2073-4441/17/7/937)
-- [Flood susceptibility via ML — factor importance (Nature Scientific Reports)](https://www.nature.com/articles/s41598-026-38391-0)
-- [AHP + FR flash-flood susceptibility, weights & classes (Frontiers, 2022)](https://www.frontiersin.org/journals/environmental-science/articles/10.3389/fenvs.2022.1037547/full)
-- [AHP flood risk weight table & directionality (Wiley IJGE, 2025)](https://onlinelibrary.wiley.com/doi/full/10.1155/ijge/6480655)
-- [HAND terrain-analysis enhancements (AGU WRR, 2019)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019wr024837)
-- [HAND in data-scarce regions vs hydrodynamic models (Springer, 2023)](https://link.springer.com/article/10.1007/s12145-023-01218-x)
-- [National Water Model–HAND flood-mapping evaluation (NHESS, 2019)](https://nhess.copernicus.org/articles/19/2405/2019/)
+Process all tiles:
+
+```powershell
+python pipeline.py
+```
+
+Process only Koper tiles with the temporary dependency target used in this session:
+
+```powershell
+$env:PYTHONPATH='C:\tmp\slovenia_pydeps'
+C:\Users\dhair\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe pipeline.py 398_44 398_45 398_46 399_44 399_45 399_46 400_44 400_45 400_46 400_47 400_48 401_44 401_45 401_46 401_47 401_48 402_44 402_45 402_46 402_47 402_48 --workers 3
+```
+
+Calibrate:
+
+```powershell
+python pipeline.py --calibrate
+python pipeline.py --calibrate --region 01-koper
+```
+
+## References
+
+- Live demo: https://dhairyamishra.github.io/slovenia-lidar-floodmap/
+- CLSS / source CDN pattern: `https://assets.flycom.si/clss/raw/<region>/zls/gkot/GKOT_E_N.laz`
+- Copernicus article from Aleks: https://climate.copernicus.eu/linking-landslide-activity-and-era-5-hydroclimatic-models-pro-active-infrastructure-management
