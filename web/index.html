@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CLSS Slovenia — Flood &amp; Forest Analysis</title>
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
@@ -121,6 +121,38 @@
 
       <div class="divider"></div>
 
+      <!-- ERA5-Land hydroclimate trigger -->
+      <div class="layer-row">
+        <label class="layer-toggle">
+          <input type="checkbox" id="toggle-hydro">
+          <span class="toggle-track"></span>
+        </label>
+        <span class="layer-name">Hydroclimate Trigger</span>
+      </div>
+      <div class="legend-bar" id="legend-hydro">
+        <div class="legend-gradient" style="background: linear-gradient(to right, #1d4ed8, #22c55e, #facc15, #f97316, #dc2626);"></div>
+        <div class="legend-labels"><span>Cool</span><span>Primed</span></div>
+      </div>
+      <div class="select-row">
+        <span class="slider-label">Date</span>
+        <select id="hydro-date" class="scenario-select"></select>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Opacity</span>
+        <input type="range" id="opacity-hydro" min="0" max="100" value="55" class="slider">
+        <span class="slider-val" id="val-hydro">55%</span>
+      </div>
+      <div class="layer-row layer-row--compact">
+        <label class="layer-toggle">
+          <input type="checkbox" id="toggle-hydro-risk">
+          <span class="toggle-track"></span>
+        </label>
+        <span class="layer-name">Hydro-Primed Risk Points</span>
+      </div>
+      <p class="layer-hint">ERA5-Land-style soil moisture, wetting trend, and 90-day water-input trigger. V1 uses an Aug-2023 Savinja fixture.</p>
+
+      <div class="divider"></div>
+
       <!-- Risk points -->
       <div class="layer-row">
         <label class="layer-toggle">
@@ -136,9 +168,10 @@
       <h3 class="panel-heading">About</h3>
       <p class="info-text">
         LiDAR-derived riverine susceptibility across Ljubljana, Savinja and Koper,
-        with a first-order coastal inundation screen for Koper sea-level scenarios.
+        with Koper coastal inundation and an ERA5-Land-style hydroclimate trigger.
         The riverine model combines HAND, TWI, elevation, slope, curvature, canopy
-        interception and NDVI.
+        interception and NDVI. The hydroclimate layer indicates temporal priming,
+        not flood probability.
       </p>
       <p class="info-text">
         <strong>Data:</strong> Geodetska uprava RS &mdash; CLSS programme<br>
@@ -152,6 +185,6 @@
   <div id="popup-content" style="display:none;"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>

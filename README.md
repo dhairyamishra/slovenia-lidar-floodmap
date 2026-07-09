@@ -1,6 +1,6 @@
-# Slovenia CLSS LiDAR — Flood, Coastal & Forest Risk
+# Slovenia CLSS LiDAR — Flood, Coastal, Hydroclimate & Forest Risk
 
-An interactive web map overlaying riverine flood susceptibility, Koper coastal sea-level-rise exposure, and forest-NDVI analysis derived from Slovenia's national airborne LiDAR dataset (CLSS — *Ciklično lasersko skeniranje*) onto a dark basemap styled after the national viewer at [clss.si](https://clss.si).
+An interactive web map overlaying riverine flood susceptibility, Koper coastal sea-level-rise exposure, ERA5-Land-style hydroclimate trigger state, and forest-NDVI analysis derived from Slovenia's national airborne LiDAR dataset (CLSS — *Ciklično lasersko skeniranje*) onto a dark basemap styled after the national viewer at [clss.si](https://clss.si).
 
 **Live demo →** https://dhairyamishra.github.io/slovenia-lidar-floodmap/
 
@@ -10,6 +10,8 @@ An interactive web map overlaying riverine flood susceptibility, Koper coastal s
 |---|---|
 | Flood Susceptibility | Weighted composite (HAND 25 % + TWI 20 % + elevation 15 % + slope 15 % + plan curvature 10 % + canopy interception 7.5 % + NDVI health 7.5 %) — blue (low) → red (high) |
 | Coastal Inundation | Koper-only bathtub sea-level-rise screen for +0.5 m / +1.0 m / +2.0 m scenarios; shades connected low-lying land, leaves sea/no-data transparent |
+| Hydroclimate Trigger | Coarse temporal priming layer based on soil moisture, wetting trend, and 90-day precipitation/snowmelt input. V1 ships a deterministic Aug-2023 Savinja fixture; real ERA5-Land NetCDF ingestion is supported separately |
+| Hydro-Primed Risk Points | Existing LiDAR candidates re-ranked by `event_score = static_susceptibility * hydro_index` for the selected hydroclimate date |
 | Forest NDVI | Per-cell NDVI from 16-bit NIR/R channels — red (stressed) → green (healthy) |
 | Land Classification | Ground, low/med/high vegetation, building returns |
 | Risk Markers | Top-20 highest-susceptibility cells (capped at 7 per CDN region so per-region-normalised scores stay comparable), shown as numbered pins |
@@ -48,6 +50,26 @@ python pipeline.py 460_100 461_100
 
 Requires: `laspy`, `lazrs`, `numpy`, `scipy`, `pyproj`, `Pillow`, `numba` (the hot DTM/D8/HAND loops in `kernels.py` are Numba-JIT'd). Tiles fan out across processes — `--workers N` overrides the RAM-bound default.
 
+### Regenerate hydroclimate trigger assets
+
+The hydroclimate feature is separate from the LiDAR pipeline. V1 can be generated without external credentials:
+
+```bash
+python hydroclimate.py derive-fixture
+python hydroclimate.py export
+```
+
+This writes `web/data/hydroclimate/manifest.json`, `hydro_2023-08-04.geojson`, and `dynamic_risk_2023-08-04.geojson`. The fixture is designed for UI validation and the Savinja Aug-2023 hindcast narrative; it is not real ERA5-Land evidence.
+
+For real ERA5-Land inputs, place NetCDF files under `data/era5/` (gitignored) with `swvl4`, `tp`, and `smlt` variables, install xarray/NetCDF support, then run:
+
+```bash
+python hydroclimate.py derive --date 2023-08-04
+python hydroclimate.py export --date 2023-08-04
+```
+
+The real-data path computes `hydro_score = soil_moisture_norm + water90_norm + 0.5 * wetting_trend_norm` and `hydro_index = hydro_score / 2.5`, following the Copernicus/BGC ERA5-Land trigger concept.
+
 ### Why calibration?
 
 Each susceptibility factor is normalised against a **fixed [p2, p98] range derived per CDN region** (not re-curved per tile) so risk scores are comparable within a region. Regions are calibrated separately because Ljubljana basin, alpine Savinja, and coastal Koper have disjoint elevation regimes — a single ruler is meaningless. `pipeline.py --calibrate` derives all regions (or `--calibrate --region 01-koper` for one, merging into the rest) and stores them in `calibration.json` (`model_version: 2`, a `regions` dict) along with a dataset fingerprint. Normal runs warn if `data/` has changed and a recalibration is due. See [`DECISIONS.md`](DECISIONS.md) D15/D17/D18.
@@ -63,6 +85,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `web/data/manifest.json` | Tile registry (bounds + file paths) consumed by the web app |
 | `web/data/candidates.json` | Global ranked list of top-500 risk candidates |
 | `web/data/risk_points.geojson` | Top-20 flood-risk points (de-duplicated at 50 m, capped at 7 per CDN region) |
+| `web/data/hydroclimate/*.geojson` | Hydroclimate trigger grid and hydro-primed risk points for available dates |
 | `calibration.json` | Per-region normalisation constants + dataset fingerprint |
 
 ## Scripts
@@ -70,6 +93,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | Script | Purpose |
 |---|---|
 | `pipeline.py` | **Canonical pipeline.** Processes all `GKOT_*.laz` → riverine PNGs, Koper coastal scenario PNGs, manifest, candidates, and risk points. Supports subset runs and `--calibrate`. |
+| `hydroclimate.py` | ERA5-Land-style hydroclimate trigger pipeline. Builds fixture assets for V1 and can derive from local ERA5-Land NetCDF files with xarray. |
 | `download_tiles.py` | Downloads CLSS GKOT tiles from the CDN with region auto-discovery and a probe cache. `--center/--radius`, `--bbox`, `--tiles`, `--dry-run`, `--pipeline`. |
 | `kernels.py` | Numba `@njit(cache=True)` hot loops — DTM grouped-min, D8 accumulation, HAND grid — bit-identical to the original pure-Python loops but ~70–150× faster. |
 | `bench_kernels.py` | Correctness + speed gate: asserts the Numba kernels match the originals on a real tile. `python bench_kernels.py [TILE_ID]`. |

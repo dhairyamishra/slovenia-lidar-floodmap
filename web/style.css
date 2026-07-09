@@ -104,6 +104,11 @@ html, body {
   margin-bottom: 8px;
 }
 
+.layer-row--compact {
+  margin-top: 8px;
+  margin-bottom: 6px;
+}
+
 .layer-name {
   font-size: 13px;
   font-weight: 500;
@@ -284,6 +289,13 @@ html, body {
      of the translate() MapLibre injects via the 'transform' property. */
   scale: 1.18;
   z-index: 10;
+}
+
+.hydro-risk-marker {
+  border-color: #f97316;
+  background: #111827;
+  color: #fed7aa;
+  box-shadow: 0 0 0 3px rgba(249,115,22,0.25), 0 2px 6px rgba(0,0,0,0.5);
 }
 
 /* ── MapLibre popup ──────────────────────────────────────────────────────── */

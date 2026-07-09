@@ -1,0 +1,505 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.856310450102455,
+          46.33561637322022
+        ]
+      },
+      "properties": {
+        "rank": 1,
+        "date": "2023-08-04",
+        "event_score": 0.777,
+        "static_risk_score": 0.953,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 403.3,
+        "easting_3794": 488937.9,
+        "northing_3794": 132887.9,
+        "tile": "488_132"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.850004811070859,
+          46.332981117582044
+        ]
+      },
+      "properties": {
+        "rank": 2,
+        "date": "2023-08-04",
+        "event_score": 0.775,
+        "static_risk_score": 0.95,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 402.7,
+        "easting_3794": 488451.9,
+        "northing_3794": 132595.9,
+        "tile": "488_132"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.849616678404733,
+          46.33242278638323
+        ]
+      },
+      "properties": {
+        "rank": 3,
+        "date": "2023-08-04",
+        "event_score": 0.775,
+        "static_risk_score": 0.949,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 402.5,
+        "easting_3794": 488421.9,
+        "northing_3794": 132533.9,
+        "tile": "488_132"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.851015439311793,
+          46.33390014486876
+        ]
+      },
+      "properties": {
+        "rank": 4,
+        "date": "2023-08-04",
+        "event_score": 0.772,
+        "static_risk_score": 0.946,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 403.8,
+        "easting_3794": 488529.9,
+        "northing_3794": 132697.9,
+        "tile": "488_132"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.845596053880723,
+          46.33945366638939
+        ]
+      },
+      "properties": {
+        "rank": 5,
+        "date": "2023-08-04",
+        "event_score": 0.772,
+        "static_risk_score": 0.946,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 400.1,
+        "easting_3794": 488113.9,
+        "northing_3794": 133316.0,
+        "tile": "488_133"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.856517056050777,
+          46.33608448260269
+        ]
+      },
+      "properties": {
+        "rank": 6,
+        "date": "2023-08-04",
+        "event_score": 0.77,
+        "static_risk_score": 0.944,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 404.3,
+        "easting_3794": 488953.9,
+        "northing_3794": 132939.9,
+        "tile": "488_132"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.848965416261473,
+          46.333087714867915
+        ]
+      },
+      "properties": {
+        "rank": 7,
+        "date": "2023-08-04",
+        "event_score": 0.769,
+        "static_risk_score": 0.942,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 403.1,
+        "easting_3794": 488371.9,
+        "northing_3794": 132607.9,
+        "tile": "488_132"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.832653554860293,
+          46.34083860190362
+        ]
+      },
+      "properties": {
+        "rank": 8,
+        "date": "2023-08-04",
+        "event_score": 0.764,
+        "static_risk_score": 0.937,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 406.7,
+        "easting_3794": 487117.9,
+        "northing_3794": 133471.9,
+        "tile": "487_133"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.859102209309622,
+          46.33101323266392
+        ]
+      },
+      "properties": {
+        "rank": 9,
+        "date": "2023-08-04",
+        "event_score": 0.764,
+        "static_risk_score": 0.937,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 391.2,
+        "easting_3794": 489151.9,
+        "northing_3794": 132375.9,
+        "tile": "489_132"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.824891544896342,
+          46.347017012409005
+        ]
+      },
+      "properties": {
+        "rank": 10,
+        "date": "2023-08-04",
+        "event_score": 0.764,
+        "static_risk_score": 0.936,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 427.0,
+        "easting_3794": 486521.9,
+        "northing_3794": 134159.9,
+        "tile": "486_134"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.837751094128004,
+          46.36560548282535
+        ]
+      },
+      "properties": {
+        "rank": 11,
+        "date": "2023-08-04",
+        "event_score": 0.763,
+        "static_risk_score": 0.935,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 473.0,
+        "easting_3794": 487516.0,
+        "northing_3794": 136223.9,
+        "tile": "487_136"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.821100573479434,
+          46.34618341132106
+        ]
+      },
+      "properties": {
+        "rank": 12,
+        "date": "2023-08-04",
+        "event_score": 0.763,
+        "static_risk_score": 0.935,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 415.7,
+        "easting_3794": 486229.9,
+        "northing_3794": 134067.9,
+        "tile": "486_134"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.85029233049309,
+          46.33233370176269
+        ]
+      },
+      "properties": {
+        "rank": 13,
+        "date": "2023-08-04",
+        "event_score": 0.762,
+        "static_risk_score": 0.934,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 402.3,
+        "easting_3794": 488473.9,
+        "northing_3794": 132523.9,
+        "tile": "488_132"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.859396619524325,
+          46.32763067617389
+        ]
+      },
+      "properties": {
+        "rank": 14,
+        "date": "2023-08-04",
+        "event_score": 0.762,
+        "static_risk_score": 0.933,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 389.4,
+        "easting_3794": 489173.9,
+        "northing_3794": 131999.9,
+        "tile": "489_132"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.831452616570585,
+          46.342726230229594
+        ]
+      },
+      "properties": {
+        "rank": 15,
+        "date": "2023-08-04",
+        "event_score": 0.762,
+        "static_risk_score": 0.933,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 409.6,
+        "easting_3794": 487025.9,
+        "northing_3794": 133681.9,
+        "tile": "487_133"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.856676737372284,
+          46.33462715019507
+        ]
+      },
+      "properties": {
+        "rank": 16,
+        "date": "2023-08-04",
+        "event_score": 0.761,
+        "static_risk_score": 0.933,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 394.5,
+        "easting_3794": 488965.9,
+        "northing_3794": 132777.9,
+        "tile": "488_132"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.818559082821322,
+          46.3525493494007
+        ]
+      },
+      "properties": {
+        "rank": 17,
+        "date": "2023-08-04",
+        "event_score": 0.761,
+        "static_risk_score": 0.933,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 422.7,
+        "easting_3794": 486035.9,
+        "northing_3794": 134775.9,
+        "tile": "486_134"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.850758597396798,
+          46.33282015572578
+        ]
+      },
+      "properties": {
+        "rank": 18,
+        "date": "2023-08-04",
+        "event_score": 0.761,
+        "static_risk_score": 0.932,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 402.5,
+        "easting_3794": 488509.9,
+        "northing_3794": 132577.9,
+        "tile": "488_132"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.830801151013121,
+          46.343480700933746
+        ]
+      },
+      "properties": {
+        "rank": 19,
+        "date": "2023-08-04",
+        "event_score": 0.761,
+        "static_risk_score": 0.932,
+        "hydro_index": 0.816,
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_cell_id": "fixture-203",
+        "elevation_m": 410.1,
+        "easting_3794": 486975.9,
+        "northing_3794": 133765.9,
+        "tile": "486_133"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.536605803567138,
+          46.07765989906064
+        ]
+      },
+      "properties": {
+        "rank": 20,
+        "date": "2023-08-04",
+        "event_score": 0.427,
+        "static_risk_score": 0.951,
+        "hydro_index": 0.449,
+        "soil_moisture_norm": 0.56,
+        "water90_norm": 0.413,
+        "wetting_trend_norm": 0.301,
+        "hydro_cell_id": "fixture-131",
+        "elevation_m": 286.7,
+        "easting_3794": 464157.8,
+        "northing_3794": 104311.9,
+        "tile": "464_104"
+      }
+    }
+  ]
+}

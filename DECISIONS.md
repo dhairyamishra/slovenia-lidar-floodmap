@@ -186,6 +186,20 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 **Caveats:** This is a first-order screening layer, not a coastal hydraulic model. It ignores tides, storm surge, waves, groundwater, drainage, levees/defenses, and tile-to-tile coastal connectivity. The connection test is local to each 1 km tile, so inland tiles without a no-data/sea seed will not fill even if they would connect through a neighbouring tile in a stitched coastal DEM. A future mosaic-level coastal pass should replace the per-tile connectivity constraint.
 **Reversible:** Remove `COASTAL_REGION`, `COASTAL_SLR_SCENARIOS`, `coastal_inundation_mask`, `coastal_mask_to_rgba`, and the Koper coastal export block from `pipeline.py`; remove the `files.coastal` handling and coastal UI controls from `web/app.js` / `web/index.html`; delete `web/data/tiles/*/coastal_slr_*.png`; re-run the Koper subset or full pipeline to refresh `manifest.json`.
 
+### D21 — ERA5-Land hydroclimate trigger as a separate temporal layer
+
+**Decision:** Added a new hydroclimate trigger feature instead of folding weather/climate state into the static LiDAR susceptibility PNGs. `hydroclimate.py` builds app-ready GeoJSON assets under `web/data/hydroclimate/`: a coarse trigger grid and hydro-primed risk points for a selected date. V1 ships one deterministic fixture date (`2023-08-04`, Savinja Aug-2023 hindcast) so the UI and data contract work without CDS credentials or large ERA5 downloads.
+
+**Model:** The trigger follows the Copernicus/BGC article Aleks shared: `hydro_score = soil_moisture_norm + water90_norm + 0.5 * wetting_trend_norm`; `hydro_index = hydro_score / 2.5`. The fixture intentionally elevates the Savinja/Kamnik block for the August 2023 flood-hindcast story. Real ERA5-Land derive support expects NetCDF files with `swvl4`, `tp`, and `smlt` variables in `data/era5/` and uses xarray when available.
+
+**Why separate:** The LiDAR model answers "where is terrain susceptible?" ERA5-Land answers "when is the landscape hydroclimatically primed?" Keeping the layers separate avoids presenting a coarse, fixture-backed temporal signal as calibrated flood probability. The app can still combine the two for a ranked exploratory view via `event_score = static_susceptibility * hydro_index`.
+
+**Result:** The web app now loads `data/hydroclimate/manifest.json` opportunistically, adds a MapLibre GeoJSON fill layer, and exposes a hydro-primed marker toggle. Missing hydroclimate data disables those controls without breaking existing riverine, coastal, NDVI, classification, or static marker layers.
+
+**Caveats:** V1 is not an operational forecast and not a trained Random Forest model. It does not download from CDS automatically, does not estimate probability, and has not been validated against ARSO or observed flood footprints. The fixture is for UI validation and stakeholder explanation only; replace it with ERA5-Land-derived outputs before using it analytically.
+
+**Reversible:** Remove `hydroclimate.py`, `web/data/hydroclimate/`, the hydro controls from `web/index.html`, the hydro layer/marker logic from `web/app.js`, and the `.hydro-risk-marker` CSS. Existing LiDAR and coastal products are independent.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

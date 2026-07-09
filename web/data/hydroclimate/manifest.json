@@ -1,0 +1,15 @@
+{
+  "generated": "2026-07-09T16:08:04.538270+00:00",
+  "model_version": 1,
+  "source": "fixture",
+  "model": "hydro_score = soil_moisture_norm + water90_norm + 0.5 * wetting_trend_norm",
+  "baseline": "fixture values for V1 UI validation",
+  "dates": [
+    {
+      "date": "2023-08-04",
+      "label": "Savinja Aug 2023 hindcast",
+      "hydro_file": "hydro_2023-08-04.geojson",
+      "dynamic_risk_file": "dynamic_risk_2023-08-04.geojson"
+    }
+  ]
+}

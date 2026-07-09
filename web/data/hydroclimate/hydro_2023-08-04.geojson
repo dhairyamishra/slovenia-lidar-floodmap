@@ -1,0 +1,9287 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              45.44
+            ],
+            [
+              13.68,
+              45.44
+            ],
+            [
+              13.68,
+              45.52
+            ],
+            [
+              13.6,
+              45.52
+            ],
+            [
+              13.6,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.309,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.769,
+        "hydro_index": 0.308,
+        "cell_id": "fixture-001",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              45.44
+            ],
+            [
+              13.76,
+              45.44
+            ],
+            [
+              13.76,
+              45.52
+            ],
+            [
+              13.68,
+              45.52
+            ],
+            [
+              13.68,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.321,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.781,
+        "hydro_index": 0.312,
+        "cell_id": "fixture-002",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              45.44
+            ],
+            [
+              13.84,
+              45.44
+            ],
+            [
+              13.84,
+              45.52
+            ],
+            [
+              13.76,
+              45.52
+            ],
+            [
+              13.76,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.313,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.773,
+        "hydro_index": 0.309,
+        "cell_id": "fixture-003",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              45.44
+            ],
+            [
+              13.92,
+              45.44
+            ],
+            [
+              13.92,
+              45.52
+            ],
+            [
+              13.84,
+              45.52
+            ],
+            [
+              13.84,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.296,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.756,
+        "hydro_index": 0.302,
+        "cell_id": "fixture-004",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              45.44
+            ],
+            [
+              14.0,
+              45.44
+            ],
+            [
+              14.0,
+              45.52
+            ],
+            [
+              13.92,
+              45.52
+            ],
+            [
+              13.92,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.285,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.745,
+        "hydro_index": 0.298,
+        "cell_id": "fixture-005",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              45.44
+            ],
+            [
+              14.08,
+              45.44
+            ],
+            [
+              14.08,
+              45.52
+            ],
+            [
+              14.0,
+              45.52
+            ],
+            [
+              14.0,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.741,
+        "hydro_index": 0.296,
+        "cell_id": "fixture-006",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              45.44
+            ],
+            [
+              14.16,
+              45.44
+            ],
+            [
+              14.16,
+              45.52
+            ],
+            [
+              14.08,
+              45.52
+            ],
+            [
+              14.08,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.74,
+        "hydro_index": 0.296,
+        "cell_id": "fixture-007",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              45.44
+            ],
+            [
+              14.24,
+              45.44
+            ],
+            [
+              14.24,
+              45.52
+            ],
+            [
+              14.16,
+              45.52
+            ],
+            [
+              14.16,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.74,
+        "hydro_index": 0.296,
+        "cell_id": "fixture-008",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              45.44
+            ],
+            [
+              14.32,
+              45.44
+            ],
+            [
+              14.32,
+              45.52
+            ],
+            [
+              14.24,
+              45.52
+            ],
+            [
+              14.24,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.74,
+        "hydro_index": 0.296,
+        "cell_id": "fixture-009",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              45.44
+            ],
+            [
+              14.4,
+              45.44
+            ],
+            [
+              14.4,
+              45.52
+            ],
+            [
+              14.32,
+              45.52
+            ],
+            [
+              14.32,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.74,
+        "hydro_index": 0.296,
+        "cell_id": "fixture-010",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              45.44
+            ],
+            [
+              14.48,
+              45.44
+            ],
+            [
+              14.48,
+              45.52
+            ],
+            [
+              14.4,
+              45.52
+            ],
+            [
+              14.4,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.74,
+        "hydro_index": 0.296,
+        "cell_id": "fixture-011",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              45.44
+            ],
+            [
+              14.56,
+              45.44
+            ],
+            [
+              14.56,
+              45.52
+            ],
+            [
+              14.48,
+              45.52
+            ],
+            [
+              14.48,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.74,
+        "hydro_index": 0.296,
+        "cell_id": "fixture-012",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              45.44
+            ],
+            [
+              14.64,
+              45.44
+            ],
+            [
+              14.64,
+              45.52
+            ],
+            [
+              14.56,
+              45.52
+            ],
+            [
+              14.56,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.74,
+        "hydro_index": 0.296,
+        "cell_id": "fixture-013",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              45.44
+            ],
+            [
+              14.72,
+              45.44
+            ],
+            [
+              14.72,
+              45.52
+            ],
+            [
+              14.64,
+              45.52
+            ],
+            [
+              14.64,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.74,
+        "hydro_index": 0.296,
+        "cell_id": "fixture-014",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              45.44
+            ],
+            [
+              14.8,
+              45.44
+            ],
+            [
+              14.8,
+              45.52
+            ],
+            [
+              14.72,
+              45.52
+            ],
+            [
+              14.72,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.74,
+        "hydro_index": 0.296,
+        "cell_id": "fixture-015",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              45.44
+            ],
+            [
+              14.88,
+              45.44
+            ],
+            [
+              14.88,
+              45.52
+            ],
+            [
+              14.8,
+              45.52
+            ],
+            [
+              14.8,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.74,
+        "hydro_index": 0.296,
+        "cell_id": "fixture-016",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              45.44
+            ],
+            [
+              14.96,
+              45.44
+            ],
+            [
+              14.96,
+              45.52
+            ],
+            [
+              14.88,
+              45.52
+            ],
+            [
+              14.88,
+              45.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.34,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.24,
+        "hydro_score": 0.74,
+        "hydro_index": 0.296,
+        "cell_id": "fixture-017",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 45.48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              45.52
+            ],
+            [
+              13.68,
+              45.52
+            ],
+            [
+              13.68,
+              45.6
+            ],
+            [
+              13.6,
+              45.6
+            ],
+            [
+              13.6,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.323,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.789,
+        "hydro_index": 0.315,
+        "cell_id": "fixture-018",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              45.52
+            ],
+            [
+              13.76,
+              45.52
+            ],
+            [
+              13.76,
+              45.6
+            ],
+            [
+              13.68,
+              45.6
+            ],
+            [
+              13.68,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.339,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.805,
+        "hydro_index": 0.322,
+        "cell_id": "fixture-019",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              45.52
+            ],
+            [
+              13.84,
+              45.52
+            ],
+            [
+              13.84,
+              45.6
+            ],
+            [
+              13.76,
+              45.6
+            ],
+            [
+              13.76,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.329,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.795,
+        "hydro_index": 0.318,
+        "cell_id": "fixture-020",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              45.52
+            ],
+            [
+              13.92,
+              45.52
+            ],
+            [
+              13.92,
+              45.6
+            ],
+            [
+              13.84,
+              45.6
+            ],
+            [
+              13.84,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.303,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.77,
+        "hydro_index": 0.308,
+        "cell_id": "fixture-021",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              45.52
+            ],
+            [
+              14.0,
+              45.52
+            ],
+            [
+              14.0,
+              45.6
+            ],
+            [
+              13.92,
+              45.6
+            ],
+            [
+              13.92,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.287,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.753,
+        "hydro_index": 0.301,
+        "cell_id": "fixture-022",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              45.52
+            ],
+            [
+              14.08,
+              45.52
+            ],
+            [
+              14.08,
+              45.6
+            ],
+            [
+              14.0,
+              45.6
+            ],
+            [
+              14.0,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.747,
+        "hydro_index": 0.299,
+        "cell_id": "fixture-023",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              45.52
+            ],
+            [
+              14.16,
+              45.52
+            ],
+            [
+              14.16,
+              45.6
+            ],
+            [
+              14.08,
+              45.6
+            ],
+            [
+              14.08,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.746,
+        "hydro_index": 0.298,
+        "cell_id": "fixture-024",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              45.52
+            ],
+            [
+              14.24,
+              45.52
+            ],
+            [
+              14.24,
+              45.6
+            ],
+            [
+              14.16,
+              45.6
+            ],
+            [
+              14.16,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.746,
+        "hydro_index": 0.298,
+        "cell_id": "fixture-025",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              45.52
+            ],
+            [
+              14.32,
+              45.52
+            ],
+            [
+              14.32,
+              45.6
+            ],
+            [
+              14.24,
+              45.6
+            ],
+            [
+              14.24,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.746,
+        "hydro_index": 0.298,
+        "cell_id": "fixture-026",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              45.52
+            ],
+            [
+              14.4,
+              45.52
+            ],
+            [
+              14.4,
+              45.6
+            ],
+            [
+              14.32,
+              45.6
+            ],
+            [
+              14.32,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.746,
+        "hydro_index": 0.298,
+        "cell_id": "fixture-027",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              45.52
+            ],
+            [
+              14.48,
+              45.52
+            ],
+            [
+              14.48,
+              45.6
+            ],
+            [
+              14.4,
+              45.6
+            ],
+            [
+              14.4,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.746,
+        "hydro_index": 0.298,
+        "cell_id": "fixture-028",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              45.52
+            ],
+            [
+              14.56,
+              45.52
+            ],
+            [
+              14.56,
+              45.6
+            ],
+            [
+              14.48,
+              45.6
+            ],
+            [
+              14.48,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.746,
+        "hydro_index": 0.298,
+        "cell_id": "fixture-029",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              45.52
+            ],
+            [
+              14.64,
+              45.52
+            ],
+            [
+              14.64,
+              45.6
+            ],
+            [
+              14.56,
+              45.6
+            ],
+            [
+              14.56,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.746,
+        "hydro_index": 0.298,
+        "cell_id": "fixture-030",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              45.52
+            ],
+            [
+              14.72,
+              45.52
+            ],
+            [
+              14.72,
+              45.6
+            ],
+            [
+              14.64,
+              45.6
+            ],
+            [
+              14.64,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.746,
+        "hydro_index": 0.298,
+        "cell_id": "fixture-031",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              45.52
+            ],
+            [
+              14.8,
+              45.52
+            ],
+            [
+              14.8,
+              45.6
+            ],
+            [
+              14.72,
+              45.6
+            ],
+            [
+              14.72,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.746,
+        "hydro_index": 0.298,
+        "cell_id": "fixture-032",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              45.52
+            ],
+            [
+              14.88,
+              45.52
+            ],
+            [
+              14.88,
+              45.6
+            ],
+            [
+              14.8,
+              45.6
+            ],
+            [
+              14.8,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.746,
+        "hydro_index": 0.298,
+        "cell_id": "fixture-033",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              45.52
+            ],
+            [
+              14.96,
+              45.52
+            ],
+            [
+              14.96,
+              45.6
+            ],
+            [
+              14.88,
+              45.6
+            ],
+            [
+              14.88,
+              45.52
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.344,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.245,
+        "hydro_score": 0.746,
+        "hydro_index": 0.298,
+        "cell_id": "fixture-034",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 45.56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              45.6
+            ],
+            [
+              13.68,
+              45.6
+            ],
+            [
+              13.68,
+              45.68
+            ],
+            [
+              13.6,
+              45.68
+            ],
+            [
+              13.6,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.351,
+        "water90_norm": 0.303,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.781,
+        "hydro_index": 0.312,
+        "cell_id": "fixture-035",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              45.6
+            ],
+            [
+              13.76,
+              45.6
+            ],
+            [
+              13.76,
+              45.68
+            ],
+            [
+              13.68,
+              45.68
+            ],
+            [
+              13.68,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.351,
+        "water90_norm": 0.312,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.79,
+        "hydro_index": 0.316,
+        "cell_id": "fixture-036",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              45.6
+            ],
+            [
+              13.84,
+              45.6
+            ],
+            [
+              13.84,
+              45.68
+            ],
+            [
+              13.76,
+              45.68
+            ],
+            [
+              13.76,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.351,
+        "water90_norm": 0.306,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.784,
+        "hydro_index": 0.314,
+        "cell_id": "fixture-037",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              45.6
+            ],
+            [
+              13.92,
+              45.6
+            ],
+            [
+              13.92,
+              45.68
+            ],
+            [
+              13.84,
+              45.68
+            ],
+            [
+              13.84,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.351,
+        "water90_norm": 0.293,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.771,
+        "hydro_index": 0.308,
+        "cell_id": "fixture-038",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              45.6
+            ],
+            [
+              14.0,
+              45.6
+            ],
+            [
+              14.0,
+              45.68
+            ],
+            [
+              13.92,
+              45.68
+            ],
+            [
+              13.92,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.351,
+        "water90_norm": 0.284,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.762,
+        "hydro_index": 0.305,
+        "cell_id": "fixture-039",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              45.6
+            ],
+            [
+              14.08,
+              45.6
+            ],
+            [
+              14.08,
+              45.68
+            ],
+            [
+              14.0,
+              45.68
+            ],
+            [
+              14.0,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.351,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.759,
+        "hydro_index": 0.304,
+        "cell_id": "fixture-040",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              45.6
+            ],
+            [
+              14.16,
+              45.6
+            ],
+            [
+              14.16,
+              45.68
+            ],
+            [
+              14.08,
+              45.68
+            ],
+            [
+              14.08,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.351,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.759,
+        "hydro_index": 0.303,
+        "cell_id": "fixture-041",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              45.6
+            ],
+            [
+              14.24,
+              45.6
+            ],
+            [
+              14.24,
+              45.68
+            ],
+            [
+              14.16,
+              45.68
+            ],
+            [
+              14.16,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.351,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.759,
+        "hydro_index": 0.303,
+        "cell_id": "fixture-042",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              45.6
+            ],
+            [
+              14.32,
+              45.6
+            ],
+            [
+              14.32,
+              45.68
+            ],
+            [
+              14.24,
+              45.68
+            ],
+            [
+              14.24,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.352,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.759,
+        "hydro_index": 0.304,
+        "cell_id": "fixture-043",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              45.6
+            ],
+            [
+              14.4,
+              45.6
+            ],
+            [
+              14.4,
+              45.68
+            ],
+            [
+              14.32,
+              45.68
+            ],
+            [
+              14.32,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.352,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.759,
+        "hydro_index": 0.304,
+        "cell_id": "fixture-044",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              45.6
+            ],
+            [
+              14.48,
+              45.6
+            ],
+            [
+              14.48,
+              45.68
+            ],
+            [
+              14.4,
+              45.68
+            ],
+            [
+              14.4,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.352,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.759,
+        "hydro_index": 0.304,
+        "cell_id": "fixture-045",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              45.6
+            ],
+            [
+              14.56,
+              45.6
+            ],
+            [
+              14.56,
+              45.68
+            ],
+            [
+              14.48,
+              45.68
+            ],
+            [
+              14.48,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.352,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.759,
+        "hydro_index": 0.304,
+        "cell_id": "fixture-046",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              45.6
+            ],
+            [
+              14.64,
+              45.6
+            ],
+            [
+              14.64,
+              45.68
+            ],
+            [
+              14.56,
+              45.68
+            ],
+            [
+              14.56,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.352,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.759,
+        "hydro_index": 0.304,
+        "cell_id": "fixture-047",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              45.6
+            ],
+            [
+              14.72,
+              45.6
+            ],
+            [
+              14.72,
+              45.68
+            ],
+            [
+              14.64,
+              45.68
+            ],
+            [
+              14.64,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.351,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.759,
+        "hydro_index": 0.303,
+        "cell_id": "fixture-048",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              45.6
+            ],
+            [
+              14.8,
+              45.6
+            ],
+            [
+              14.8,
+              45.68
+            ],
+            [
+              14.72,
+              45.68
+            ],
+            [
+              14.72,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.351,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.759,
+        "hydro_index": 0.303,
+        "cell_id": "fixture-049",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              45.6
+            ],
+            [
+              14.88,
+              45.6
+            ],
+            [
+              14.88,
+              45.68
+            ],
+            [
+              14.8,
+              45.68
+            ],
+            [
+              14.8,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.351,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.758,
+        "hydro_index": 0.303,
+        "cell_id": "fixture-050",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              45.6
+            ],
+            [
+              14.96,
+              45.6
+            ],
+            [
+              14.96,
+              45.68
+            ],
+            [
+              14.88,
+              45.68
+            ],
+            [
+              14.88,
+              45.6
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.351,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.254,
+        "hydro_score": 0.758,
+        "hydro_index": 0.303,
+        "cell_id": "fixture-051",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 45.64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              45.68
+            ],
+            [
+              13.68,
+              45.68
+            ],
+            [
+              13.68,
+              45.76
+            ],
+            [
+              13.6,
+              45.76
+            ],
+            [
+              13.6,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.359,
+        "water90_norm": 0.284,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.775,
+        "hydro_index": 0.31,
+        "cell_id": "fixture-052",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              45.68
+            ],
+            [
+              13.76,
+              45.68
+            ],
+            [
+              13.76,
+              45.76
+            ],
+            [
+              13.68,
+              45.76
+            ],
+            [
+              13.68,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.359,
+        "water90_norm": 0.286,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.777,
+        "hydro_index": 0.311,
+        "cell_id": "fixture-053",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              45.68
+            ],
+            [
+              13.84,
+              45.68
+            ],
+            [
+              13.84,
+              45.76
+            ],
+            [
+              13.76,
+              45.76
+            ],
+            [
+              13.76,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.359,
+        "water90_norm": 0.285,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.776,
+        "hydro_index": 0.31,
+        "cell_id": "fixture-054",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              45.68
+            ],
+            [
+              13.92,
+              45.68
+            ],
+            [
+              13.92,
+              45.76
+            ],
+            [
+              13.84,
+              45.76
+            ],
+            [
+              13.84,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.359,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.773,
+        "hydro_index": 0.309,
+        "cell_id": "fixture-055",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              45.68
+            ],
+            [
+              14.0,
+              45.68
+            ],
+            [
+              14.0,
+              45.76
+            ],
+            [
+              13.92,
+              45.76
+            ],
+            [
+              13.92,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.359,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.771,
+        "hydro_index": 0.309,
+        "cell_id": "fixture-056",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              45.68
+            ],
+            [
+              14.08,
+              45.68
+            ],
+            [
+              14.08,
+              45.76
+            ],
+            [
+              14.0,
+              45.76
+            ],
+            [
+              14.0,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.359,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.771,
+        "hydro_index": 0.308,
+        "cell_id": "fixture-057",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              45.68
+            ],
+            [
+              14.16,
+              45.68
+            ],
+            [
+              14.16,
+              45.76
+            ],
+            [
+              14.08,
+              45.76
+            ],
+            [
+              14.08,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.359,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.771,
+        "hydro_index": 0.309,
+        "cell_id": "fixture-058",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              45.68
+            ],
+            [
+              14.24,
+              45.68
+            ],
+            [
+              14.24,
+              45.76
+            ],
+            [
+              14.16,
+              45.76
+            ],
+            [
+              14.16,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.36,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.772,
+        "hydro_index": 0.309,
+        "cell_id": "fixture-059",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              45.68
+            ],
+            [
+              14.32,
+              45.68
+            ],
+            [
+              14.32,
+              45.76
+            ],
+            [
+              14.24,
+              45.76
+            ],
+            [
+              14.24,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.361,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.774,
+        "hydro_index": 0.31,
+        "cell_id": "fixture-060",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              45.68
+            ],
+            [
+              14.4,
+              45.68
+            ],
+            [
+              14.4,
+              45.76
+            ],
+            [
+              14.32,
+              45.76
+            ],
+            [
+              14.32,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.362,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.775,
+        "hydro_index": 0.31,
+        "cell_id": "fixture-061",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              45.68
+            ],
+            [
+              14.48,
+              45.68
+            ],
+            [
+              14.48,
+              45.76
+            ],
+            [
+              14.4,
+              45.76
+            ],
+            [
+              14.4,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.362,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.776,
+        "hydro_index": 0.311,
+        "cell_id": "fixture-062",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              45.68
+            ],
+            [
+              14.56,
+              45.68
+            ],
+            [
+              14.56,
+              45.76
+            ],
+            [
+              14.48,
+              45.76
+            ],
+            [
+              14.48,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.362,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.776,
+        "hydro_index": 0.31,
+        "cell_id": "fixture-063",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              45.68
+            ],
+            [
+              14.64,
+              45.68
+            ],
+            [
+              14.64,
+              45.76
+            ],
+            [
+              14.56,
+              45.76
+            ],
+            [
+              14.56,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.361,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.775,
+        "hydro_index": 0.31,
+        "cell_id": "fixture-064",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              45.68
+            ],
+            [
+              14.72,
+              45.68
+            ],
+            [
+              14.72,
+              45.76
+            ],
+            [
+              14.64,
+              45.76
+            ],
+            [
+              14.64,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.36,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.774,
+        "hydro_index": 0.309,
+        "cell_id": "fixture-065",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              45.68
+            ],
+            [
+              14.8,
+              45.68
+            ],
+            [
+              14.8,
+              45.76
+            ],
+            [
+              14.72,
+              45.76
+            ],
+            [
+              14.72,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.36,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.772,
+        "hydro_index": 0.309,
+        "cell_id": "fixture-066",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              45.68
+            ],
+            [
+              14.88,
+              45.68
+            ],
+            [
+              14.88,
+              45.76
+            ],
+            [
+              14.8,
+              45.76
+            ],
+            [
+              14.8,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.359,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.771,
+        "hydro_index": 0.309,
+        "cell_id": "fixture-067",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              45.68
+            ],
+            [
+              14.96,
+              45.68
+            ],
+            [
+              14.96,
+              45.76
+            ],
+            [
+              14.88,
+              45.76
+            ],
+            [
+              14.88,
+              45.68
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.359,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.264,
+        "hydro_score": 0.771,
+        "hydro_index": 0.308,
+        "cell_id": "fixture-068",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 45.72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              45.76
+            ],
+            [
+              13.68,
+              45.76
+            ],
+            [
+              13.68,
+              45.84
+            ],
+            [
+              13.6,
+              45.84
+            ],
+            [
+              13.6,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.366,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.783,
+        "hydro_index": 0.313,
+        "cell_id": "fixture-069",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              45.76
+            ],
+            [
+              13.76,
+              45.76
+            ],
+            [
+              13.76,
+              45.84
+            ],
+            [
+              13.68,
+              45.84
+            ],
+            [
+              13.68,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.366,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.783,
+        "hydro_index": 0.313,
+        "cell_id": "fixture-070",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              45.76
+            ],
+            [
+              13.84,
+              45.76
+            ],
+            [
+              13.84,
+              45.84
+            ],
+            [
+              13.76,
+              45.84
+            ],
+            [
+              13.76,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.366,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.783,
+        "hydro_index": 0.313,
+        "cell_id": "fixture-071",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              45.76
+            ],
+            [
+              13.92,
+              45.76
+            ],
+            [
+              13.92,
+              45.84
+            ],
+            [
+              13.84,
+              45.84
+            ],
+            [
+              13.84,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.366,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.783,
+        "hydro_index": 0.313,
+        "cell_id": "fixture-072",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              45.76
+            ],
+            [
+              14.0,
+              45.76
+            ],
+            [
+              14.0,
+              45.84
+            ],
+            [
+              13.92,
+              45.84
+            ],
+            [
+              13.92,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.367,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.783,
+        "hydro_index": 0.313,
+        "cell_id": "fixture-073",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              45.76
+            ],
+            [
+              14.08,
+              45.76
+            ],
+            [
+              14.08,
+              45.84
+            ],
+            [
+              14.0,
+              45.84
+            ],
+            [
+              14.0,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.367,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.785,
+        "hydro_index": 0.314,
+        "cell_id": "fixture-074",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              45.76
+            ],
+            [
+              14.16,
+              45.76
+            ],
+            [
+              14.16,
+              45.84
+            ],
+            [
+              14.08,
+              45.84
+            ],
+            [
+              14.08,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.369,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.787,
+        "hydro_index": 0.315,
+        "cell_id": "fixture-075",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              45.76
+            ],
+            [
+              14.24,
+              45.76
+            ],
+            [
+              14.24,
+              45.84
+            ],
+            [
+              14.16,
+              45.84
+            ],
+            [
+              14.16,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.372,
+        "water90_norm": 0.284,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.793,
+        "hydro_index": 0.317,
+        "cell_id": "fixture-076",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              45.76
+            ],
+            [
+              14.32,
+              45.76
+            ],
+            [
+              14.32,
+              45.84
+            ],
+            [
+              14.24,
+              45.84
+            ],
+            [
+              14.24,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.376,
+        "water90_norm": 0.288,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.8,
+        "hydro_index": 0.32,
+        "cell_id": "fixture-077",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              45.76
+            ],
+            [
+              14.4,
+              45.76
+            ],
+            [
+              14.4,
+              45.84
+            ],
+            [
+              14.32,
+              45.84
+            ],
+            [
+              14.32,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.381,
+        "water90_norm": 0.291,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.808,
+        "hydro_index": 0.323,
+        "cell_id": "fixture-078",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              45.76
+            ],
+            [
+              14.48,
+              45.76
+            ],
+            [
+              14.48,
+              45.84
+            ],
+            [
+              14.4,
+              45.84
+            ],
+            [
+              14.4,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.383,
+        "water90_norm": 0.293,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.813,
+        "hydro_index": 0.325,
+        "cell_id": "fixture-079",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              45.76
+            ],
+            [
+              14.56,
+              45.76
+            ],
+            [
+              14.56,
+              45.84
+            ],
+            [
+              14.48,
+              45.84
+            ],
+            [
+              14.48,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.383,
+        "water90_norm": 0.293,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.812,
+        "hydro_index": 0.325,
+        "cell_id": "fixture-080",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              45.76
+            ],
+            [
+              14.64,
+              45.76
+            ],
+            [
+              14.64,
+              45.84
+            ],
+            [
+              14.56,
+              45.84
+            ],
+            [
+              14.56,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.38,
+        "water90_norm": 0.29,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.806,
+        "hydro_index": 0.323,
+        "cell_id": "fixture-081",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              45.76
+            ],
+            [
+              14.72,
+              45.76
+            ],
+            [
+              14.72,
+              45.84
+            ],
+            [
+              14.64,
+              45.84
+            ],
+            [
+              14.64,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.375,
+        "water90_norm": 0.287,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.798,
+        "hydro_index": 0.319,
+        "cell_id": "fixture-082",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              45.76
+            ],
+            [
+              14.8,
+              45.76
+            ],
+            [
+              14.8,
+              45.84
+            ],
+            [
+              14.72,
+              45.84
+            ],
+            [
+              14.72,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.371,
+        "water90_norm": 0.284,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.791,
+        "hydro_index": 0.316,
+        "cell_id": "fixture-083",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              45.76
+            ],
+            [
+              14.88,
+              45.76
+            ],
+            [
+              14.88,
+              45.84
+            ],
+            [
+              14.8,
+              45.84
+            ],
+            [
+              14.8,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.368,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.787,
+        "hydro_index": 0.315,
+        "cell_id": "fixture-084",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              45.76
+            ],
+            [
+              14.96,
+              45.76
+            ],
+            [
+              14.96,
+              45.84
+            ],
+            [
+              14.88,
+              45.84
+            ],
+            [
+              14.88,
+              45.76
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.367,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.273,
+        "hydro_score": 0.784,
+        "hydro_index": 0.314,
+        "cell_id": "fixture-085",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 45.8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              45.84
+            ],
+            [
+              13.68,
+              45.84
+            ],
+            [
+              13.68,
+              45.92
+            ],
+            [
+              13.6,
+              45.92
+            ],
+            [
+              13.6,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.374,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.795,
+        "hydro_index": 0.318,
+        "cell_id": "fixture-086",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              45.84
+            ],
+            [
+              13.76,
+              45.84
+            ],
+            [
+              13.76,
+              45.92
+            ],
+            [
+              13.68,
+              45.92
+            ],
+            [
+              13.68,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.374,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.795,
+        "hydro_index": 0.318,
+        "cell_id": "fixture-087",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              45.84
+            ],
+            [
+              13.84,
+              45.84
+            ],
+            [
+              13.84,
+              45.92
+            ],
+            [
+              13.76,
+              45.92
+            ],
+            [
+              13.76,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.374,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.795,
+        "hydro_index": 0.318,
+        "cell_id": "fixture-088",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              45.84
+            ],
+            [
+              13.92,
+              45.84
+            ],
+            [
+              13.92,
+              45.92
+            ],
+            [
+              13.84,
+              45.92
+            ],
+            [
+              13.84,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.374,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.796,
+        "hydro_index": 0.318,
+        "cell_id": "fixture-089",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              45.84
+            ],
+            [
+              14.0,
+              45.84
+            ],
+            [
+              14.0,
+              45.92
+            ],
+            [
+              13.92,
+              45.92
+            ],
+            [
+              13.92,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.375,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.797,
+        "hydro_index": 0.319,
+        "cell_id": "fixture-090",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              45.84
+            ],
+            [
+              14.08,
+              45.84
+            ],
+            [
+              14.08,
+              45.92
+            ],
+            [
+              14.0,
+              45.92
+            ],
+            [
+              14.0,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.377,
+        "water90_norm": 0.283,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.801,
+        "hydro_index": 0.32,
+        "cell_id": "fixture-091",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              45.84
+            ],
+            [
+              14.16,
+              45.84
+            ],
+            [
+              14.16,
+              45.92
+            ],
+            [
+              14.08,
+              45.92
+            ],
+            [
+              14.08,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.383,
+        "water90_norm": 0.287,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.811,
+        "hydro_index": 0.324,
+        "cell_id": "fixture-092",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              45.84
+            ],
+            [
+              14.24,
+              45.84
+            ],
+            [
+              14.24,
+              45.92
+            ],
+            [
+              14.16,
+              45.92
+            ],
+            [
+              14.16,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.393,
+        "water90_norm": 0.295,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.829,
+        "hydro_index": 0.332,
+        "cell_id": "fixture-093",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              45.84
+            ],
+            [
+              14.32,
+              45.84
+            ],
+            [
+              14.32,
+              45.92
+            ],
+            [
+              14.24,
+              45.92
+            ],
+            [
+              14.24,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.407,
+        "water90_norm": 0.306,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.855,
+        "hydro_index": 0.342,
+        "cell_id": "fixture-094",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              45.84
+            ],
+            [
+              14.4,
+              45.84
+            ],
+            [
+              14.4,
+              45.92
+            ],
+            [
+              14.32,
+              45.92
+            ],
+            [
+              14.32,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.422,
+        "water90_norm": 0.318,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.881,
+        "hydro_index": 0.353,
+        "cell_id": "fixture-095",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              45.84
+            ],
+            [
+              14.48,
+              45.84
+            ],
+            [
+              14.48,
+              45.92
+            ],
+            [
+              14.4,
+              45.92
+            ],
+            [
+              14.4,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.432,
+        "water90_norm": 0.325,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.898,
+        "hydro_index": 0.359,
+        "cell_id": "fixture-096",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              45.84
+            ],
+            [
+              14.56,
+              45.84
+            ],
+            [
+              14.56,
+              45.92
+            ],
+            [
+              14.48,
+              45.92
+            ],
+            [
+              14.48,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.43,
+        "water90_norm": 0.324,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.895,
+        "hydro_index": 0.358,
+        "cell_id": "fixture-097",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              45.84
+            ],
+            [
+              14.64,
+              45.84
+            ],
+            [
+              14.64,
+              45.92
+            ],
+            [
+              14.56,
+              45.92
+            ],
+            [
+              14.56,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.419,
+        "water90_norm": 0.315,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.875,
+        "hydro_index": 0.35,
+        "cell_id": "fixture-098",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              45.84
+            ],
+            [
+              14.72,
+              45.84
+            ],
+            [
+              14.72,
+              45.92
+            ],
+            [
+              14.64,
+              45.92
+            ],
+            [
+              14.64,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.403,
+        "water90_norm": 0.303,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.848,
+        "hydro_index": 0.339,
+        "cell_id": "fixture-099",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              45.84
+            ],
+            [
+              14.8,
+              45.84
+            ],
+            [
+              14.8,
+              45.92
+            ],
+            [
+              14.72,
+              45.92
+            ],
+            [
+              14.72,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.39,
+        "water90_norm": 0.292,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.823,
+        "hydro_index": 0.329,
+        "cell_id": "fixture-100",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              45.84
+            ],
+            [
+              14.88,
+              45.84
+            ],
+            [
+              14.88,
+              45.92
+            ],
+            [
+              14.8,
+              45.92
+            ],
+            [
+              14.8,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.381,
+        "water90_norm": 0.285,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.808,
+        "hydro_index": 0.323,
+        "cell_id": "fixture-101",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              45.84
+            ],
+            [
+              14.96,
+              45.84
+            ],
+            [
+              14.96,
+              45.92
+            ],
+            [
+              14.88,
+              45.92
+            ],
+            [
+              14.88,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.376,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.282,
+        "hydro_score": 0.8,
+        "hydro_index": 0.32,
+        "cell_id": "fixture-102",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 45.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              45.92
+            ],
+            [
+              13.68,
+              45.92
+            ],
+            [
+              13.68,
+              46.0
+            ],
+            [
+              13.6,
+              46.0
+            ],
+            [
+              13.6,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.381,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.807,
+        "hydro_index": 0.323,
+        "cell_id": "fixture-103",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              45.92
+            ],
+            [
+              13.76,
+              45.92
+            ],
+            [
+              13.76,
+              46.0
+            ],
+            [
+              13.68,
+              46.0
+            ],
+            [
+              13.68,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.381,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.807,
+        "hydro_index": 0.323,
+        "cell_id": "fixture-104",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              45.92
+            ],
+            [
+              13.84,
+              45.92
+            ],
+            [
+              13.84,
+              46.0
+            ],
+            [
+              13.76,
+              46.0
+            ],
+            [
+              13.76,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.382,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.808,
+        "hydro_index": 0.323,
+        "cell_id": "fixture-105",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              45.92
+            ],
+            [
+              13.92,
+              45.92
+            ],
+            [
+              13.92,
+              46.0
+            ],
+            [
+              13.84,
+              46.0
+            ],
+            [
+              13.84,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.382,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.808,
+        "hydro_index": 0.323,
+        "cell_id": "fixture-106",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              45.92
+            ],
+            [
+              14.0,
+              45.92
+            ],
+            [
+              14.0,
+              46.0
+            ],
+            [
+              13.92,
+              46.0
+            ],
+            [
+              13.92,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.384,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.811,
+        "hydro_index": 0.325,
+        "cell_id": "fixture-107",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              45.92
+            ],
+            [
+              14.08,
+              45.92
+            ],
+            [
+              14.08,
+              46.0
+            ],
+            [
+              14.0,
+              46.0
+            ],
+            [
+              14.0,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.389,
+        "water90_norm": 0.286,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.82,
+        "hydro_index": 0.328,
+        "cell_id": "fixture-108",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              45.92
+            ],
+            [
+              14.16,
+              45.92
+            ],
+            [
+              14.16,
+              46.0
+            ],
+            [
+              14.08,
+              46.0
+            ],
+            [
+              14.08,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.401,
+        "water90_norm": 0.295,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.841,
+        "hydro_index": 0.337,
+        "cell_id": "fixture-109",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              45.92
+            ],
+            [
+              14.24,
+              45.92
+            ],
+            [
+              14.24,
+              46.0
+            ],
+            [
+              14.16,
+              46.0
+            ],
+            [
+              14.16,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.423,
+        "water90_norm": 0.312,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.881,
+        "hydro_index": 0.352,
+        "cell_id": "fixture-110",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              45.92
+            ],
+            [
+              14.32,
+              45.92
+            ],
+            [
+              14.32,
+              46.0
+            ],
+            [
+              14.24,
+              46.0
+            ],
+            [
+              14.24,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.454,
+        "water90_norm": 0.337,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.937,
+        "hydro_index": 0.375,
+        "cell_id": "fixture-111",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              45.92
+            ],
+            [
+              14.4,
+              45.92
+            ],
+            [
+              14.4,
+              46.0
+            ],
+            [
+              14.32,
+              46.0
+            ],
+            [
+              14.32,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.487,
+        "water90_norm": 0.362,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.995,
+        "hydro_index": 0.398,
+        "cell_id": "fixture-112",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              45.92
+            ],
+            [
+              14.48,
+              45.92
+            ],
+            [
+              14.48,
+              46.0
+            ],
+            [
+              14.4,
+              46.0
+            ],
+            [
+              14.4,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.507,
+        "water90_norm": 0.378,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 1.03,
+        "hydro_index": 0.412,
+        "cell_id": "fixture-113",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              45.92
+            ],
+            [
+              14.56,
+              45.92
+            ],
+            [
+              14.56,
+              46.0
+            ],
+            [
+              14.48,
+              46.0
+            ],
+            [
+              14.48,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.504,
+        "water90_norm": 0.375,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 1.025,
+        "hydro_index": 0.41,
+        "cell_id": "fixture-114",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              45.92
+            ],
+            [
+              14.64,
+              45.92
+            ],
+            [
+              14.64,
+              46.0
+            ],
+            [
+              14.56,
+              46.0
+            ],
+            [
+              14.56,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.479,
+        "water90_norm": 0.356,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.982,
+        "hydro_index": 0.393,
+        "cell_id": "fixture-115",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              45.92
+            ],
+            [
+              14.72,
+              45.92
+            ],
+            [
+              14.72,
+              46.0
+            ],
+            [
+              14.64,
+              46.0
+            ],
+            [
+              14.64,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.446,
+        "water90_norm": 0.33,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.922,
+        "hydro_index": 0.369,
+        "cell_id": "fixture-116",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              45.92
+            ],
+            [
+              14.8,
+              45.92
+            ],
+            [
+              14.8,
+              46.0
+            ],
+            [
+              14.72,
+              46.0
+            ],
+            [
+              14.72,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.416,
+        "water90_norm": 0.307,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.869,
+        "hydro_index": 0.348,
+        "cell_id": "fixture-117",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              45.92
+            ],
+            [
+              14.88,
+              45.92
+            ],
+            [
+              14.88,
+              46.0
+            ],
+            [
+              14.8,
+              46.0
+            ],
+            [
+              14.8,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.397,
+        "water90_norm": 0.292,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.835,
+        "hydro_index": 0.334,
+        "cell_id": "fixture-118",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              45.92
+            ],
+            [
+              14.96,
+              45.92
+            ],
+            [
+              14.96,
+              46.0
+            ],
+            [
+              14.88,
+              46.0
+            ],
+            [
+              14.88,
+              45.92
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.387,
+        "water90_norm": 0.284,
+        "wetting_trend_norm": 0.292,
+        "hydro_score": 0.817,
+        "hydro_index": 0.327,
+        "cell_id": "fixture-119",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 45.96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              46.0
+            ],
+            [
+              13.68,
+              46.0
+            ],
+            [
+              13.68,
+              46.08
+            ],
+            [
+              13.6,
+              46.08
+            ],
+            [
+              13.6,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.389,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 0.82,
+        "hydro_index": 0.328,
+        "cell_id": "fixture-120",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              46.0
+            ],
+            [
+              13.76,
+              46.0
+            ],
+            [
+              13.76,
+              46.08
+            ],
+            [
+              13.68,
+              46.08
+            ],
+            [
+              13.68,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.389,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 0.82,
+        "hydro_index": 0.328,
+        "cell_id": "fixture-121",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              46.0
+            ],
+            [
+              13.84,
+              46.0
+            ],
+            [
+              13.84,
+              46.08
+            ],
+            [
+              13.76,
+              46.08
+            ],
+            [
+              13.76,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.389,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 0.82,
+        "hydro_index": 0.328,
+        "cell_id": "fixture-122",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              46.0
+            ],
+            [
+              13.92,
+              46.0
+            ],
+            [
+              13.92,
+              46.08
+            ],
+            [
+              13.84,
+              46.08
+            ],
+            [
+              13.84,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.39,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 0.821,
+        "hydro_index": 0.328,
+        "cell_id": "fixture-123",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              46.0
+            ],
+            [
+              14.0,
+              46.0
+            ],
+            [
+              14.0,
+              46.08
+            ],
+            [
+              13.92,
+              46.08
+            ],
+            [
+              13.92,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.392,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 0.825,
+        "hydro_index": 0.33,
+        "cell_id": "fixture-124",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              46.0
+            ],
+            [
+              14.08,
+              46.0
+            ],
+            [
+              14.08,
+              46.08
+            ],
+            [
+              14.0,
+              46.08
+            ],
+            [
+              14.0,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.399,
+        "water90_norm": 0.288,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 0.838,
+        "hydro_index": 0.335,
+        "cell_id": "fixture-125",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              46.0
+            ],
+            [
+              14.16,
+              46.0
+            ],
+            [
+              14.16,
+              46.08
+            ],
+            [
+              14.08,
+              46.08
+            ],
+            [
+              14.08,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.416,
+        "water90_norm": 0.301,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 0.867,
+        "hydro_index": 0.347,
+        "cell_id": "fixture-126",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              46.0
+            ],
+            [
+              14.24,
+              46.0
+            ],
+            [
+              14.24,
+              46.08
+            ],
+            [
+              14.16,
+              46.08
+            ],
+            [
+              14.16,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.447,
+        "water90_norm": 0.325,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 0.922,
+        "hydro_index": 0.369,
+        "cell_id": "fixture-127",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              46.0
+            ],
+            [
+              14.32,
+              46.0
+            ],
+            [
+              14.32,
+              46.08
+            ],
+            [
+              14.24,
+              46.08
+            ],
+            [
+              14.24,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.491,
+        "water90_norm": 0.359,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 1.0,
+        "hydro_index": 0.4,
+        "cell_id": "fixture-128",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              46.0
+            ],
+            [
+              14.4,
+              46.0
+            ],
+            [
+              14.4,
+              46.08
+            ],
+            [
+              14.32,
+              46.08
+            ],
+            [
+              14.32,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.536,
+        "water90_norm": 0.395,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 1.081,
+        "hydro_index": 0.433,
+        "cell_id": "fixture-129",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              46.0
+            ],
+            [
+              14.48,
+              46.0
+            ],
+            [
+              14.48,
+              46.08
+            ],
+            [
+              14.4,
+              46.08
+            ],
+            [
+              14.4,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.564,
+        "water90_norm": 0.416,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 1.131,
+        "hydro_index": 0.452,
+        "cell_id": "fixture-130",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              46.0
+            ],
+            [
+              14.56,
+              46.0
+            ],
+            [
+              14.56,
+              46.08
+            ],
+            [
+              14.48,
+              46.08
+            ],
+            [
+              14.48,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.56,
+        "water90_norm": 0.413,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 1.123,
+        "hydro_index": 0.449,
+        "cell_id": "fixture-131",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              46.0
+            ],
+            [
+              14.64,
+              46.0
+            ],
+            [
+              14.64,
+              46.08
+            ],
+            [
+              14.56,
+              46.08
+            ],
+            [
+              14.56,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.526,
+        "water90_norm": 0.386,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 1.063,
+        "hydro_index": 0.425,
+        "cell_id": "fixture-132",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              46.0
+            ],
+            [
+              14.72,
+              46.0
+            ],
+            [
+              14.72,
+              46.08
+            ],
+            [
+              14.64,
+              46.08
+            ],
+            [
+              14.64,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.479,
+        "water90_norm": 0.35,
+        "wetting_trend_norm": 0.301,
+        "hydro_score": 0.98,
+        "hydro_index": 0.392,
+        "cell_id": "fixture-133",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              46.0
+            ],
+            [
+              14.8,
+              46.0
+            ],
+            [
+              14.8,
+              46.08
+            ],
+            [
+              14.72,
+              46.08
+            ],
+            [
+              14.72,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.438,
+        "water90_norm": 0.318,
+        "wetting_trend_norm": 0.302,
+        "hydro_score": 0.907,
+        "hydro_index": 0.363,
+        "cell_id": "fixture-134",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              46.0
+            ],
+            [
+              14.88,
+              46.0
+            ],
+            [
+              14.88,
+              46.08
+            ],
+            [
+              14.8,
+              46.08
+            ],
+            [
+              14.8,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.411,
+        "water90_norm": 0.298,
+        "wetting_trend_norm": 0.302,
+        "hydro_score": 0.859,
+        "hydro_index": 0.344,
+        "cell_id": "fixture-135",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              46.0
+            ],
+            [
+              14.96,
+              46.0
+            ],
+            [
+              14.96,
+              46.08
+            ],
+            [
+              14.88,
+              46.08
+            ],
+            [
+              14.88,
+              46.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.397,
+        "water90_norm": 0.287,
+        "wetting_trend_norm": 0.302,
+        "hydro_score": 0.835,
+        "hydro_index": 0.334,
+        "cell_id": "fixture-136",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 46.04
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              46.08
+            ],
+            [
+              13.68,
+              46.08
+            ],
+            [
+              13.68,
+              46.16
+            ],
+            [
+              13.6,
+              46.16
+            ],
+            [
+              13.6,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.396,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.311,
+        "hydro_score": 0.832,
+        "hydro_index": 0.333,
+        "cell_id": "fixture-137",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              46.08
+            ],
+            [
+              13.76,
+              46.08
+            ],
+            [
+              13.76,
+              46.16
+            ],
+            [
+              13.68,
+              46.16
+            ],
+            [
+              13.68,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.396,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.311,
+        "hydro_score": 0.832,
+        "hydro_index": 0.333,
+        "cell_id": "fixture-138",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              46.08
+            ],
+            [
+              13.84,
+              46.08
+            ],
+            [
+              13.84,
+              46.16
+            ],
+            [
+              13.76,
+              46.16
+            ],
+            [
+              13.76,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.397,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.311,
+        "hydro_score": 0.832,
+        "hydro_index": 0.333,
+        "cell_id": "fixture-139",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              46.08
+            ],
+            [
+              13.92,
+              46.08
+            ],
+            [
+              13.92,
+              46.16
+            ],
+            [
+              13.84,
+              46.16
+            ],
+            [
+              13.84,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.397,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.311,
+        "hydro_score": 0.833,
+        "hydro_index": 0.333,
+        "cell_id": "fixture-140",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              46.08
+            ],
+            [
+              14.0,
+              46.08
+            ],
+            [
+              14.0,
+              46.16
+            ],
+            [
+              13.92,
+              46.16
+            ],
+            [
+              13.92,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.399,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.311,
+        "hydro_score": 0.837,
+        "hydro_index": 0.335,
+        "cell_id": "fixture-141",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              46.08
+            ],
+            [
+              14.08,
+              46.08
+            ],
+            [
+              14.08,
+              46.16
+            ],
+            [
+              14.0,
+              46.16
+            ],
+            [
+              14.0,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.406,
+        "water90_norm": 0.287,
+        "wetting_trend_norm": 0.311,
+        "hydro_score": 0.848,
+        "hydro_index": 0.339,
+        "cell_id": "fixture-142",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              46.08
+            ],
+            [
+              14.16,
+              46.08
+            ],
+            [
+              14.16,
+              46.16
+            ],
+            [
+              14.08,
+              46.16
+            ],
+            [
+              14.08,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.42,
+        "water90_norm": 0.299,
+        "wetting_trend_norm": 0.311,
+        "hydro_score": 0.874,
+        "hydro_index": 0.35,
+        "cell_id": "fixture-143",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              46.08
+            ],
+            [
+              14.24,
+              46.08
+            ],
+            [
+              14.24,
+              46.16
+            ],
+            [
+              14.16,
+              46.16
+            ],
+            [
+              14.16,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.448,
+        "water90_norm": 0.32,
+        "wetting_trend_norm": 0.311,
+        "hydro_score": 0.923,
+        "hydro_index": 0.369,
+        "cell_id": "fixture-144",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              46.08
+            ],
+            [
+              14.32,
+              46.08
+            ],
+            [
+              14.32,
+              46.16
+            ],
+            [
+              14.24,
+              46.16
+            ],
+            [
+              14.24,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.487,
+        "water90_norm": 0.351,
+        "wetting_trend_norm": 0.311,
+        "hydro_score": 0.994,
+        "hydro_index": 0.397,
+        "cell_id": "fixture-145",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              46.08
+            ],
+            [
+              14.4,
+              46.08
+            ],
+            [
+              14.4,
+              46.16
+            ],
+            [
+              14.32,
+              46.16
+            ],
+            [
+              14.32,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.528,
+        "water90_norm": 0.383,
+        "wetting_trend_norm": 0.311,
+        "hydro_score": 1.066,
+        "hydro_index": 0.426,
+        "cell_id": "fixture-146",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              46.08
+            ],
+            [
+              14.48,
+              46.08
+            ],
+            [
+              14.48,
+              46.16
+            ],
+            [
+              14.4,
+              46.16
+            ],
+            [
+              14.4,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.553,
+        "water90_norm": 0.402,
+        "wetting_trend_norm": 0.311,
+        "hydro_score": 1.11,
+        "hydro_index": 0.444,
+        "cell_id": "fixture-147",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              46.08
+            ],
+            [
+              14.56,
+              46.08
+            ],
+            [
+              14.56,
+              46.16
+            ],
+            [
+              14.48,
+              46.16
+            ],
+            [
+              14.48,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.55,
+        "water90_norm": 0.399,
+        "wetting_trend_norm": 0.311,
+        "hydro_score": 1.104,
+        "hydro_index": 0.442,
+        "cell_id": "fixture-148",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              46.08
+            ],
+            [
+              14.64,
+              46.08
+            ],
+            [
+              14.64,
+              46.16
+            ],
+            [
+              14.56,
+              46.16
+            ],
+            [
+              14.56,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.521,
+        "water90_norm": 0.377,
+        "wetting_trend_norm": 0.312,
+        "hydro_score": 1.054,
+        "hydro_index": 0.422,
+        "cell_id": "fixture-149",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              46.08
+            ],
+            [
+              14.72,
+              46.08
+            ],
+            [
+              14.72,
+              46.16
+            ],
+            [
+              14.64,
+              46.16
+            ],
+            [
+              14.64,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.483,
+        "water90_norm": 0.349,
+        "wetting_trend_norm": 0.315,
+        "hydro_score": 0.989,
+        "hydro_index": 0.396,
+        "cell_id": "fixture-150",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              46.08
+            ],
+            [
+              14.8,
+              46.08
+            ],
+            [
+              14.8,
+              46.16
+            ],
+            [
+              14.72,
+              46.16
+            ],
+            [
+              14.72,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.451,
+        "water90_norm": 0.328,
+        "wetting_trend_norm": 0.32,
+        "hydro_score": 0.939,
+        "hydro_index": 0.376,
+        "cell_id": "fixture-151",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              46.08
+            ],
+            [
+              14.88,
+              46.08
+            ],
+            [
+              14.88,
+              46.16
+            ],
+            [
+              14.8,
+              46.16
+            ],
+            [
+              14.8,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.431,
+        "water90_norm": 0.313,
+        "wetting_trend_norm": 0.323,
+        "hydro_score": 0.906,
+        "hydro_index": 0.362,
+        "cell_id": "fixture-152",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              46.08
+            ],
+            [
+              14.96,
+              46.08
+            ],
+            [
+              14.96,
+              46.16
+            ],
+            [
+              14.88,
+              46.16
+            ],
+            [
+              14.88,
+              46.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.416,
+        "water90_norm": 0.301,
+        "wetting_trend_norm": 0.321,
+        "hydro_score": 0.878,
+        "hydro_index": 0.351,
+        "cell_id": "fixture-153",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 46.12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              46.16
+            ],
+            [
+              13.68,
+              46.16
+            ],
+            [
+              13.68,
+              46.24
+            ],
+            [
+              13.6,
+              46.24
+            ],
+            [
+              13.6,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.404,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.32,
+        "hydro_score": 0.844,
+        "hydro_index": 0.338,
+        "cell_id": "fixture-154",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              46.16
+            ],
+            [
+              13.76,
+              46.16
+            ],
+            [
+              13.76,
+              46.24
+            ],
+            [
+              13.68,
+              46.24
+            ],
+            [
+              13.68,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.404,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.32,
+        "hydro_score": 0.844,
+        "hydro_index": 0.338,
+        "cell_id": "fixture-155",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              46.16
+            ],
+            [
+              13.84,
+              46.16
+            ],
+            [
+              13.84,
+              46.24
+            ],
+            [
+              13.76,
+              46.24
+            ],
+            [
+              13.76,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.404,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.32,
+        "hydro_score": 0.844,
+        "hydro_index": 0.338,
+        "cell_id": "fixture-156",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              46.16
+            ],
+            [
+              13.92,
+              46.16
+            ],
+            [
+              13.92,
+              46.24
+            ],
+            [
+              13.84,
+              46.24
+            ],
+            [
+              13.84,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.404,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.32,
+        "hydro_score": 0.845,
+        "hydro_index": 0.338,
+        "cell_id": "fixture-157",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              46.16
+            ],
+            [
+              14.0,
+              46.16
+            ],
+            [
+              14.0,
+              46.24
+            ],
+            [
+              13.92,
+              46.24
+            ],
+            [
+              13.92,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.406,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.32,
+        "hydro_score": 0.847,
+        "hydro_index": 0.339,
+        "cell_id": "fixture-158",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              46.16
+            ],
+            [
+              14.08,
+              46.16
+            ],
+            [
+              14.08,
+              46.24
+            ],
+            [
+              14.0,
+              46.24
+            ],
+            [
+              14.0,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.409,
+        "water90_norm": 0.284,
+        "wetting_trend_norm": 0.32,
+        "hydro_score": 0.853,
+        "hydro_index": 0.341,
+        "cell_id": "fixture-159",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              46.16
+            ],
+            [
+              14.16,
+              46.16
+            ],
+            [
+              14.16,
+              46.24
+            ],
+            [
+              14.08,
+              46.24
+            ],
+            [
+              14.08,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.418,
+        "water90_norm": 0.291,
+        "wetting_trend_norm": 0.32,
+        "hydro_score": 0.868,
+        "hydro_index": 0.347,
+        "cell_id": "fixture-160",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              46.16
+            ],
+            [
+              14.24,
+              46.16
+            ],
+            [
+              14.24,
+              46.24
+            ],
+            [
+              14.16,
+              46.24
+            ],
+            [
+              14.16,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.434,
+        "water90_norm": 0.303,
+        "wetting_trend_norm": 0.32,
+        "hydro_score": 0.897,
+        "hydro_index": 0.359,
+        "cell_id": "fixture-161",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              46.16
+            ],
+            [
+              14.32,
+              46.16
+            ],
+            [
+              14.32,
+              46.24
+            ],
+            [
+              14.24,
+              46.24
+            ],
+            [
+              14.24,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.456,
+        "water90_norm": 0.321,
+        "wetting_trend_norm": 0.32,
+        "hydro_score": 0.937,
+        "hydro_index": 0.375,
+        "cell_id": "fixture-162",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              46.16
+            ],
+            [
+              14.4,
+              46.16
+            ],
+            [
+              14.4,
+              46.24
+            ],
+            [
+              14.32,
+              46.24
+            ],
+            [
+              14.32,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.48,
+        "water90_norm": 0.339,
+        "wetting_trend_norm": 0.32,
+        "hydro_score": 0.979,
+        "hydro_index": 0.391,
+        "cell_id": "fixture-163",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              46.16
+            ],
+            [
+              14.48,
+              46.16
+            ],
+            [
+              14.48,
+              46.24
+            ],
+            [
+              14.4,
+              46.24
+            ],
+            [
+              14.4,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.494,
+        "water90_norm": 0.35,
+        "wetting_trend_norm": 0.32,
+        "hydro_score": 1.005,
+        "hydro_index": 0.402,
+        "cell_id": "fixture-164",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              46.16
+            ],
+            [
+              14.56,
+              46.16
+            ],
+            [
+              14.56,
+              46.24
+            ],
+            [
+              14.48,
+              46.24
+            ],
+            [
+              14.48,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.495,
+        "water90_norm": 0.352,
+        "wetting_trend_norm": 0.322,
+        "hydro_score": 1.008,
+        "hydro_index": 0.403,
+        "cell_id": "fixture-165",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              46.16
+            ],
+            [
+              14.64,
+              46.16
+            ],
+            [
+              14.64,
+              46.24
+            ],
+            [
+              14.56,
+              46.24
+            ],
+            [
+              14.56,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.489,
+        "water90_norm": 0.352,
+        "wetting_trend_norm": 0.332,
+        "hydro_score": 1.007,
+        "hydro_index": 0.403,
+        "cell_id": "fixture-166",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              46.16
+            ],
+            [
+              14.72,
+              46.16
+            ],
+            [
+              14.72,
+              46.24
+            ],
+            [
+              14.64,
+              46.24
+            ],
+            [
+              14.64,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.497,
+        "water90_norm": 0.373,
+        "wetting_trend_norm": 0.359,
+        "hydro_score": 1.049,
+        "hydro_index": 0.42,
+        "cell_id": "fixture-167",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              46.16
+            ],
+            [
+              14.8,
+              46.16
+            ],
+            [
+              14.8,
+              46.24
+            ],
+            [
+              14.72,
+              46.24
+            ],
+            [
+              14.72,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.526,
+        "water90_norm": 0.416,
+        "wetting_trend_norm": 0.401,
+        "hydro_score": 1.142,
+        "hydro_index": 0.457,
+        "cell_id": "fixture-168",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              46.16
+            ],
+            [
+              14.88,
+              46.16
+            ],
+            [
+              14.88,
+              46.24
+            ],
+            [
+              14.8,
+              46.24
+            ],
+            [
+              14.8,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.543,
+        "water90_norm": 0.443,
+        "wetting_trend_norm": 0.426,
+        "hydro_score": 1.199,
+        "hydro_index": 0.48,
+        "cell_id": "fixture-169",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              46.16
+            ],
+            [
+              14.96,
+              46.16
+            ],
+            [
+              14.96,
+              46.24
+            ],
+            [
+              14.88,
+              46.24
+            ],
+            [
+              14.88,
+              46.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.516,
+        "water90_norm": 0.414,
+        "wetting_trend_norm": 0.41,
+        "hydro_score": 1.135,
+        "hydro_index": 0.454,
+        "cell_id": "fixture-170",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 46.2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              46.24
+            ],
+            [
+              13.68,
+              46.24
+            ],
+            [
+              13.68,
+              46.32
+            ],
+            [
+              13.6,
+              46.32
+            ],
+            [
+              13.6,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.412,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.329,
+        "hydro_score": 0.856,
+        "hydro_index": 0.342,
+        "cell_id": "fixture-171",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              46.24
+            ],
+            [
+              13.76,
+              46.24
+            ],
+            [
+              13.76,
+              46.32
+            ],
+            [
+              13.68,
+              46.32
+            ],
+            [
+              13.68,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.412,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.329,
+        "hydro_score": 0.856,
+        "hydro_index": 0.342,
+        "cell_id": "fixture-172",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              46.24
+            ],
+            [
+              13.84,
+              46.24
+            ],
+            [
+              13.84,
+              46.32
+            ],
+            [
+              13.76,
+              46.32
+            ],
+            [
+              13.76,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.412,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.329,
+        "hydro_score": 0.856,
+        "hydro_index": 0.343,
+        "cell_id": "fixture-173",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              46.24
+            ],
+            [
+              13.92,
+              46.24
+            ],
+            [
+              13.92,
+              46.32
+            ],
+            [
+              13.84,
+              46.32
+            ],
+            [
+              13.84,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.412,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.329,
+        "hydro_score": 0.857,
+        "hydro_index": 0.343,
+        "cell_id": "fixture-174",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              46.24
+            ],
+            [
+              14.0,
+              46.24
+            ],
+            [
+              14.0,
+              46.32
+            ],
+            [
+              13.92,
+              46.32
+            ],
+            [
+              13.92,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.412,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.329,
+        "hydro_score": 0.857,
+        "hydro_index": 0.343,
+        "cell_id": "fixture-175",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              46.24
+            ],
+            [
+              14.08,
+              46.24
+            ],
+            [
+              14.08,
+              46.32
+            ],
+            [
+              14.0,
+              46.32
+            ],
+            [
+              14.0,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.413,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.329,
+        "hydro_score": 0.86,
+        "hydro_index": 0.344,
+        "cell_id": "fixture-176",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              46.24
+            ],
+            [
+              14.16,
+              46.24
+            ],
+            [
+              14.16,
+              46.32
+            ],
+            [
+              14.08,
+              46.32
+            ],
+            [
+              14.08,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.417,
+        "water90_norm": 0.284,
+        "wetting_trend_norm": 0.329,
+        "hydro_score": 0.865,
+        "hydro_index": 0.346,
+        "cell_id": "fixture-177",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              46.24
+            ],
+            [
+              14.24,
+              46.24
+            ],
+            [
+              14.24,
+              46.32
+            ],
+            [
+              14.16,
+              46.32
+            ],
+            [
+              14.16,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.422,
+        "water90_norm": 0.288,
+        "wetting_trend_norm": 0.329,
+        "hydro_score": 0.876,
+        "hydro_index": 0.35,
+        "cell_id": "fixture-178",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              46.24
+            ],
+            [
+              14.32,
+              46.24
+            ],
+            [
+              14.32,
+              46.32
+            ],
+            [
+              14.24,
+              46.32
+            ],
+            [
+              14.24,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.431,
+        "water90_norm": 0.295,
+        "wetting_trend_norm": 0.329,
+        "hydro_score": 0.89,
+        "hydro_index": 0.356,
+        "cell_id": "fixture-179",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              46.24
+            ],
+            [
+              14.4,
+              46.24
+            ],
+            [
+              14.4,
+              46.32
+            ],
+            [
+              14.32,
+              46.32
+            ],
+            [
+              14.32,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.439,
+        "water90_norm": 0.302,
+        "wetting_trend_norm": 0.329,
+        "hydro_score": 0.906,
+        "hydro_index": 0.362,
+        "cell_id": "fixture-180",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              46.24
+            ],
+            [
+              14.48,
+              46.24
+            ],
+            [
+              14.48,
+              46.32
+            ],
+            [
+              14.4,
+              46.32
+            ],
+            [
+              14.4,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.446,
+        "water90_norm": 0.307,
+        "wetting_trend_norm": 0.33,
+        "hydro_score": 0.918,
+        "hydro_index": 0.367,
+        "cell_id": "fixture-181",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              46.24
+            ],
+            [
+              14.56,
+              46.24
+            ],
+            [
+              14.56,
+              46.32
+            ],
+            [
+              14.48,
+              46.32
+            ],
+            [
+              14.48,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.453,
+        "water90_norm": 0.316,
+        "wetting_trend_norm": 0.337,
+        "hydro_score": 0.937,
+        "hydro_index": 0.375,
+        "cell_id": "fixture-182",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              46.24
+            ],
+            [
+              14.64,
+              46.24
+            ],
+            [
+              14.64,
+              46.32
+            ],
+            [
+              14.56,
+              46.32
+            ],
+            [
+              14.56,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.482,
+        "water90_norm": 0.355,
+        "wetting_trend_norm": 0.367,
+        "hydro_score": 1.02,
+        "hydro_index": 0.408,
+        "cell_id": "fixture-183",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              46.24
+            ],
+            [
+              14.72,
+              46.24
+            ],
+            [
+              14.72,
+              46.32
+            ],
+            [
+              14.64,
+              46.32
+            ],
+            [
+              14.64,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.573,
+        "water90_norm": 0.468,
+        "wetting_trend_norm": 0.45,
+        "hydro_score": 1.266,
+        "hydro_index": 0.507,
+        "cell_id": "fixture-184",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              46.24
+            ],
+            [
+              14.8,
+              46.24
+            ],
+            [
+              14.8,
+              46.32
+            ],
+            [
+              14.72,
+              46.32
+            ],
+            [
+              14.72,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.719,
+        "water90_norm": 0.647,
+        "wetting_trend_norm": 0.578,
+        "hydro_score": 1.655,
+        "hydro_index": 0.662,
+        "cell_id": "fixture-185",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              46.24
+            ],
+            [
+              14.88,
+              46.24
+            ],
+            [
+              14.88,
+              46.32
+            ],
+            [
+              14.8,
+              46.32
+            ],
+            [
+              14.8,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.809,
+        "water90_norm": 0.759,
+        "wetting_trend_norm": 0.657,
+        "hydro_score": 1.896,
+        "hydro_index": 0.759,
+        "cell_id": "fixture-186",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              46.24
+            ],
+            [
+              14.96,
+              46.24
+            ],
+            [
+              14.96,
+              46.32
+            ],
+            [
+              14.88,
+              46.32
+            ],
+            [
+              14.88,
+              46.24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.746,
+        "water90_norm": 0.684,
+        "wetting_trend_norm": 0.607,
+        "hydro_score": 1.733,
+        "hydro_index": 0.693,
+        "cell_id": "fixture-187",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 46.28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              46.32
+            ],
+            [
+              13.68,
+              46.32
+            ],
+            [
+              13.68,
+              46.4
+            ],
+            [
+              13.6,
+              46.4
+            ],
+            [
+              13.6,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.419,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.339,
+        "hydro_score": 0.868,
+        "hydro_index": 0.347,
+        "cell_id": "fixture-188",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              46.32
+            ],
+            [
+              13.76,
+              46.32
+            ],
+            [
+              13.76,
+              46.4
+            ],
+            [
+              13.68,
+              46.4
+            ],
+            [
+              13.68,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.419,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.339,
+        "hydro_score": 0.868,
+        "hydro_index": 0.347,
+        "cell_id": "fixture-189",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              46.32
+            ],
+            [
+              13.84,
+              46.32
+            ],
+            [
+              13.84,
+              46.4
+            ],
+            [
+              13.76,
+              46.4
+            ],
+            [
+              13.76,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.419,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.339,
+        "hydro_score": 0.868,
+        "hydro_index": 0.347,
+        "cell_id": "fixture-190",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              46.32
+            ],
+            [
+              13.92,
+              46.32
+            ],
+            [
+              13.92,
+              46.4
+            ],
+            [
+              13.84,
+              46.4
+            ],
+            [
+              13.84,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.419,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.339,
+        "hydro_score": 0.869,
+        "hydro_index": 0.347,
+        "cell_id": "fixture-191",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              46.32
+            ],
+            [
+              14.0,
+              46.32
+            ],
+            [
+              14.0,
+              46.4
+            ],
+            [
+              13.92,
+              46.4
+            ],
+            [
+              13.92,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.419,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.339,
+        "hydro_score": 0.869,
+        "hydro_index": 0.347,
+        "cell_id": "fixture-192",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              46.32
+            ],
+            [
+              14.08,
+              46.32
+            ],
+            [
+              14.08,
+              46.4
+            ],
+            [
+              14.0,
+              46.4
+            ],
+            [
+              14.0,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.42,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.339,
+        "hydro_score": 0.869,
+        "hydro_index": 0.348,
+        "cell_id": "fixture-193",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              46.32
+            ],
+            [
+              14.16,
+              46.32
+            ],
+            [
+              14.16,
+              46.4
+            ],
+            [
+              14.08,
+              46.4
+            ],
+            [
+              14.08,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.42,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.339,
+        "hydro_score": 0.871,
+        "hydro_index": 0.348,
+        "cell_id": "fixture-194",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              46.32
+            ],
+            [
+              14.24,
+              46.32
+            ],
+            [
+              14.24,
+              46.4
+            ],
+            [
+              14.16,
+              46.4
+            ],
+            [
+              14.16,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.422,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.339,
+        "hydro_score": 0.873,
+        "hydro_index": 0.349,
+        "cell_id": "fixture-195",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              46.32
+            ],
+            [
+              14.32,
+              46.32
+            ],
+            [
+              14.32,
+              46.4
+            ],
+            [
+              14.24,
+              46.4
+            ],
+            [
+              14.24,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.424,
+        "water90_norm": 0.284,
+        "wetting_trend_norm": 0.339,
+        "hydro_score": 0.877,
+        "hydro_index": 0.351,
+        "cell_id": "fixture-196",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              46.32
+            ],
+            [
+              14.4,
+              46.32
+            ],
+            [
+              14.4,
+              46.4
+            ],
+            [
+              14.32,
+              46.4
+            ],
+            [
+              14.32,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.426,
+        "water90_norm": 0.285,
+        "wetting_trend_norm": 0.339,
+        "hydro_score": 0.88,
+        "hydro_index": 0.352,
+        "cell_id": "fixture-197",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              46.32
+            ],
+            [
+              14.48,
+              46.32
+            ],
+            [
+              14.48,
+              46.4
+            ],
+            [
+              14.4,
+              46.4
+            ],
+            [
+              14.4,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.428,
+        "water90_norm": 0.288,
+        "wetting_trend_norm": 0.34,
+        "hydro_score": 0.886,
+        "hydro_index": 0.354,
+        "cell_id": "fixture-198",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              46.32
+            ],
+            [
+              14.56,
+              46.32
+            ],
+            [
+              14.56,
+              46.4
+            ],
+            [
+              14.48,
+              46.4
+            ],
+            [
+              14.48,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.437,
+        "water90_norm": 0.298,
+        "wetting_trend_norm": 0.347,
+        "hydro_score": 0.909,
+        "hydro_index": 0.364,
+        "cell_id": "fixture-199",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              46.32
+            ],
+            [
+              14.64,
+              46.32
+            ],
+            [
+              14.64,
+              46.4
+            ],
+            [
+              14.56,
+              46.4
+            ],
+            [
+              14.56,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.476,
+        "water90_norm": 0.346,
+        "wetting_trend_norm": 0.381,
+        "hydro_score": 1.013,
+        "hydro_index": 0.405,
+        "cell_id": "fixture-200",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              46.32
+            ],
+            [
+              14.72,
+              46.32
+            ],
+            [
+              14.72,
+              46.4
+            ],
+            [
+              14.64,
+              46.4
+            ],
+            [
+              14.64,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.587,
+        "water90_norm": 0.481,
+        "wetting_trend_norm": 0.476,
+        "hydro_score": 1.306,
+        "hydro_index": 0.522,
+        "cell_id": "fixture-201",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              46.32
+            ],
+            [
+              14.8,
+              46.32
+            ],
+            [
+              14.8,
+              46.4
+            ],
+            [
+              14.72,
+              46.4
+            ],
+            [
+              14.72,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.759,
+        "water90_norm": 0.69,
+        "wetting_trend_norm": 0.62,
+        "hydro_score": 1.759,
+        "hydro_index": 0.704,
+        "cell_id": "fixture-202",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              46.32
+            ],
+            [
+              14.88,
+              46.32
+            ],
+            [
+              14.88,
+              46.4
+            ],
+            [
+              14.8,
+              46.4
+            ],
+            [
+              14.8,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.866,
+        "water90_norm": 0.819,
+        "wetting_trend_norm": 0.71,
+        "hydro_score": 2.041,
+        "hydro_index": 0.816,
+        "cell_id": "fixture-203",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              46.32
+            ],
+            [
+              14.96,
+              46.32
+            ],
+            [
+              14.96,
+              46.4
+            ],
+            [
+              14.88,
+              46.4
+            ],
+            [
+              14.88,
+              46.32
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.797,
+        "water90_norm": 0.736,
+        "wetting_trend_norm": 0.653,
+        "hydro_score": 1.86,
+        "hydro_index": 0.744,
+        "cell_id": "fixture-204",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 46.36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.6,
+              46.4
+            ],
+            [
+              13.68,
+              46.4
+            ],
+            [
+              13.68,
+              46.4
+            ],
+            [
+              13.6,
+              46.4
+            ],
+            [
+              13.6,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.42,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.34,
+        "hydro_score": 0.87,
+        "hydro_index": 0.348,
+        "cell_id": "fixture-205",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.64,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.68,
+              46.4
+            ],
+            [
+              13.76,
+              46.4
+            ],
+            [
+              13.76,
+              46.4
+            ],
+            [
+              13.68,
+              46.4
+            ],
+            [
+              13.68,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.42,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.34,
+        "hydro_score": 0.87,
+        "hydro_index": 0.348,
+        "cell_id": "fixture-206",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.72,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.76,
+              46.4
+            ],
+            [
+              13.84,
+              46.4
+            ],
+            [
+              13.84,
+              46.4
+            ],
+            [
+              13.76,
+              46.4
+            ],
+            [
+              13.76,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.42,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.34,
+        "hydro_score": 0.87,
+        "hydro_index": 0.348,
+        "cell_id": "fixture-207",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.8,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.84,
+              46.4
+            ],
+            [
+              13.92,
+              46.4
+            ],
+            [
+              13.92,
+              46.4
+            ],
+            [
+              13.84,
+              46.4
+            ],
+            [
+              13.84,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.42,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.34,
+        "hydro_score": 0.87,
+        "hydro_index": 0.348,
+        "cell_id": "fixture-208",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.88,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.92,
+              46.4
+            ],
+            [
+              14.0,
+              46.4
+            ],
+            [
+              14.0,
+              46.4
+            ],
+            [
+              13.92,
+              46.4
+            ],
+            [
+              13.92,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.42,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.34,
+        "hydro_score": 0.87,
+        "hydro_index": 0.348,
+        "cell_id": "fixture-209",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 13.96,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.0,
+              46.4
+            ],
+            [
+              14.08,
+              46.4
+            ],
+            [
+              14.08,
+              46.4
+            ],
+            [
+              14.0,
+              46.4
+            ],
+            [
+              14.0,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.42,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.34,
+        "hydro_score": 0.87,
+        "hydro_index": 0.348,
+        "cell_id": "fixture-210",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.04,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.08,
+              46.4
+            ],
+            [
+              14.16,
+              46.4
+            ],
+            [
+              14.16,
+              46.4
+            ],
+            [
+              14.08,
+              46.4
+            ],
+            [
+              14.08,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.42,
+        "water90_norm": 0.28,
+        "wetting_trend_norm": 0.34,
+        "hydro_score": 0.871,
+        "hydro_index": 0.348,
+        "cell_id": "fixture-211",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.12,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.16,
+              46.4
+            ],
+            [
+              14.24,
+              46.4
+            ],
+            [
+              14.24,
+              46.4
+            ],
+            [
+              14.16,
+              46.4
+            ],
+            [
+              14.16,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.421,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.34,
+        "hydro_score": 0.872,
+        "hydro_index": 0.349,
+        "cell_id": "fixture-212",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.2,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.24,
+              46.4
+            ],
+            [
+              14.32,
+              46.4
+            ],
+            [
+              14.32,
+              46.4
+            ],
+            [
+              14.24,
+              46.4
+            ],
+            [
+              14.24,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.422,
+        "water90_norm": 0.281,
+        "wetting_trend_norm": 0.34,
+        "hydro_score": 0.873,
+        "hydro_index": 0.349,
+        "cell_id": "fixture-213",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.28,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.32,
+              46.4
+            ],
+            [
+              14.4,
+              46.4
+            ],
+            [
+              14.4,
+              46.4
+            ],
+            [
+              14.32,
+              46.4
+            ],
+            [
+              14.32,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.423,
+        "water90_norm": 0.282,
+        "wetting_trend_norm": 0.34,
+        "hydro_score": 0.875,
+        "hydro_index": 0.35,
+        "cell_id": "fixture-214",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.36,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4,
+              46.4
+            ],
+            [
+              14.48,
+              46.4
+            ],
+            [
+              14.48,
+              46.4
+            ],
+            [
+              14.4,
+              46.4
+            ],
+            [
+              14.4,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.424,
+        "water90_norm": 0.284,
+        "wetting_trend_norm": 0.341,
+        "hydro_score": 0.878,
+        "hydro_index": 0.351,
+        "cell_id": "fixture-215",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.44,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.48,
+              46.4
+            ],
+            [
+              14.56,
+              46.4
+            ],
+            [
+              14.56,
+              46.4
+            ],
+            [
+              14.48,
+              46.4
+            ],
+            [
+              14.48,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.431,
+        "water90_norm": 0.291,
+        "wetting_trend_norm": 0.346,
+        "hydro_score": 0.895,
+        "hydro_index": 0.358,
+        "cell_id": "fixture-216",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.52,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.56,
+              46.4
+            ],
+            [
+              14.64,
+              46.4
+            ],
+            [
+              14.64,
+              46.4
+            ],
+            [
+              14.56,
+              46.4
+            ],
+            [
+              14.56,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.46,
+        "water90_norm": 0.327,
+        "wetting_trend_norm": 0.371,
+        "hydro_score": 0.973,
+        "hydro_index": 0.389,
+        "cell_id": "fixture-217",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.6,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.64,
+              46.4
+            ],
+            [
+              14.72,
+              46.4
+            ],
+            [
+              14.72,
+              46.4
+            ],
+            [
+              14.64,
+              46.4
+            ],
+            [
+              14.64,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.542,
+        "water90_norm": 0.426,
+        "wetting_trend_norm": 0.44,
+        "hydro_score": 1.188,
+        "hydro_index": 0.475,
+        "cell_id": "fixture-218",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.68,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.72,
+              46.4
+            ],
+            [
+              14.8,
+              46.4
+            ],
+            [
+              14.8,
+              46.4
+            ],
+            [
+              14.72,
+              46.4
+            ],
+            [
+              14.72,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.668,
+        "water90_norm": 0.579,
+        "wetting_trend_norm": 0.546,
+        "hydro_score": 1.52,
+        "hydro_index": 0.608,
+        "cell_id": "fixture-219",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.76,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.8,
+              46.4
+            ],
+            [
+              14.88,
+              46.4
+            ],
+            [
+              14.88,
+              46.4
+            ],
+            [
+              14.8,
+              46.4
+            ],
+            [
+              14.8,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.747,
+        "water90_norm": 0.674,
+        "wetting_trend_norm": 0.612,
+        "hydro_score": 1.727,
+        "hydro_index": 0.691,
+        "cell_id": "fixture-220",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.84,
+        "center_lat": 46.4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.88,
+              46.4
+            ],
+            [
+              14.96,
+              46.4
+            ],
+            [
+              14.96,
+              46.4
+            ],
+            [
+              14.88,
+              46.4
+            ],
+            [
+              14.88,
+              46.4
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_moisture_norm": 0.696,
+        "water90_norm": 0.614,
+        "wetting_trend_norm": 0.57,
+        "hydro_score": 1.595,
+        "hydro_index": 0.638,
+        "cell_id": "fixture-221",
+        "date": "2023-08-04",
+        "source": "fixture",
+        "center_lon": 14.92,
+        "center_lat": 46.4
+      }
+    }
+  ]
+}

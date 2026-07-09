@@ -1,8 +1,8 @@
-# Handoff - Slovenia CLSS LiDAR Flood & Coastal Demo
+# Handoff - Slovenia CLSS LiDAR Flood, Coastal & Hydroclimate Demo
 
-**Status:** The app is a 146-tile, 3-region static MapLibre demo with D19 riverine susceptibility and D20 Koper coastal sea-level-rise overlays implemented. The active thread is now validation and credibility: compare against ARSO / Aug-2023 flood evidence, then improve per-tile approximations with mosaic-level routing.
+**Status:** The app is a 146-tile, 3-region static MapLibre demo with D19 riverine susceptibility, D20 Koper coastal sea-level-rise overlays, and D21 ERA5-Land-style hydroclimate trigger UI implemented. The hydroclimate V1 is fixture-backed for `2023-08-04`; real ERA5-Land validation is still pending.
 
-**Goal:** A polished, honest screening tool for Aleks / sledilnik.org that shows where detailed flood/coastal investigation should start. It is not a hydraulic model.
+**Goal:** A polished, honest screening tool for Aleks / sledilnik.org that shows where detailed flood/coastal investigation should start. It is not a hydraulic, coastal, or probabilistic forecast model.
 
 > Authoritative context: `AGENTS.md`, `CLAUDE.md`, `DECISIONS.md`, and `PLAN.md`. This handoff is the current snapshot plus the latest implementation notes.
 
@@ -10,41 +10,41 @@
 
 This repository builds an interactive web map from Slovenia's CLSS airborne LiDAR data. `pipeline.py` reads local `data/GKOT_*.laz` files, computes terrain/vegetation factors, exports PNG overlays under `web/data/tiles/<tile>/`, and writes `web/data/manifest.json`, `web/data/candidates.json`, and `web/data/risk_points.geojson` for the static web app.
 
-The project started as a Ljubljana flood/forest demo. Aleks then provided two validation/extension sites: the Savinja valley flood area from Aug 2023 and Koper for sea-level-rise exposure. The dataset now covers all three.
+Aleks provided two validation/extension directions: the Savinja valley flood area from Aug 2023 and Koper for sea-level-rise exposure. D20 handled Koper coastal exposure. D21 now implements the Copernicus/BGC idea Aleks shared as a separate hydroclimate trigger: use soil moisture, wetting trend, and 90-day water input to answer "when is the landscape primed?" while LiDAR susceptibility still answers "where is terrain susceptible?"
 
 Live site: https://dhairyamishra.github.io/slovenia-lidar-floodmap/
 
 ## Current State
 
-Recent implementation commits:
+Recent implementation commits before this working tree:
 
+- `83def46` - Update README and handoff for D20
 - `47a1320` - Add Koper coastal SLR overlays
 - `770a7b5` - docs: update README
 - `1bccc73` - Add HAND flood factor (D19) - research-weighted model
 - `f9281d7` - Add Koper coastal baseline (21 tiles) + D18 no-data mask
-- `c6ea058` - Record D17: model redesign + per-region calibration
 
-What `47a1320` shipped:
+Done but not yet committed in the current working tree:
 
-- D20 coastal bathtub sea-level-rise mode in `pipeline.py`.
-- Coastal UI controls in `web/app.js`, `web/index.html`, and `web/style.css`.
-- 21 regenerated Koper tiles with 63 coastal scenario PNGs under `web/data/tiles/`.
-- `web/data/manifest.json` entries under `files.coastal` for Koper tiles.
-- `DECISIONS.md`, `PLAN.md`, `CLAUDE.md`, and this handoff updated for D20.
+- D21 `hydroclimate.py` added.
+- `web/data/hydroclimate/manifest.json` generated with one available date: `2023-08-04`.
+- `web/data/hydroclimate/hydro_2023-08-04.geojson` generated as a deterministic fixture grid.
+- `web/data/hydroclimate/dynamic_risk_2023-08-04.geojson` generated from existing `web/data/candidates.json`.
+- `web/app.js`, `web/index.html`, and `web/style.css` updated for optional Hydroclimate Trigger controls and hydro-primed risk markers.
+- `DECISIONS.md` D21 and `README.md` updated.
 
 Current local note:
 
 - `AGENTS.md` is untracked local context from before the D20 commit.
 
-Verified facts:
+Verified facts from this implementation:
 
+- Fixture/export commands completed:
+  - `C:\Users\dhair\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe hydroclimate.py derive-fixture`
+  - `C:\Users\dhair\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe hydroclimate.py export`
+- Generated hydroclimate web assets total about 209 KB.
+- The fixture dynamic ranking puts Savinja tile `488_132` at rank #1 for `2023-08-04` with `event_score: 0.777`, `static_risk_score: 0.953`, and `hydro_index: 0.816`.
 - `web/data/manifest.json` still has `tile_count: 146`.
-- `.tile_region_cache.json` splits the data as 100 Ljubljana (`05-ljubljana`), 25 Savinja/Kamnik (`08-kamnik`), and 21 Koper (`01-koper`).
-- Coastal export count: 21 Koper tiles x 3 scenarios = 63 `coastal_slr_*.png` files.
-- `400_46` coastal visible pixels grow with scenario: about 58,895 at +0.5 m, 71,463 at +1.0 m, 127,669 at +2.0 m.
-- `400_48` is all sea/no-data and remains fully transparent for coastal scenarios.
-- Static checks passed: `py_compile` for `pipeline.py` / `kernels.py`, and `node --check web/app.js`.
-- Local browser smoke test confirmed the new "Coastal Inundation" control and scenario selector are present.
 
 ## Method
 
@@ -77,60 +77,68 @@ Coastal D20 model:
 - A land cell is shaded when its DTM elevation is below the scenario and it connects, within that tile, to sea/no-data cells.
 - Sea/no-data remains transparent. The overlay only shades exposed land.
 
-Why D20 is separate:
+Hydroclimate D21 model:
 
-Koper sea-level rise is a coastal exposure mechanism. The riverine susceptibility factors can identify low-flat terrain, but they cannot honestly answer "which land is below +1 m sea level?" Keeping this as a separate overlay makes the limitation obvious and demo-friendly.
+- Implemented in `hydroclimate.py`.
+- App reads `web/data/hydroclimate/manifest.json` opportunistically. Missing hydroclimate data disables controls without breaking the base map.
+- Formula: `hydro_score = soil_moisture_norm + water90_norm + 0.5 * wetting_trend_norm`.
+- Normalized UI index: `hydro_index = hydro_score / 2.5`.
+- Hydro-primed risk points use `event_score = static_susceptibility * hydro_index`.
+- V1 fixture intentionally elevates Savinja/Kamnik for the `2023-08-04` hindcast. It is not real ERA5 evidence.
+- Real NetCDF path expects ERA5-Land variables `swvl4`, `tp`, and `smlt` under `data/era5/` and requires xarray/NetCDF support.
 
 ## Active Thread
 
-The main open work is validation and model credibility.
+The current open work is validation and credibility.
 
-1. ARSO / official flood-hazard validation is still pending.
-   The model is literature-informed but not calibrated against observed flood footprints. This is the biggest credibility step for sledilnik-style technical stakeholders.
+1. D21 is implemented as a UI/data-contract feature, not a validated climate product.
+   The deterministic fixture is useful for stakeholder review and front-end testing, but analytical claims require real ERA5-Land data from CDS. Do not present the fixture as evidence.
 
-2. Savinja Aug-2023 validation is pending.
-   The D17/D19 redesign was motivated by Aleks's Savinja location. The model now highlights the valley floor, but it still needs comparison against a documented footprint or hazard layer.
+2. Real ERA5-Land ingestion is only partially proven.
+   `hydroclimate.py derive` has a narrow xarray path for local NetCDF files, but no CDS download automation has been added and no real NetCDF file was available in this session. The next agent should test it against actual ERA5-Land data for Slovenia before expanding the UI.
 
-3. Per-tile HAND is still approximate.
-   D19 computes HAND inside each 1 km tile. Drainage paths that should cross tile boundaries terminate at tile edges, so channels are local. Whole-region / mosaic routing is the real upgrade.
+3. ARSO / official flood-hazard validation is still pending.
+   The D19 terrain model is literature-informed but not calibrated against observed flood footprints. This remains the biggest credibility step for sledilnik-style technical stakeholders.
 
-4. D20 coastal connectivity is also per-tile.
-   Coastal inundation only propagates from sea/no-data cells within the same tile. That avoids false filling of isolated inland depressions, but it misses cross-tile connectivity. A stitched Koper DEM is the upgrade.
+4. Savinja Aug-2023 validation is pending.
+   The model now highlights the valley floor, and D21 can show a temporal priming layer, but both need comparison against documented flood extent or hazard layers.
 
-5. ERA5-Land hydroclimate is proposed, not implemented.
-   Aleks shared a Copernicus article about linking landslide activity and ERA5 hydroclimatic models. Useful direction: combine static LiDAR susceptibility ("where") with ERA5-Land soil moisture / rolling water-input anomalies ("when"). Start with an Aug-2023 Savinja hindcast.
+5. Per-tile HAND and coastal connectivity are still approximate.
+   HAND computes inside each 1 km tile, so drainage paths terminate locally. Coastal connectivity is also per-tile. Whole-region / mosaic routing remains the real model-quality upgrade.
 
 Recommended entry point:
 
-Start with validation. Specifically, find or ingest ARSO flood-hazard zones / Aug-2023 Savinja footprint and compare against the current D19 risk layer. That gives the project credibility and tells whether mosaic HAND or ERA5 should be the next engineering investment.
+First validate D21 with real ERA5-Land over the current app bbox for `2023-08-04`, then compare the hydro-primed Savinja ranking against ARSO or observed Aug-2023 flood evidence. If that comparison is credible, add CDS download automation; if not, fix the hydro indicators before polishing the UI further.
 
 ## Gotchas
 
-- `HANDOFF.md` and `PLAN.md` were stale before this session. Use `DECISIONS.md` as the decision source of truth.
-- Raw `.laz` files in `data/` are gitignored and large, about 50 GB total.
+- `python` is not on PATH in this desktop shell. Use the bundled runtime:
+  `C:\Users\dhair\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe`
+- Real ERA5 derive needs xarray/NetCDF support; fixture/export does not.
+- Raw `.laz` files and future ERA5 NetCDF files in `data/` are gitignored and large.
 - If you delete LAZ/PNG tiles manually, also purge them from `web/data/manifest.json`; subset runs merge and will keep old entries.
 - Pipeline subset runs update global candidates by removing stale entries for reprocessed tiles and merging fresh candidates.
-- `manifest.json - N tile(s)` in pipeline output reports total merged manifest count, while earlier docs warned about processed-run count; inspect the JSON directly if in doubt.
 - Long pipeline/calibration runs have previously died when the machine slept. Keep the machine awake.
 - Browser preview may not fully verify MapLibre if external basemap/sprite requests fail. DOM/static checks are still useful.
-- In this session, the desktop shell had no system `python`; the bundled runtime lacked SciPy/laspy/numba. Missing packages were installed into `C:\tmp\slovenia_pydeps` and the pipeline was run with `PYTHONPATH=C:\tmp\slovenia_pydeps` under escalation.
-- New Matplotlib removed `matplotlib.cm.get_cmap`; `pipeline.py` now uses `matplotlib.colormaps[...]` with a fallback.
+- `web/app.js` intentionally treats hydroclimate data as optional; do not change that unless the static site should hard-fail when hydro assets are absent.
 
 ## File Map
 
 | Path | Purpose |
 |---|---|
 | `pipeline.py` | Canonical LiDAR pipeline; D19 riverine model; D20 coastal export. |
+| `hydroclimate.py` | D21 hydroclimate trigger pipeline; fixture generation, real NetCDF derive path, web export. |
 | `kernels.py` | Numba kernels for DTM min-grid, D8 accumulation, HAND. |
 | `download_tiles.py` | CLSS CDN downloader and tile-region cache helper. |
 | `calibration.json` | Per-region p2-p98 factor/display calibration. |
 | `.tile_region_cache.json` | Tile ID to CDN region mapping. |
-| `web/app.js` | MapLibre app, raster layers, risk markers, coastal scenario UI. |
+| `web/app.js` | MapLibre app, raster layers, risk markers, coastal scenario UI, hydroclimate UI. |
 | `web/index.html` | Static app shell and layer panel. |
 | `web/style.css` | App styling. |
 | `web/data/manifest.json` | Tile registry consumed by the app. |
+| `web/data/hydroclimate/` | D21 trigger grid, dynamic risk points, and manifest. |
 | `web/data/tiles/<tile>/coastal_slr_*.png` | D20 Koper coastal scenario overlays. |
-| `web/data/risk_points.geojson` | Top-20 balanced risk markers. |
+| `web/data/risk_points.geojson` | Top-20 balanced static risk markers. |
 | `DECISIONS.md` | Chronological decision log; append here for significant changes. |
 | `PLAN.md` | Multi-region execution plan and current open checklist. |
 
@@ -148,17 +156,24 @@ If `python` is unavailable in this desktop environment, use the bundled runtime:
 C:\Users\dhair\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -m http.server 8765 --directory web
 ```
 
-Process all tiles:
+Regenerate the D21 fixture and web hydroclimate assets:
+
+```powershell
+C:\Users\dhair\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe hydroclimate.py derive-fixture
+C:\Users\dhair\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe hydroclimate.py export
+```
+
+Attempt real ERA5-Land derive after placing NetCDF files under `data/era5/` and installing xarray/NetCDF support:
+
+```powershell
+python hydroclimate.py derive --date 2023-08-04
+python hydroclimate.py export --date 2023-08-04
+```
+
+Process all LiDAR tiles:
 
 ```powershell
 python pipeline.py
-```
-
-Process only Koper tiles with the temporary dependency target used in this session:
-
-```powershell
-$env:PYTHONPATH='C:\tmp\slovenia_pydeps'
-C:\Users\dhair\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe pipeline.py 398_44 398_45 398_46 399_44 399_45 399_46 400_44 400_45 400_46 400_47 400_48 401_44 401_45 401_46 401_47 401_48 402_44 402_45 402_46 402_47 402_48 --workers 3
 ```
 
 Calibrate:
@@ -173,3 +188,4 @@ python pipeline.py --calibrate --region 01-koper
 - Live demo: https://dhairyamishra.github.io/slovenia-lidar-floodmap/
 - CLSS / source CDN pattern: `https://assets.flycom.si/clss/raw/<region>/zls/gkot/GKOT_E_N.laz`
 - Copernicus article from Aleks: https://climate.copernicus.eu/linking-landslide-activity-and-era-5-hydroclimatic-models-pro-active-infrastructure-management
+- ERA5-Land dataset: https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land

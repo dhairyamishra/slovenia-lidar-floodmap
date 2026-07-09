@@ -2,23 +2,26 @@
 
 const BASEMAP_STYLE = 'https://tiles.openfreemap.org/styles/dark';
 
-// ── Bootstrap: load manifest + risk points, then init map ────────────────────
+function optionalJson(url) {
+  return fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
+}
+
 Promise.all([
   fetch('data/manifest.json').then(r => r.json()),
   fetch('data/risk_points.geojson').then(r => r.json()),
+  optionalJson('data/hydroclimate/manifest.json'),
 ])
-  .then(([manifest, riskPoints]) => initMap(manifest, riskPoints))
+  .then(([manifest, riskPoints, hydroManifest]) => initMap(manifest, riskPoints, hydroManifest))
   .catch(err => {
     document.body.innerHTML =
       `<div style="color:#e74c3c;padding:40px;font-family:monospace">
         Failed to load map data.<br>
-        Run <code>python pipeline.py</code> (or <code>python export_web_assets.py</code>)
-        to generate web/data/ assets first.<br><br>${err}
+        Run <code>python pipeline.py</code> to generate web/data/ assets first.
+        <br><br>${err}
       </div>`;
   });
 
-// ── Map init ──────────────────────────────────────────────────────────────────
-function initMap(manifest, riskPoints) {
+function initMap(manifest, riskPoints, hydroManifest) {
   const ub = manifest.union_bounds;
 
   const map = window._map = new maplibregl.Map({
@@ -39,17 +42,15 @@ function initMap(manifest, riskPoints) {
     map.fitBounds([[ub.west, ub.south], [ub.east, ub.north]],
                   { padding: 60, duration: 0 });
 
-    // Add one set of raster layers per tile
     manifest.tiles.forEach(tile => addTileLayers(map, tile));
-
-    // DOM markers — added inside load so map.project() is ready
     addRiskPoints(map, riskPoints);
 
-    wireControls(map, manifest.tiles);
+    initHydroClimate(map, hydroManifest).then(hydroState => {
+      wireControls(map, manifest.tiles, hydroState);
+    });
   });
 }
 
-// ── Raster overlays (one set per tile) ────────────────────────────────────────
 const LAYER_TYPES = [
   { key: 'susceptibility', defaultOpacity: 0.75, defaultVisible: true  },
   { key: 'ndvi',           defaultOpacity: 0.75, defaultVisible: false },
@@ -97,10 +98,8 @@ function addTileLayers(map, tile) {
   }
 }
 
-// ── Risk markers ──────────────────────────────────────────────────────────────
-// maplibregl.Marker calls map.project(lngLat) on every render frame —
-// no async worker, no tile pipeline — so markers track the map with zero lag.
 const riskMarkers = [];
+const hydroRiskMarkers = [];
 
 function addRiskPoints(map, riskPoints) {
   const popup = new maplibregl.Popup({ offset: 18, closeButton: true });
@@ -137,7 +136,7 @@ function addRiskPoints(map, riskPoints) {
         </div>
         <div class="popup-row">
           <span class="popup-key">WGS84</span>
-          <span class="popup-val">${lat.toFixed(5)}°N, ${lng.toFixed(5)}°E</span>
+          <span class="popup-val">${lat.toFixed(5)}N, ${lng.toFixed(5)}E</span>
         </div>${tileLabel}`
       ).addTo(map);
     });
@@ -153,15 +152,157 @@ function setRiskVisible(visible) {
   riskMarkers.forEach(m => { m.getElement().style.display = visible ? '' : 'none'; });
 }
 
-// ── UI controls ───────────────────────────────────────────────────────────────
-// Toggle IDs in HTML use short aliases: susc / ndvi / cls
+function clearHydroRiskMarkers() {
+  while (hydroRiskMarkers.length) {
+    hydroRiskMarkers.pop().remove();
+  }
+}
+
+function addHydroRiskPoints(map, riskPoints, visible) {
+  clearHydroRiskMarkers();
+  if (!riskPoints || !riskPoints.features) return;
+
+  const popup = new maplibregl.Popup({ offset: 18, closeButton: true });
+  riskPoints.features.forEach(f => {
+    const p = f.properties;
+    const [lng, lat] = f.geometry.coordinates;
+    const el = document.createElement('div');
+    el.className = 'risk-marker hydro-risk-marker';
+    el.textContent = p.rank;
+    el.style.display = visible ? '' : 'none';
+
+    el.addEventListener('click', () => {
+      popup.setLngLat([lng, lat]).setHTML(`
+        <div class="popup-rank">Hydro-primed #${p.rank}</div>
+        <div class="popup-row">
+          <span class="popup-key">Event score</span>
+          <span class="popup-val">${(p.event_score * 100).toFixed(1)}%</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-key">Static risk</span>
+          <span class="popup-val">${(p.static_risk_score * 100).toFixed(1)}%</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-key">Hydro index</span>
+          <span class="popup-val">${(p.hydro_index * 100).toFixed(1)}%</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-key">Soil moisture</span>
+          <span class="popup-val">${(p.soil_moisture_norm * 100).toFixed(0)}%</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-key">90-day water</span>
+          <span class="popup-val">${(p.water90_norm * 100).toFixed(0)}%</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-key">Tile</span>
+          <span class="popup-val">${p.tile || 'n/a'}</span>
+        </div>`
+      ).addTo(map);
+    });
+
+    hydroRiskMarkers.push(
+      new maplibregl.Marker({ element: el, anchor: 'center' })
+        .setLngLat([lng, lat])
+        .addTo(map)
+    );
+  });
+}
+
+function setHydroRiskVisible(visible) {
+  hydroRiskMarkers.forEach(m => { m.getElement().style.display = visible ? '' : 'none'; });
+}
+
+async function initHydroClimate(map, hydroManifest) {
+  const emptyState = { available: false };
+  if (!hydroManifest || !hydroManifest.dates || hydroManifest.dates.length === 0) {
+    return emptyState;
+  }
+
+  const firstDate = hydroManifest.dates[0];
+  const hydroData = await optionalJson(`data/hydroclimate/${firstDate.hydro_file}`);
+  const dynamicRisk = await optionalJson(`data/hydroclimate/${firstDate.dynamic_risk_file}`);
+  if (!hydroData) return emptyState;
+
+  map.addSource('src-hydro-trigger', {
+    type: 'geojson',
+    data: hydroData,
+  });
+  map.addLayer({
+    id: 'layer-hydro-trigger',
+    type: 'fill',
+    source: 'src-hydro-trigger',
+    paint: {
+      'fill-color': [
+        'interpolate',
+        ['linear'],
+        ['get', 'hydro_index'],
+        0.0, '#1d4ed8',
+        0.35, '#22c55e',
+        0.55, '#facc15',
+        0.75, '#f97316',
+        1.0, '#dc2626',
+      ],
+      'fill-opacity': 0.55,
+      'fill-outline-color': 'rgba(255,255,255,0.20)',
+    },
+    layout: { visibility: 'none' },
+  });
+
+  const popup = new maplibregl.Popup({ closeButton: true });
+  map.on('click', 'layer-hydro-trigger', e => {
+    const p = e.features[0].properties;
+    popup.setLngLat(e.lngLat).setHTML(`
+      <div class="popup-rank">Hydroclimate trigger</div>
+      <div class="popup-row">
+        <span class="popup-key">Hydro index</span>
+        <span class="popup-val">${(p.hydro_index * 100).toFixed(1)}%</span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-key">Soil moisture</span>
+        <span class="popup-val">${(p.soil_moisture_norm * 100).toFixed(0)}%</span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-key">90-day water</span>
+        <span class="popup-val">${(p.water90_norm * 100).toFixed(0)}%</span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-key">Wetting trend</span>
+        <span class="popup-val">${(p.wetting_trend_norm * 100).toFixed(0)}%</span>
+      </div>`
+    ).addTo(map);
+  });
+  map.on('mouseenter', 'layer-hydro-trigger', () => { map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', 'layer-hydro-trigger', () => { map.getCanvas().style.cursor = ''; });
+
+  addHydroRiskPoints(map, dynamicRisk, false);
+
+  return {
+    available: true,
+    manifest: hydroManifest,
+    activeDate: firstDate.date,
+    datesByValue: Object.fromEntries(hydroManifest.dates.map(d => [d.date, d])),
+  };
+}
+
+async function setHydroDate(map, hydroState, date, markersVisible) {
+  const entry = hydroState.datesByValue[date];
+  if (!entry) return;
+  const hydroData = await optionalJson(`data/hydroclimate/${entry.hydro_file}`);
+  const dynamicRisk = await optionalJson(`data/hydroclimate/${entry.dynamic_risk_file}`);
+  if (hydroData) {
+    map.getSource('src-hydro-trigger').setData(hydroData);
+    hydroState.activeDate = date;
+  }
+  addHydroRiskPoints(map, dynamicRisk, markersVisible);
+}
+
 const KEY_ALIAS = { susc: 'susceptibility', ndvi: 'ndvi', cls: 'classification' };
 
-function wireControls(map, tiles) {
+function wireControls(map, tiles, hydroState) {
   const tileNames = tiles.map(t => t.name);
 
   Object.entries(KEY_ALIAS).forEach(([alias, key]) => {
-    // Visibility toggle — applies to all tiles
     const chk = document.getElementById(`toggle-${alias}`);
     chk.addEventListener('change', () => {
       const vis = chk.checked ? 'visible' : 'none';
@@ -169,7 +310,6 @@ function wireControls(map, tiles) {
         map.setLayoutProperty(`layer-${key}-${name}`, 'visibility', vis));
     });
 
-    // Opacity slider — applies to all tiles
     const slider = document.getElementById(`opacity-${alias}`);
     const valEl  = document.getElementById(`val-${alias}`);
     slider.addEventListener('input', () => {
@@ -222,4 +362,45 @@ function wireControls(map, tiles) {
       coastalVal.textContent = coastalOpacity.value + '%';
     });
   }
+
+  wireHydroControls(map, hydroState);
+}
+
+function wireHydroControls(map, hydroState) {
+  const hydroToggle = document.getElementById('toggle-hydro');
+  const hydroDate = document.getElementById('hydro-date');
+  const hydroOpacity = document.getElementById('opacity-hydro');
+  const hydroVal = document.getElementById('val-hydro');
+  const hydroRiskToggle = document.getElementById('toggle-hydro-risk');
+
+  if (!hydroState || !hydroState.available) {
+    hydroToggle.disabled = true;
+    hydroDate.disabled = true;
+    hydroOpacity.disabled = true;
+    hydroRiskToggle.disabled = true;
+    return;
+  }
+
+  hydroState.manifest.dates.forEach(entry => {
+    const option = document.createElement('option');
+    option.value = entry.date;
+    option.textContent = entry.label || entry.date;
+    hydroDate.appendChild(option);
+  });
+
+  hydroToggle.addEventListener('change', () => {
+    map.setLayoutProperty(
+      'layer-hydro-trigger',
+      'visibility',
+      hydroToggle.checked ? 'visible' : 'none'
+    );
+  });
+  hydroOpacity.addEventListener('input', () => {
+    map.setPaintProperty('layer-hydro-trigger', 'fill-opacity', hydroOpacity.value / 100);
+    hydroVal.textContent = hydroOpacity.value + '%';
+  });
+  hydroDate.addEventListener('change', () => {
+    setHydroDate(map, hydroState, hydroDate.value, hydroRiskToggle.checked);
+  });
+  hydroRiskToggle.addEventListener('change', e => setHydroRiskVisible(e.target.checked));
 }
