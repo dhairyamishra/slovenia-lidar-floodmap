@@ -16,23 +16,25 @@ Live site: https://dhairyamishra.github.io/slovenia-lidar-floodmap/
 
 ## Current State
 
-Latest known commits before this handoff:
+Recent implementation commits:
 
+- `47a1320` - Add Koper coastal SLR overlays
 - `770a7b5` - docs: update README
 - `1bccc73` - Add HAND flood factor (D19) - research-weighted model
 - `f9281d7` - Add Koper coastal baseline (21 tiles) + D18 no-data mask
 - `c6ea058` - Record D17: model redesign + per-region calibration
-- `3c5ec01` - Update calibration and risk assessment data
 
-Current uncommitted work in this session:
+What `47a1320` shipped:
 
-- D20 coastal bathtub sea-level-rise mode added to `pipeline.py`.
-- Coastal UI controls added to `web/app.js`, `web/index.html`, and `web/style.css`.
-- Koper tiles regenerated; `web/data/manifest.json` now has 21 coastal-enabled tiles and 63 coastal scenario PNGs.
-- `DECISIONS.md` now records D20.
-- `PLAN.md` checklist updated so completed D16-D20 work is not shown as pending.
-- `HANDOFF.md` replaced with this current handoff.
-- Existing pre-session local changes remain: `README.md` was already modified and `AGENTS.md` was untracked before this session. Do not assume those are ours.
+- D20 coastal bathtub sea-level-rise mode in `pipeline.py`.
+- Coastal UI controls in `web/app.js`, `web/index.html`, and `web/style.css`.
+- 21 regenerated Koper tiles with 63 coastal scenario PNGs under `web/data/tiles/`.
+- `web/data/manifest.json` entries under `files.coastal` for Koper tiles.
+- `DECISIONS.md`, `PLAN.md`, `CLAUDE.md`, and this handoff updated for D20.
+
+Current local note:
+
+- `AGENTS.md` is untracked local context from before the D20 commit.
 
 Verified facts:
 

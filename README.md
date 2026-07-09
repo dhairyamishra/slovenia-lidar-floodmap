@@ -1,6 +1,6 @@
-# Slovenia CLSS LiDAR — Flood Susceptibility & Forest Health
+# Slovenia CLSS LiDAR — Flood, Coastal & Forest Risk
 
-An interactive web map overlaying flood-susceptibility and forest-NDVI analysis derived from Slovenia's national airborne LiDAR dataset (CLSS — *Ciklično lasersko skeniranje*) onto a dark basemap styled after the national viewer at [clss.si](https://clss.si).
+An interactive web map overlaying riverine flood susceptibility, Koper coastal sea-level-rise exposure, and forest-NDVI analysis derived from Slovenia's national airborne LiDAR dataset (CLSS — *Ciklično lasersko skeniranje*) onto a dark basemap styled after the national viewer at [clss.si](https://clss.si).
 
 **Live demo →** https://dhairyamishra.github.io/slovenia-lidar-floodmap/
 
@@ -8,17 +8,19 @@ An interactive web map overlaying flood-susceptibility and forest-NDVI analysis 
 
 | Layer | Description |
 |---|---|
-| Flood Susceptibility | Four-factor composite (TWI 40 % + canopy interception 25 % + NDVI health 15 % + plan curvature 15 % + terrain roughness 5 %) — blue (low) → red (high) |
+| Flood Susceptibility | Weighted composite (HAND 25 % + TWI 20 % + elevation 15 % + slope 15 % + plan curvature 10 % + canopy interception 7.5 % + NDVI health 7.5 %) — blue (low) → red (high) |
+| Coastal Inundation | Koper-only bathtub sea-level-rise screen for +0.5 m / +1.0 m / +2.0 m scenarios; shades connected low-lying land, leaves sea/no-data transparent |
 | Forest NDVI | Per-cell NDVI from 16-bit NIR/R channels — red (stressed) → green (healthy) |
 | Land Classification | Ground, low/med/high vegetation, building returns |
-| Risk Markers | Top-20 globally-ranked highest-susceptibility cells, shown as numbered pins |
+| Risk Markers | Top-20 highest-susceptibility cells (capped at 7 per CDN region so per-region-normalised scores stay comparable), shown as numbered pins |
 
 ## Dataset
 
-- **81 tiles** forming a contiguous **9 × 9 km block over Ljubljana** (EPSG:3794 easting 456–464 km × northing 96–104 km).
-- WGS84 extent ≈ lon 14.431–14.548°, lat 46.002–46.084°.
+- **146 tiles across 3 CDN regions** — 100 over Ljubljana (`05-ljubljana`, basin), 25 over the Savinja valley (`08-kamnik`, alpine riverine), 21 over Koper (`01-koper`, coastal). Tile coords are EPSG:3794 kilometres (e.g. `460_100` = easting 460 km, northing 100 km).
+- Each region is calibrated independently (see below) because their elevation regimes are disjoint.
+- Koper includes both the riverine baseline and a separate coastal sea-level-rise overlay. The coastal layer is a first-order screening product, not a hydraulic storm-surge model.
 - Source: Flycom CLSS S3 CDN — `https://assets.flycom.si/clss/raw/<region>/zls/gkot/GKOT_E_N.laz`.
-- Raw `.laz` tiles (~170–200 MB each, ~15 GB total) live in `data/` and are **gitignored**. The small derived overlays in `web/data/` are committed and deployed.
+- Raw `.laz` tiles (~170–800 MB each — alpine/coastal tiles are denser — ~50 GB total) live in `data/` and are **gitignored**. The small derived overlays in `web/data/` are committed and deployed.
 
 ## Run locally
 
@@ -44,30 +46,33 @@ python pipeline.py
 python pipeline.py 460_100 461_100
 ```
 
-Requires: `laspy`, `lazrs`, `numpy`, `scipy`, `pyproj`, `Pillow`
+Requires: `laspy`, `lazrs`, `numpy`, `scipy`, `pyproj`, `Pillow`, `numba` (the hot DTM/D8/HAND loops in `kernels.py` are Numba-JIT'd). Tiles fan out across processes — `--workers N` overrides the RAM-bound default.
 
 ### Why calibration?
 
-Each susceptibility factor is normalised against a **fixed dataset-wide range** (not re-curved per tile) so risk scores are comparable across tiles. `pipeline.py --calibrate` derives those ranges from a sample of all tiles and stores them in `calibration.json` along with a dataset fingerprint. Normal runs warn if `data/` has changed (tiles added / removed / re-downloaded) and a recalibration is due. See [`DECISIONS.md`](DECISIONS.md) D15.
+Each susceptibility factor is normalised against a **fixed [p2, p98] range derived per CDN region** (not re-curved per tile) so risk scores are comparable within a region. Regions are calibrated separately because Ljubljana basin, alpine Savinja, and coastal Koper have disjoint elevation regimes — a single ruler is meaningless. `pipeline.py --calibrate` derives all regions (or `--calibrate --region 01-koper` for one, merging into the rest) and stores them in `calibration.json` (`model_version: 2`, a `regions` dict) along with a dataset fingerprint. Normal runs warn if `data/` has changed and a recalibration is due. See [`DECISIONS.md`](DECISIONS.md) D15/D17/D18.
 
 ## Pipeline outputs
 
 | Path | Description |
 |---|---|
 | `web/data/tiles/<name>/susceptibility.png` | Composite flood-risk overlay (RdYlBu_r) |
+| `web/data/tiles/<name>/coastal_slr_0_5m.png` etc. | Koper-only coastal inundation overlays for +0.5 m, +1.0 m, +2.0 m sea-level scenarios |
 | `web/data/tiles/<name>/ndvi.png` | Forest-health NDVI (RdYlGn, percentile-stretched) |
 | `web/data/tiles/<name>/classification.png` | Land-cover classes |
 | `web/data/manifest.json` | Tile registry (bounds + file paths) consumed by the web app |
 | `web/data/candidates.json` | Global ranked list of top-500 risk candidates |
-| `web/data/risk_points.geojson` | Top-20 globally-ranked flood-risk points |
-| `calibration.json` | Global normalisation constants + dataset fingerprint |
+| `web/data/risk_points.geojson` | Top-20 flood-risk points (de-duplicated at 50 m, capped at 7 per CDN region) |
+| `calibration.json` | Per-region normalisation constants + dataset fingerprint |
 
 ## Scripts
 
 | Script | Purpose |
 |---|---|
-| `pipeline.py` | **Canonical pipeline.** Processes all `GKOT_*.laz` → PNGs + manifest + candidates + risk points. Supports subset runs and `--calibrate`. |
+| `pipeline.py` | **Canonical pipeline.** Processes all `GKOT_*.laz` → riverine PNGs, Koper coastal scenario PNGs, manifest, candidates, and risk points. Supports subset runs and `--calibrate`. |
 | `download_tiles.py` | Downloads CLSS GKOT tiles from the CDN with region auto-discovery and a probe cache. `--center/--radius`, `--bbox`, `--tiles`, `--dry-run`, `--pipeline`. |
+| `kernels.py` | Numba `@njit(cache=True)` hot loops — DTM grouped-min, D8 accumulation, HAND grid — bit-identical to the original pure-Python loops but ~70–150× faster. |
+| `bench_kernels.py` | Correctness + speed gate: asserts the Numba kernels match the originals on a real tile. `python bench_kernels.py [TILE_ID]`. |
 
 <details>
 <summary>Legacy / exploratory scripts (early single-tile work, superseded by <code>pipeline.py</code>)</summary>
@@ -94,7 +99,7 @@ The `web/` directory is published to GitHub Pages on every push to `main` via `.
 
 ## Verified Maintenance Notes
 
-Reviewed on 2026-06-30.
+Reviewed on 2026-07-09 (verified 146-tile / 3-region dataset, D19 HAND weight model, D20 Koper coastal overlays, and Numba kernels against the code).
 
 This repository is the Git-backed version of the Slovenia LiDAR floodmap work.
 It has the canonical multi-tile pipeline (`pipeline.py`), downloader
