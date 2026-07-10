@@ -4,6 +4,69 @@ An interactive web map overlaying riverine flood susceptibility, Koper coastal s
 
 **Live demo →** https://dhairyamishra.github.io/slovenia-lidar-floodmap/
 
+## Map layers in action
+
+The interface lets you combine the derived analysis layers, adjust each layer's opacity, and switch the ranked high-risk markers on or off. The examples below show how the same controls reveal different terrain and land-use patterns across the three study regions.
+
+### Flood susceptibility
+
+Blue cells have lower relative susceptibility and red cells have higher relative susceptibility within each calibrated region. Numbered markers identify the globally ranked high-risk candidates; they are region-capped so one independently normalised region cannot dominate the list.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/koper-flood-susceptibility.png" alt="Flood susceptibility layer over Koper" /></td>
+    <td width="50%"><img src="docs/images/savinja-flood-susceptibility.png" alt="Flood susceptibility layer over the Savinja valley" /></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Koper:</strong> the riverine baseline highlights low-lying urban and port terrain. The separate coastal controls add the +0.5 m, +1.0 m, and +2.0 m sea-level-rise screens.</td>
+    <td align="center"><strong>Savinja:</strong> the warm corridor follows the alpine valley floor and drainage network, while steep uplands remain predominantly lower-risk blue.</td>
+  </tr>
+</table>
+
+### Land classification
+
+The classification layer translates CLSS return classes into a compact surface map: ground is tan, buildings are red, and vegetation progresses from light green (low) through medium green to dark green (high). Black or transparent areas contain no classified ground return, including open water and coastal no-data cells.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/ljubljana-land-classification.png" alt="Land classification layer over Ljubljana" /></td>
+    <td width="50%"><img src="docs/images/savinja-land-classification.png" alt="Land classification layer over the Savinja valley" /></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Ljubljana:</strong> dense red building fabric, tan open ground, agricultural plots, and high-vegetation forest blocks.</td>
+    <td align="center"><strong>Savinja:</strong> a forest-dominated alpine landscape surrounding the developed valley floor.</td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="docs/images/koper-land-classification.png" alt="Land classification layer over Koper" /></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><strong>Koper:</strong> port buildings and paved ground stand out from vegetated slopes; the sea remains unclassified.</td>
+  </tr>
+</table>
+
+### Forest health (NDVI)
+
+The NDVI layer uses the LiDAR sensor's NIR and red channels. Red indicates relatively stressed or sparse vegetation and green indicates healthier vegetation after a per-tile percentile stretch; black areas are non-vegetated or no-data. The opacity control makes it easy to compare the raster against roads, parcels, and the dark basemap.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/ljubljana-forest-ndvi-controls.png" alt="Forest NDVI layer over Ljubljana with the layer controls visible" /></td>
+    <td width="50%"><img src="docs/images/ljubljana-forest-ndvi-detail.png" alt="Detailed forest NDVI view over Ljubljana" /></td>
+  </tr>
+  <tr>
+    <td align="center">The complete interactive view with the NDVI and high-risk-location controls enabled.</td>
+    <td align="center">A closer view showing field-scale and forest-edge variation in vegetation condition.</td>
+  </tr>
+</table>
+
+### From airborne returns to map layers
+
+<p align="center">
+  <img src="docs/images/lidar-point-cloud-3d.png" alt="Three-dimensional CLSS LiDAR point cloud over a rural Slovenian landscape" width="900" />
+</p>
+
+The source is a three-dimensional CLSS LiDAR point cloud: individual returns reconstruct terrain, trees, buildings, and crops. The pipeline groups these returns into a 2 m × 2 m × 2 m voxel grid, derives terrain, hydrology, canopy, vegetation, and classification factors, and exports lightweight georeferenced PNG overlays for the browser map.
+
 ## What it shows
 
 | Layer | Description |
