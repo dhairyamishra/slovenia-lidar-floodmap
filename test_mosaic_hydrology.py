@@ -46,8 +46,19 @@ class ConditioningTests(unittest.TestCase):
         self.assertTrue(np.all(hand >= 0))
         self.assertGreaterEqual(int(order.max()), 2)
 
+    def test_flow_labels_propagate_outlet_and_downstream_stream(self):
+        dem = np.array([[5, 4, 3, 2]], dtype=float)
+        receivers = np.array([1, 2, 3, -1], dtype=np.int64)
+        streams = np.array([[False, False, True, False]])
+        outlet, downstream = kernels.flow_labels(dem, receivers, streams)
+        np.testing.assert_array_equal(outlet, [[3, 3, 3, 3]])
+        np.testing.assert_array_equal(downstream, [[2, 2, 2, -1]])
+
 
 class MosaicContractTests(unittest.TestCase):
+    def tearDown(self):
+        mosaic.configure_region("savinja")
+
     def test_threshold_selection_uses_d8_alignment_only(self):
         blocks = [
             {"method": "d8", "stream_area_m2": 10_000, "f1_20m": 0.4},
@@ -56,6 +67,15 @@ class MosaicContractTests(unittest.TestCase):
         ]
         self.assertEqual(mosaic.select_stream_threshold(blocks), 50_000)
 
+    def test_configuration_selection_uses_development_auc_then_ap(self):
+        rows = [
+            {"conditioning_variant": "a", "stream_area_m2": 10_000,
+             "benchmark": {"available": True, "mosaic_hand": {"roc_auc": 0.7, "average_precision": 0.6}}},
+            {"conditioning_variant": "b", "stream_area_m2": 50_000,
+             "benchmark": {"available": True, "mosaic_hand": {"roc_auc": 0.71, "average_precision": 0.5}}},
+        ]
+        self.assertEqual(mosaic.select_configuration(rows)["conditioning_variant"], "b")
+
     def test_smooth_plane_has_no_artificial_seam_amplification(self):
         rows, cols = mosaic.SHAPE
         plane = np.add.outer(np.arange(rows, dtype=float), np.arange(cols, dtype=float))
@@ -63,10 +83,19 @@ class MosaicContractTests(unittest.TestCase):
         self.assertAlmostEqual(metrics["median_seam_ratio"], 1.0)
 
     def test_expected_savinja_tile_contract(self):
+        mosaic.configure_region("savinja")
         paths = mosaic.tile_paths()
         self.assertEqual(len(paths), 25)
         self.assertEqual(paths[0].name, "GKOT_486_132.laz")
         self.assertEqual(paths[-1].name, "GKOT_490_136.laz")
+
+    def test_expected_ljubljana_tile_contract(self):
+        mosaic.configure_region("ljubljana")
+        paths = mosaic.tile_paths()
+        self.assertEqual(len(paths), 100)
+        self.assertEqual(mosaic.SHAPE, (5000, 5000))
+        self.assertEqual(paths[0].name, "GKOT_455_96.laz")
+        self.assertEqual(paths[-1].name, "GKOT_464_105.laz")
 
 
 if __name__ == "__main__":

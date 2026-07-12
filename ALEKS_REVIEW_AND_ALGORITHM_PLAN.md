@@ -432,7 +432,7 @@ The 2023 fixture must be visibly watermarked “synthetic demo” or removed fro
 - [x] Demonstrate continuity across every tile seam.
 - [x] Cut seven features back into all 25 tiles without recomputing routing locally, with exact-array verification.
 
-**Exit gate: PASSED 2026-07-12 (D26).** The 5×5 mosaic has zero internal sinks, 14,340 receiver links cross former tile seams, and all 25 feature exports reproduce exact mosaic windows. On development-only static Q100 samples, mosaic HAND improves ROC-AUC/AP from 0.7387/0.1523 to 0.7894/0.1973. The locked test was not accessed.
+**Exit gate: PASSED 2026-07-12 (D26–D27).** The 5×5 Savinja mosaic has zero internal sinks, 14,340 receiver links cross former tile seams, and mosaic HAND improves development-only Q100 ROC-AUC/AP from 0.7387/0.1523 to 0.7894/0.1973. The same code path now processes the 10×10 Ljubljana basin: zero internal sinks, 63,263 cross-seam links, exact export of 13 features to all 100 tiles, and unburned 100k m² HAND improves development AUC/AP from 0.7111/0.4949 to 0.7358/0.5150. The locked test was not accessed.
 
 ### Phase 3 — Benchmark and select static model
 
@@ -484,6 +484,7 @@ Append each experiment; never overwrite an unfavorable result.
 
 | E003 | 2026-07-12 | `D19-baseline-v1`, validation contract v1 | DRSV validity/Q10/Q100/Q500/depth; 128,737 eligible samples after 10 m Q100 boundary exclusion | Frozen east-strip locked tests with 1 km guard columns; Koper evaluation-only | Lock label grids, spatial splits, ambiguity, and negative controls before replacement fitting | Locked test: D19 AUC/AP 0.6100/0.3737; HAND-only 0.7764/0.5548. Overall HAND-only 0.7130/0.4915 vs D19 0.6069/0.3922 | Low-flat Q100-negative flagged at development top-10% threshold: D19 0.1334, HAND-only 0.0904 | Freeze contract and preserve locked test for final replacement gate; proceed to Savinja mosaic hydrology |
 | E004 | 2026-07-12 | Savinja mosaic hydrology v1, input fingerprint `e7ebe35c…` | 25 CLSS tiles, 346,901,854 ground returns; DRSV flow lines; development-only Q100 samples | Savinja E486–488 development only; guard E489 and locked E490 excluded | Continuous priority-flood D8 routing, HAND, channel distance and Strahler; MFD and threshold sensitivities | Per-tile HAND AUC/AP 0.7387/0.1523; mosaic HAND 0.7894/0.1973; selected 50,000 m² D8 channel F1 0.7163 | Absolute elevation is not used in this feature gate; HAND is drainage-relative | Accept mosaic hydrology for Savinja; extend the same code path to Ljubljana before model fitting |
+| E005 | 2026-07-12 | Ljubljana mosaic hydrology v1, input fingerprint `96e7bfdd…` | 100 CLSS tiles, 1,321,210,775 ground returns; DRSV flow lines; 78,848 development-only samples | Ljubljana E455–461 development only; E462 guard and E463–464 locked test excluded | Compare unburned/burned priority-fill surfaces and 10k/50k/100k m² D8 HAND; export exact receiver/connectivity/outlet and local-relief features | Per-tile HAND 0.7111/0.4949; selected unburned 100k mosaic HAND 0.7358/0.5150. Burned 100k degraded to 0.6991/0.4654 | No absolute-elevation score used; valley-relative elevation and local relief exported for later controlled testing | Reject automatic network burn; accept continuous Ljubljana hydrology and proceed to spatial model benchmark |
 
 ## 12. Decision gates
 

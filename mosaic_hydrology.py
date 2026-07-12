@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Build continuous, conditioned Savinja hydrology across the 5×5 LiDAR block.
+"""Build continuous, conditioned hydrology across a complete LiDAR region.
 
-Large feature arrays are written under ignored output/mosaic/savinja/. The
+Large feature arrays are written under ignored output/mosaic/<region>/. The
 script never evaluates replacement features on the frozen locked-test column;
 its optional Q100 comparison is development-only and exists solely to verify
 that mosaic HAND clears the frozen per-tile HAND engineering baseline.
@@ -19,7 +19,12 @@ from pathlib import Path
 import laspy
 import numpy as np
 from PIL import Image, ImageDraw
-from scipy.ndimage import distance_transform_edt, gaussian_filter, minimum_filter
+from scipy.ndimage import (
+    distance_transform_edt,
+    gaussian_filter,
+    maximum_filter,
+    minimum_filter,
+)
 from shapely import contains_xy
 
 import analyze_model
@@ -30,26 +35,59 @@ from validation_grid import assign_split, file_sha256
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
-OUTPUT = ROOT / "output" / "mosaic" / "savinja"
-TILE_OUTPUT = OUTPUT / "tiles"
 FLOW_LINES = ROOT / "validation" / "data" / "official_flow_lines.geojson"
 VALIDITY = ROOT / "validation" / "data" / "ikpn_validity.geojson"
 Q100 = ROOT / "validation" / "data" / "ikpn_q100.geojson"
 SAMPLES = ROOT / "output" / "diagnostics" / "samples"
 
-REGION = "08-kamnik"
 GRID_RES_M = 2.0
 TILE_CELLS = 500
-EASTING_RANGE = range(486, 491)
-NORTHING_RANGE = range(132, 137)
-BOUNDS = (486000.0, 132000.0, 491000.0, 137000.0)
-SHAPE = (2500, 2500)  # row 0 is south; column 0 is west
+REGION_SPECS = {
+    "savinja": {
+        "cdn_region": "08-kamnik",
+        "easting_range": (486, 491),
+        "northing_range": (132, 137),
+    },
+    "ljubljana": {
+        "cdn_region": "05-ljubljana",
+        "easting_range": (455, 465),
+        "northing_range": (96, 106),
+    },
+}
 STREAM_THRESHOLDS_M2 = (10_000.0, 50_000.0, 100_000.0)
 DEFAULT_STREAM_AREA_M2 = 50_000.0
 OFFICIAL_TOLERANCE_M = 20.0
 GENTLE_BURN_DEPTH_M = 0.5
 GENTLE_BURN_HALF_WIDTH_M = 10.0
 FILL_EPSILON_M = 1e-5
+
+
+def configure_region(name):
+    """Select one region for this process; all stages share this exact geometry."""
+    global REGION_NAME, REGION, EASTING_RANGE, NORTHING_RANGE
+    global BOUNDS, SHAPE, OUTPUT, TILE_OUTPUT
+    if name not in REGION_SPECS:
+        raise ValueError(f"Unknown region {name!r}; choose from {sorted(REGION_SPECS)}")
+    spec = REGION_SPECS[name]
+    REGION_NAME = name
+    REGION = spec["cdn_region"]
+    EASTING_RANGE = range(*spec["easting_range"])
+    NORTHING_RANGE = range(*spec["northing_range"])
+    BOUNDS = (
+        EASTING_RANGE.start * 1000.0,
+        NORTHING_RANGE.start * 1000.0,
+        EASTING_RANGE.stop * 1000.0,
+        NORTHING_RANGE.stop * 1000.0,
+    )
+    SHAPE = (
+        len(NORTHING_RANGE) * TILE_CELLS,
+        len(EASTING_RANGE) * TILE_CELLS,
+    )  # row 0 is south; column 0 is west
+    OUTPUT = ROOT / "output" / "mosaic" / REGION_NAME
+    TILE_OUTPUT = OUTPUT / "tiles"
+
+
+configure_region("savinja")
 
 
 def tile_paths():
@@ -91,7 +129,7 @@ def assemble_ground_dtm(paths, chunk_size=4_000_000):
 
     missing = np.isinf(dtm)
     if missing.all():
-        raise RuntimeError("Savinja mosaic has no ground returns")
+        raise RuntimeError(f"{REGION_NAME} mosaic has no ground returns")
     distances, indices = distance_transform_edt(
         missing, return_distances=True, return_indices=True
     )
@@ -114,8 +152,8 @@ def load_or_build_dtm(paths, fingerprint, rebuild=False):
     if not rebuild and dtm_path.exists() and coverage_path.exists() and cache_path.exists():
         cache = json.loads(cache_path.read_text(encoding="utf-8"))
         if cache.get("input_sha256") == fingerprint["sha256"]:
-            print("Using cached Savinja mosaic DTM", flush=True)
-            return np.load(dtm_path), np.load(coverage_path), cache["assembly"]
+            print(f"Using cached {REGION_NAME} mosaic DTM", flush=True)
+            return np.load(dtm_path, mmap_mode="r"), np.load(coverage_path, mmap_mode="r"), cache["assembly"]
 
     dtm, coverage, assembly = assemble_ground_dtm(paths)
     np.save(dtm_path, dtm.astype(np.float32))
@@ -328,9 +366,44 @@ def development_hand_benchmark(hand):
     }
 
 
+def configuration_sensitivity(variants):
+    """Evaluate allowed conditioning/threshold variants on development only."""
+    rows = []
+    for variant_name, conditioned, recv, accumulation in variants:
+        for threshold in STREAM_THRESHOLDS_M2:
+            stream = accumulation * GRID_RES_M**2 >= threshold
+            hand = kernels.hand_from_receivers(conditioned, recv, stream)
+            benchmark = development_hand_benchmark(hand)
+            rows.append({
+                "conditioning_variant": variant_name,
+                "stream_area_m2": threshold,
+                "benchmark": benchmark,
+            })
+    return rows
+
+
+def select_configuration(rows):
+    available = [row for row in rows if row["benchmark"].get("available")]
+    if not available:
+        raise RuntimeError("No development benchmark is available for configuration selection")
+    return max(
+        available,
+        key=lambda row: (
+            row["benchmark"]["mosaic_hand"]["roc_auc"],
+            row["benchmark"]["mosaic_hand"]["average_precision"],
+        ),
+    )
+
+
 def save_feature(name, array):
     path = OUTPUT / f"{name}.npy"
-    np.save(path, array)
+    backing_file = getattr(array, "filename", None)
+    same_backing_file = (
+        backing_file is not None
+        and Path(backing_file).resolve() == path.resolve()
+    )
+    if not same_backing_file:
+        np.save(path, array)
     return {
         "path": str(path.relative_to(ROOT)).replace("\\", "/"),
         "dtype": str(array.dtype),
@@ -355,7 +428,7 @@ def cut_tiles(features):
                 },
                 metadata=np.array(json.dumps({
                     "tile": f"{easting}_{northing}",
-                    "source": "continuous-savinja-mosaic",
+                    "source": f"continuous-{REGION_NAME}-mosaic",
                     "row_order": "south-to-north",
                     "resolution_m": GRID_RES_M,
                 }, sort_keys=True)),
@@ -398,35 +471,39 @@ def render_qa_overview(conditioned, accumulation, hand, stream, official_mask):
     from matplotlib.colors import LogNorm
 
     qa_path = OUTPUT / "qa_overview.png"
+    stride = max(1, int(np.ceil(max(SHAPE) / 2500)))
+    view = np.s_[::stride, ::stride]
     figure, axes = plt.subplots(2, 2, figsize=(12, 12), constrained_layout=True)
-    dy, dx = np.gradient(conditioned)
+    dy, dx = np.gradient(conditioned[view])
     hillshade = np.clip(0.55 - 0.7 * dx + 0.7 * dy, 0, 1)
     axes[0, 0].imshow(np.flipud(hillshade), cmap="gray", vmin=0, vmax=1)
     axes[0, 0].set_title("Conditioned DTM hillshade")
 
     positive = accumulation[accumulation > 1]
     axes[0, 1].imshow(
-        np.flipud(accumulation), cmap="viridis",
+        np.flipud(accumulation[view]), cmap="viridis",
         norm=LogNorm(vmin=1, vmax=max(float(np.percentile(positive, 99.9)), 2)),
     )
     axes[0, 1].set_title("Continuous D8 accumulation (log scale)")
 
     hand_max = max(float(np.percentile(hand, 98)), 1.0)
-    axes[1, 0].imshow(np.flipud(hand), cmap="magma", vmin=0, vmax=hand_max)
+    axes[1, 0].imshow(np.flipud(hand[view]), cmap="magma", vmin=0, vmax=hand_max)
     axes[1, 0].set_title(f"Mosaic HAND (0–p98={hand_max:.1f} m)")
 
-    comparison = np.zeros((*stream.shape, 3), dtype=np.uint8)
-    comparison[official_mask] = (56, 189, 248)
-    comparison[stream] = (168, 85, 247)
-    comparison[official_mask & stream] = (255, 255, 255)
+    stream_view = stream[view]
+    official_view = official_mask[view]
+    comparison = np.zeros((*stream_view.shape, 3), dtype=np.uint8)
+    comparison[official_view] = (56, 189, 248)
+    comparison[stream_view] = (168, 85, 247)
+    comparison[official_view & stream_view] = (255, 255, 255)
     axes[1, 1].imshow(np.flipud(comparison))
     axes[1, 1].set_title("Streams: official cyan / D8 purple / overlap white")
     for axis in axes.ravel():
         axis.set_axis_off()
         for boundary in range(TILE_CELLS, SHAPE[1], TILE_CELLS):
-            axis.axvline(boundary - 0.5, color="lime", alpha=0.25, linewidth=0.5)
+            axis.axvline(boundary / stride - 0.5, color="lime", alpha=0.25, linewidth=0.5)
         for boundary in range(TILE_CELLS, SHAPE[0], TILE_CELLS):
-            axis.axhline(boundary - 0.5, color="lime", alpha=0.25, linewidth=0.5)
+            axis.axhline(boundary / stride - 0.5, color="lime", alpha=0.25, linewidth=0.5)
     figure.savefig(qa_path, dpi=140)
     plt.close(figure)
     return {
@@ -435,12 +512,13 @@ def render_qa_overview(conditioned, accumulation, hand, stream, official_mask):
     }
 
 
-def main(rebuild_dtm=False):
+def main(region="savinja", rebuild_dtm=False):
+    configure_region(region)
     started = time.time()
     paths = tile_paths()
     missing = [path for path in paths if not path.exists()]
     if missing:
-        raise SystemExit(f"Missing {len(missing)} Savinja LAZ tiles, first: {missing[0]}")
+        raise SystemExit(f"Missing {len(missing)} {REGION_NAME} LAZ tiles, first: {missing[0]}")
     for required in (FLOW_LINES, VALIDITY, Q100):
         if not required.exists():
             raise SystemExit(f"Missing {required}")
@@ -459,13 +537,37 @@ def main(rebuild_dtm=False):
     print("Priority-flood conditioning gentle network-burn sensitivity", flush=True)
     conditioned_burned = kernels.priority_flood_fill(burn_input, FILL_EPSILON_M)
     burned_metrics = conditioning_metrics(burn_input, conditioned_burned)
-    use_burned = bool(alignment.get("accepted_for_gentle_burn"))
-    conditioned = conditioned_burned if use_burned else conditioned_unburned
-    conditioning_variant = "gentle-official-network-burn-plus-priority-flood" if use_burned else "priority-flood-only"
-
     print("Continuous D8 receivers and accumulation", flush=True)
-    recv = kernels.flow_receivers(conditioned, GRID_RES_M)
-    accumulation_d8 = kernels.accumulate_receivers(conditioned, recv)
+    recv_unburned = kernels.flow_receivers(conditioned_unburned, GRID_RES_M)
+    accumulation_unburned = kernels.accumulate_receivers(conditioned_unburned, recv_unburned)
+    variants = [("priority-flood-only", conditioned_unburned, recv_unburned, accumulation_unburned)]
+    if alignment.get("accepted_for_gentle_burn"):
+        recv_burned = kernels.flow_receivers(conditioned_burned, GRID_RES_M)
+        accumulation_burned = kernels.accumulate_receivers(conditioned_burned, recv_burned)
+        variants.append((
+            "gentle-official-network-burn-plus-priority-flood",
+            conditioned_burned,
+            recv_burned,
+            accumulation_burned,
+        ))
+
+    configuration_rows = configuration_sensitivity(variants)
+    if REGION_NAME == "savinja":
+        # D26 is a frozen accepted feature version; do not reshape it post hoc.
+        selected_configuration = next(
+            row for row in configuration_rows
+            if row["conditioning_variant"] == "priority-flood-only"
+            and row["stream_area_m2"] == DEFAULT_STREAM_AREA_M2
+        )
+        selection_rule = "frozen-d26-unburned-50000m2"
+    else:
+        selected_configuration = select_configuration(configuration_rows)
+        selection_rule = "maximum-development-mosaic-hand-roc-auc-with-ap-tiebreak"
+
+    conditioning_variant = selected_configuration["conditioning_variant"]
+    selected_threshold = selected_configuration["stream_area_m2"]
+    selected_tuple = next(item for item in variants if item[0] == conditioning_variant)
+    _, conditioned, recv, accumulation_d8 = selected_tuple
     print("MFD sensitivity accumulation", flush=True)
     accumulation_mfd = kernels.mfd_accumulation(conditioned, GRID_RES_M)
 
@@ -473,7 +575,6 @@ def main(rebuild_dtm=False):
         threshold_sensitivity(accumulation_d8, official_mask, "d8")
         + threshold_sensitivity(accumulation_mfd, official_mask, "mfd")
     )
-    selected_threshold = select_stream_threshold(sensitivity)
     stream = accumulation_d8 * GRID_RES_M**2 >= selected_threshold
     stream_mfd = accumulation_mfd * GRID_RES_M**2 >= selected_threshold
     union = stream | stream_mfd
@@ -483,18 +584,30 @@ def main(rebuild_dtm=False):
     hand = kernels.hand_from_receivers(conditioned, recv, stream)
     channel_distance = distance_transform_edt(~stream) * GRID_RES_M
     stream_order = kernels.strahler_order(conditioned, recv, stream)
+    outlet_id, downstream_stream_id = kernels.flow_labels(conditioned, recv, stream)
+    neighborhood_cells = max(3, int(round(250.0 / GRID_RES_M)))
+    local_minimum = minimum_filter(conditioned, size=neighborhood_cells, mode="nearest")
+    local_maximum = maximum_filter(conditioned, size=neighborhood_cells, mode="nearest")
+    valley_relative_elevation = conditioned - local_minimum
+    local_relief = local_maximum - local_minimum
 
     seam_metrics = receiver_seam_metrics(recv, stream, official_mask)
     seam_metrics["conditioned_dtm"] = seam_jump_metrics(conditioned)
     seam_metrics["hand"] = seam_jump_metrics(hand)
 
     feature_arrays = {
-        "conditioned_dtm": conditioned.astype(np.float32),
+        "conditioned_dtm": conditioned,
         "accumulation_cells": accumulation_d8.astype(np.float32),
         "hand_m": hand.astype(np.float32),
         "channel_distance_m": channel_distance.astype(np.float32),
         "stream_order": stream_order.astype(np.int16),
         "stream_mask": stream,
+        "receiver_index": recv.reshape(SHAPE).astype(np.int32),
+        "terminal_outlet_id": outlet_id.astype(np.int32),
+        "downstream_stream_id": downstream_stream_id.astype(np.int32),
+        "connected_to_stream": downstream_stream_id >= 0,
+        "valley_relative_elevation_250m": valley_relative_elevation.astype(np.float32),
+        "local_relief_250m": local_relief.astype(np.float32),
         "ground_coverage": ground_coverage,
     }
     OUTPUT.mkdir(parents=True, exist_ok=True)
@@ -509,6 +622,7 @@ def main(rebuild_dtm=False):
     manifest = {
         "schema_version": 1,
         "generated": datetime.now(timezone.utc).isoformat(),
+        "region_name": REGION_NAME,
         "region": REGION,
         "semantics": "continuous-mosaic-hydrology-features-not-flood-probability",
         "bounds_epsg3794": BOUNDS,
@@ -526,6 +640,8 @@ def main(rebuild_dtm=False):
         },
         "conditioning": {
             "selected_variant": conditioning_variant,
+            "selection_rule": selection_rule,
+            "development_configuration_sensitivity": configuration_rows,
             "epsilon_m": FILL_EPSILON_M,
             "unburned": unburned_metrics,
             "gentle_network_burn_sensitivity": burned_metrics,
@@ -568,6 +684,7 @@ def main(rebuild_dtm=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--rebuild-dtm", action="store_true", help="Decode all 25 LAZ tiles even if the DTM cache matches")
+    parser.add_argument("--region", choices=sorted(REGION_SPECS), default="savinja")
+    parser.add_argument("--rebuild-dtm", action="store_true", help="Decode every region LAZ tile even if the DTM cache matches")
     args = parser.parse_args()
-    main(rebuild_dtm=args.rebuild_dtm)
+    main(region=args.region, rebuild_dtm=args.rebuild_dtm)

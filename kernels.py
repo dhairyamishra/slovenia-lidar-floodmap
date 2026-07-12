@@ -293,7 +293,9 @@ def _priority_flood_core(dem, epsilon):
 
 def priority_flood_fill(dem, epsilon=1e-5):
     """Condition a finite DEM so every interior cell has a descending outlet."""
-    dem = np.ascontiguousarray(dem, dtype=np.float64)
+    dem = np.ascontiguousarray(dem)
+    if dem.dtype not in (np.float32, np.float64):
+        dem = dem.astype(np.float64)
     if not np.isfinite(dem).all():
         raise ValueError("priority_flood_fill requires a finite DEM")
     return _priority_flood_core(dem, np.float64(epsilon))
@@ -365,6 +367,35 @@ def strahler_order(dem, recv, stream_mask):
     stream = np.ascontiguousarray(stream_mask, dtype=np.bool_).ravel()
     order = np.argsort(-dem.ravel())
     return _strahler_core(recv, stream, order).reshape(dem.shape)
+
+
+@njit(cache=True)
+def _flow_labels_core(recv, stream, ascending_order):
+    """Propagate terminal outlets and first downstream streams upstream."""
+    terminal = np.full(recv.size, -1, dtype=np.int64)
+    downstream_stream = np.full(recv.size, -1, dtype=np.int64)
+    for position in range(ascending_order.size):
+        idx = ascending_order[position]
+        receiver = recv[idx]
+        if receiver < 0:
+            terminal[idx] = idx
+        else:
+            terminal[idx] = terminal[receiver]
+        if stream[idx]:
+            downstream_stream[idx] = idx
+        elif receiver >= 0:
+            downstream_stream[idx] = downstream_stream[receiver]
+    return terminal, downstream_stream
+
+
+def flow_labels(dem, recv, stream_mask):
+    """Return terminal-outlet and first-downstream-stream global cell IDs."""
+    dem = np.ascontiguousarray(dem)
+    recv = np.ascontiguousarray(recv, dtype=np.int64)
+    stream = np.ascontiguousarray(stream_mask, dtype=np.bool_).ravel()
+    ascending_order = np.argsort(dem.ravel())
+    terminal, downstream_stream = _flow_labels_core(recv, stream, ascending_order)
+    return terminal.reshape(dem.shape), downstream_stream.reshape(dem.shape)
 
 
 @njit(cache=True)

@@ -1,6 +1,6 @@
 # Flood Terrain Model Replacement Plan
 
-**Status:** Approved and in progress. Phases 1–3 complete (D24–D26); Phase 4 active.
+**Status:** Approved and in progress. Phases 1–4 complete (D24–D27); Phase 5 active.
 
 **Prepared:** 2026-07-12
 
@@ -9,7 +9,7 @@
 - [x] Phase 1 — communication repair, DRSV validity/depth, Q100 comparison.
 - [x] Phase 2 — validation rasters, locked spatial splits, negative controls.
 - [x] Phase 3 — Savinja mosaic hydrology.
-- [ ] Phase 4 — Ljubljana mosaic hydrology.
+- [x] Phase 4 — Ljubljana mosaic hydrology.
 - [ ] Phase 5+ — model benchmark, sparse production output, scenario evidence.
 
 **Problem:** The frozen `D19-baseline-v1` overlay renders most low, flat land as strongly red. It is visually alarming, strongly associated with elevation, and performs worse than HAND-only against the official DRSV Q100 reference. The replacement must reduce false positives through drainage connectivity and scenario evidence, not cosmetic weight or color changes.
@@ -281,7 +281,7 @@ Do not show cell-level probability unless the target is defined, multiple indepe
 | 1 | Communication repair | Honest D19/DRSV comparison UI | **Complete — D24** |
 | 2 | Validation lock | Rasters, spatial blocks, controls | **Complete — D25** |
 | 3 | Savinja mosaic | Continuous conditioned hydrology | **Complete — D26** |
-| 4 | Ljubljana mosaic | Continuous basin features | C6 Ljubljana |
+| 4 | Ljubljana mosaic | Continuous basin features | **Complete — D27** |
 | 5 | Model benchmark | Candidate comparison/model card | D1 |
 | 6 | Sparse production output | Validated classes/applicability | E3 |
 | 7 | Event/scenario evidence | Savinja hindcast and stage/HAND | F2 evaluated |

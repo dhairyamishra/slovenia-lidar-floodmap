@@ -1,12 +1,30 @@
 # Handoff - Slovenia CLSS LiDAR Flood, Coastal & Hydroclimate Demo
 
-**Status:** Phases 1–3 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D26). D19 communication is repaired, validation is locked, and Savinja now has continuous conditioned mosaic hydrology. Phase 4 extends the same code path to Ljubljana.
+**Status:** Phases 1–4 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D27). D19 communication is repaired, validation is locked, and both Savinja and Ljubljana have continuous conditioned mosaic hydrology. Phase 5 is the interpretable replacement-model benchmark; no replacement has been published to the web yet.
 
 **Goal:** A polished, honest screening tool for Aleks / sledilnik.org that shows where detailed flood/coastal investigation should start. It is not a hydraulic, coastal, or probabilistic forecast model.
 
 > Authoritative context: `AGENTS.md`, `CLAUDE.md`, `DECISIONS.md`, and `PLAN.md`. This handoff is the current snapshot plus the latest implementation notes.
 > The active review/implementation tracker is `ALEKS_REVIEW_AND_ALGORITHM_PLAN.md`.
 > The focused red-map/model-replacement tracker is `FLOOD_MODEL_REPLACEMENT_PLAN.md`.
+
+## D27 Phase-4 Ljubljana mosaic hydrology (2026-07-12)
+
+- Generalized `mosaic_hydrology.py` so `--region savinja` and `--region ljubljana` use one code path and separate fingerprinted caches. The Ljubljana 10×10 run decoded 1,321,210,775 ground returns into a 5000×5000 grid; initial full runtime was 240 s and the expanded cached run was 137 s.
+- Added memory-mapped cache reads and downsampled QA rendering for the 25-million-cell basin. Fixed a Windows lock found when a memory-mapped feature already backed its destination file.
+- Geometric official-line alignment made Ljubljana's gentle burn eligible (median/p90 line offset 0.100/0.698 m), but development Q100 showed it was harmful: burned 100k m² HAND AUC/AP 0.6991/0.4654. Selection therefore keeps the unburned priority-flood surface.
+- Development-only configuration selection chose the unburned 100,000 m² stream threshold: mosaic HAND AUC/AP 0.7358/0.5150 versus per-tile 0.7111/0.4949. Guard and locked test remained untouched.
+- Verified zero internal sinks, 63,263 receiver links across former tile seams, conditioned-DTM/HAND seam ratios 0.9976/0.9988, and exact cut-back of 13 features into all 100 tiles.
+- Added exact global receiver indices, terminal outlet IDs, first downstream stream IDs, connectivity, 250 m valley-relative elevation, and 250 m local relief. Ljubljana stream connectivity covers 96.47% of cells.
+- Conditioned terrain is now retained as float64 and the exact receiver graph is exported. Reconstructing receivers from the saved terrain produces zero mismatches; the former float32 export could lose tiny priority-fill gradients.
+- Savinja was rerun through the expanded 13-feature contract while retaining its frozen D26 unburned 50k m² selection and identical benchmark metrics.
+- Verification: 33/33 repository tests, Python/JavaScript syntax, diff check, exact tile exports, and real-tile legacy kernel faithfulness all pass.
+
+**Why:** Ljubljana is a broad, urbanized basin rather than an alpine valley. The first automatic burn looked geometrically plausible but made the reference benchmark worse. Requiring development evidence in addition to line alignment prevented an apparently sophisticated conditioning step from degrading the feature.
+
+**Caveats:** Ljubljana priority fill changes 16.51% of cells (median +0.117 m among changed cells; p99 +4.455 m; maximum +19.10 m), so conditioning deltas require review before hydraulic use. Selected D8 channels recover only 23.13% of official line cells within 20 m (precision 56.88%; F1 0.3289); the official layer contains dense field/urban drainage not fully represented by surface D8. D8/MFD selected-stream Jaccard is 0.3983. Underground stormwater, culverts, pumps, barriers, and engineered flow directions remain absent. These are screening features, not hydraulics.
+
+**Next entry point:** Phase 5—implement frozen D19/per-tile HAND, mosaic HAND, drainage-rule, and constrained statistical candidates. Use spatial development folds and negative controls; open the locked test only once at the final selection gate.
 
 ## D26 Phase-3 Savinja mosaic hydrology (2026-07-12)
 

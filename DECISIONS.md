@@ -274,6 +274,18 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 **Reversible:** The D19 per-tile outputs and kernels remain intact. Remove `mosaic_hydrology.py` and its new public kernels/tests, delete ignored `output/mosaic/savinja/`, and continue selecting the explicit per-tile baseline. No committed web raster depends on D26 yet.
 
+### D27 — Generalize mosaic routing to Ljubljana; reject automatic network burning
+
+**Decision:** Run the same continuous hydrology code path over Ljubljana's 10×10, 2 m mosaic. Treat an official-network burn as an eligible conditioning sensitivity only after geometric alignment, then select among eligible conditioning/10k/50k/100k m² HAND configurations using development-only ROC-AUC with AP as tie-break. For Ljubljana, select the unburned priority-flood surface at 100,000 m². Preserve Savinja's already frozen D26 unburned 50,000 m² configuration. Export float64 conditioned terrain plus exact receiver, terminal-outlet, downstream-stream, connectivity, valley-relative-elevation, and local-relief grids so the routing graph is reproducible and later models can test drainage-relative factors without absolute elevation.
+
+**Why:** The initial Ljubljana rule accepted a gentle 0.5 m burn because official lines lie close to local terrain minima (median/p90 offset 0.100/0.698 m). That plausible-looking step reduced development HAND AUC/AP to 0.6830/0.4627 at 10k and 0.6991/0.4654 at 100k, below per-tile HAND's 0.7111/0.4949. The unburned surface improved monotonically across tested thresholds and reached 0.7358/0.5150 at 100k. Geometric alignment therefore does not establish that a mapped line has the correct channel-bed elevation or should be carved into LiDAR terrain.
+
+**Result:** The 5000×5000 mosaic assembled 1,321,210,775 ground returns, has zero internal sinks, routes 63,263 receiver links across former tile seams, and exports 13 exact features to all 100 tiles. Conditioned-DTM/HAND seam ratios are 0.9976/0.9988. The saved float64 terrain reconstructs the exported receiver graph with zero mismatches; 96.47% of cells reach a selected downstream stream. The full initial run took 240 s and the expanded cached run 137 s. No guard or locked-test replacement metrics were accessed.
+
+**Caveats:** Priority fill modifies 16.51% of Ljubljana cells (median +0.117 m among changed cells, p99 +4.455 m, maximum +19.10 m). The selected D8 channel network has official-line recall/precision/F1 of 0.2313/0.5688/0.3289 within 20 m, and D8/MFD stream-cell Jaccard is 0.3983. Dense agricultural ditches, storm sewers, culverts, pumps, barriers, and engineered drainage are not represented reliably by bare-earth surface routing. Configuration selection used one development partition and must not be described as final held-out skill.
+
+**Reversible:** Select `--region savinja` to reproduce D26 independently; remove the `ljubljana` region spec and D27 feature exports to return to the Phase-3 script. D19 and all committed web assets remain unchanged, so rollback requires no web-data regeneration.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*
