@@ -202,4 +202,34 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 ---
 
+## 2026-07-11
+
+### D22 — Freeze D19 as a non-default baseline; add diagnostic and semantic gates
+
+**Decision:** Freeze the existing riverine weighted overlay as `D19-baseline-v1` rather than retuning its weights from visual inspection. Pipeline outputs now carry a machine-readable model definition, definition digest, calibration digest, dataset digest, and score semantics. Every land-bearing tile also writes a deterministic score-decile-stratified factor/score sample under ignored `output/diagnostics/samples/`. `analyze_model.py` produces JSON/Markdown audits with display-saturation, candidate-concentration, full-grid elevation association, per-region association, factor association, and descriptive altitude ablations. The web app keeps D19 available but defaults it and its review points off, removes probability-like percentage labels, labels the hydroclimate layer as a synthetic fixture, and adds a persistent screening-only warning.
+
+**Why:** Aleks Jakulin identified three credibility problems: unclear differentiation from state of the art, an almost universally red map, and apparent altitude dependence. The repository audit confirmed the visual defect (median valid tile warm fraction **0.9879**, strongly-red fraction **0.9219**) and the full 146-tile rerun confirmed the shortcut on 360,790 diagnostic samples from 145 land-bearing tiles (score/elevation Pearson **−0.4742**, Spearman **−0.5057**). Within-region Pearson correlations are stronger: Koper **−0.7675**, Ljubljana **−0.8181**, Kamnik/Savinja **−0.6239**. Removing elevation and slope reduces the descriptive Pearson correlation to **−0.3825**, but does not remove it; HAND/TWI-only remains elevation-associated. Therefore weight tuning without validation would hide symptoms rather than establish flood skill.
+
+**Result:** Phase 0 of `ALEKS_REVIEW_AND_ALGORITHM_PLAN.md` is complete. A full 146-tile run finished successfully in 516 s with three RAM-bound workers and populated the diagnostics contract. Four unit tests pass, JavaScript syntax passes, and the local rendered app was browser-verified with all analytical toggles off by default, explicit synthetic/unvalidated labels, and no browser console errors (only upstream basemap sprite warnings). D19 remains an analytical comparison baseline, not the selected future model.
+
+**Caveats:** The diagnostic samples use equal quotas across score deciles per tile. They are appropriate for shortcut screening but not unbiased land-area estimates. Ablations diagnose score/elevation sensitivity only; they do not measure predictive skill. The next gate requires official/observed flood labels, spatial blocks, negative controls, and mosaic-level hydrology. Tile `400_48` has no land-bearing cells, so 145 of 146 tiles emit samples.
+
+**Reversible:** Remove `MODEL_VERSION`/provenance fields and the diagnostic writer from `pipeline.py`, delete `analyze_model.py`, `model_diagnostics.py`, and their tests, and restore the former UI labels/default visibility. This is not recommended because it would remove the evidence and release gates without improving the model.
+
+---
+
+### D23 — Official DRSV validation contract; HAND-only becomes the minimum baseline
+
+**Decision:** Use official DRSV IKPN polygons only inside the companion IKPN hydraulic-study validity domain for the first independent static benchmark. The new validation contract inventories and downloads Q10/Q100/Q500 extents, Q100 depth classes, hazard classes, validity, and official flow lines from DRSV ArcGIS REST using separate Koper/Ljubljana/Kamnik EPSG:3794 envelopes. Downloads remain gitignored; their acquisition manifest records URLs, regional counts, timestamps, and SHA-256 digests. Compact dissolved/simplified Q10/Q100/Q500 WGS84 layers are committed for an optional blue official-reference UI. Model selection must at least beat HAND-only, which is now the minimum terrain baseline.
+
+**Why:** Treating areas outside the published hydraulic-study validity polygon as dry would create false negatives. Querying the single union bbox also covered large empty gaps between the three disjoint study blocks: the initial Q100 query returned 8,156 polygons and 198 MB, while region envelopes returned 472 relevant polygons and 11.8 MB. On 151,435 diagnostic samples inside official validity (55,309 Q100-positive), frozen D19 scores **ROC-AUC 0.5972 / average precision 0.4109**. HAND-only scores **0.6908 / 0.4985**, substantially better. D19 per-region AUC is Koper 0.5368, Ljubljana 0.6117, Kamnik/Savinja 0.6648. Across 91 tiles containing both classes, median tile AUC is 0.6239 (IQR 0.5285–0.7415).
+
+**Result:** The app can now visually compare D19 with official Q10/Q100/Q500 extents without implying that the official layer is the August 2023 footprint. `evaluate_validation.py` produces reproducible JSON/Markdown comparison reports and includes HAND-only, TWI-only, HAND+TWI, and no-elevation/slope baselines. Ten unit tests pass, the new UI selector was browser-verified, and no application errors were observed.
+
+**Caveats:** This is descriptive static Q100 evaluation, not event validation or fitted spatial cross-validation. Diagnostic samples are score-decile/tile stratified. Official polygons have study/model/boundary uncertainty, and no uncertainty buffer has been applied yet. August 2023 observed extent, ARSO forcing/gauges, negative controls, and validation rasters remain pending. Do not optimize final weights on the same Q100 reference.
+
+**Reversible:** Remove `validation/`, `download_validation.py`, `prepare_validation_web.py`, `evaluate_validation.py`, web validation assets/controls, and associated tests. D19 remains independently usable, but removing the benchmark would also remove the evidence that it underperforms HAND-only.
+
+---
+
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CLSS Slovenia — Flood &amp; Forest Analysis</title>
+  <title>CLSS Slovenia — Flood Susceptibility &amp; Terrain Screening</title>
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
   <link rel="stylesheet" href="style.css?v=4">
 </head>
@@ -14,7 +14,7 @@
     <div class="topbar-left">
       <span class="topbar-logo">&#9650;</span>
       <span class="topbar-title">CLSS Slovenia</span>
-      <span class="topbar-subtitle">Flood, Coastal &amp; Forest Risk Analysis</span>
+      <span class="topbar-subtitle">Flood Susceptibility &amp; Terrain Screening</span>
     </div>
     <div class="topbar-right">
       <span class="topbar-meta">146 tiles &nbsp;&middot;&nbsp; CLSS GKOT &middot; 2 m grid</span>
@@ -32,20 +32,50 @@
       <!-- Flood susceptibility -->
       <div class="layer-row">
         <label class="layer-toggle">
-          <input type="checkbox" id="toggle-susc" checked>
+          <input type="checkbox" id="toggle-susc">
           <span class="toggle-track"></span>
         </label>
-        <span class="layer-name">Flood Susceptibility</span>
+        <span class="layer-name">Relative Terrain Susceptibility</span>
       </div>
       <div class="legend-bar" id="legend-susc">
-        <div class="legend-gradient" style="background: linear-gradient(to right, #4575b4, #91bfdb, #e0f3f8, #ffffbf, #fee090, #fc8d59, #d73027);"></div>
-        <div class="legend-labels"><span>Low</span><span>High</span></div>
+        <div class="legend-gradient" style="background: linear-gradient(to right, rgba(251,191,36,0.2), #f59e0b, #c2410c, #86198f);"></div>
+        <div class="legend-labels"><span>Lower relative</span><span>Higher relative</span></div>
       </div>
       <div class="slider-row">
         <span class="slider-label">Opacity</span>
-        <input type="range" id="opacity-susc" min="0" max="100" value="75" class="slider">
-        <span class="slider-val" id="val-susc">75%</span>
+        <input type="range" id="opacity-susc" min="0" max="100" value="55" class="slider">
+        <span class="slider-val" id="val-susc">55%</span>
       </div>
+      <p class="layer-hint layer-warning">D19 baseline: region-relative and unvalidated. Colors are not flood probability or modeled water depth.</p>
+
+      <div class="divider"></div>
+
+      <!-- Official DRSV hazard reference -->
+      <div class="layer-row">
+        <label class="layer-toggle">
+          <input type="checkbox" id="toggle-official">
+          <span class="toggle-track"></span>
+        </label>
+        <span class="layer-name">Official DRSV Hazard Reference</span>
+      </div>
+      <div class="legend-bar" id="legend-official">
+        <div class="legend-gradient" style="background: linear-gradient(to right, rgba(56,189,248,0.18), rgba(56,189,248,0.85));"></div>
+        <div class="legend-labels"><span>Outside extent</span><span>Hazard extent</span></div>
+      </div>
+      <div class="select-row">
+        <span class="slider-label">Scenario</span>
+        <select id="official-scenario" class="scenario-select">
+          <option value="q10">Q10</option>
+          <option value="q100" selected>Q100</option>
+          <option value="q500">Q500</option>
+        </select>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Opacity</span>
+        <input type="range" id="opacity-official" min="0" max="100" value="32" class="slider">
+        <span class="slider-val" id="val-official">32%</span>
+      </div>
+      <p class="layer-hint">Official static IKPN reference inside modeled study coverage; not the observed August 2023 event extent.</p>
 
       <div class="divider"></div>
 
@@ -98,11 +128,11 @@
           <input type="checkbox" id="toggle-coastal">
           <span class="toggle-track"></span>
         </label>
-        <span class="layer-name">Coastal Inundation</span>
+        <span class="layer-name">Connected Coastal Low-Land Exposure</span>
       </div>
       <div class="legend-bar" id="legend-coastal">
         <div class="legend-gradient" style="background: linear-gradient(to right, rgba(56,189,248,0.25), rgba(56,189,248,0.9));"></div>
-        <div class="legend-labels"><span>Dry</span><span>Inundated</span></div>
+        <div class="legend-labels"><span>Not exposed</span><span>Connected low land</span></div>
       </div>
       <div class="select-row">
         <span class="slider-label">Scenario</span>
@@ -117,7 +147,7 @@
         <input type="range" id="opacity-coastal" min="0" max="100" value="70" class="slider">
         <span class="slider-val" id="val-coastal">70%</span>
       </div>
-      <p class="layer-hint">Koper sea-level-rise bathtub screen; connected to mapped sea/no-data cells.</p>
+      <p class="layer-hint">Koper bathtub screen connected to mapped sea/no-data cells; not surge or hydraulic inundation.</p>
 
       <div class="divider"></div>
 
@@ -147,31 +177,35 @@
           <input type="checkbox" id="toggle-hydro-risk">
           <span class="toggle-track"></span>
         </label>
-        <span class="layer-name">Hydro-Primed Risk Points</span>
+        <span class="layer-name">Terrain Candidates Under Trigger</span>
       </div>
-      <p class="layer-hint">ERA5-Land-style soil moisture, wetting trend, and 90-day water-input trigger. V1 uses an Aug-2023 Savinja fixture.</p>
+      <p class="layer-hint layer-warning">Synthetic Aug-2023 Savinja fixture for UI testing. It is not ERA5 evidence, probability, or a forecast.</p>
 
       <div class="divider"></div>
 
       <!-- Risk points -->
       <div class="layer-row">
         <label class="layer-toggle">
-          <input type="checkbox" id="toggle-risk" checked>
+          <input type="checkbox" id="toggle-risk">
           <span class="toggle-track"></span>
         </label>
-        <span class="layer-name">High-Risk Locations</span>
+        <span class="layer-name">High-Susceptibility Review Points</span>
       </div>
-      <p class="layer-hint">Top 20 flood-risk cells &mdash; click for details</p>
+      <p class="layer-hint">Region-capped D19 candidates for review; not a global probability ranking.</p>
     </div>
 
     <div class="panel-section panel-section--info">
       <h3 class="panel-heading">About</h3>
       <p class="info-text">
-        LiDAR-derived riverine susceptibility across Ljubljana, Savinja and Koper,
-        with Koper coastal inundation and an ERA5-Land-style hydroclimate trigger.
+        LiDAR-derived riverine terrain screening across Ljubljana, Savinja and Koper,
+        with a Koper connected-low-land screen and a synthetic hydroclimate fixture.
         The riverine model combines HAND, TWI, elevation, slope, curvature, canopy
         interception and NDVI. The hydroclimate layer indicates temporal priming,
         not flood probability.
+      </p>
+      <p class="info-text screening-notice">
+        <strong>Screening only:</strong> not a forecast, evacuation map, insurance
+        map, official hazard map, or hydraulic depth estimate.
       </p>
       <p class="info-text">
         <strong>Data:</strong> Geodetska uprava RS &mdash; CLSS programme<br>
@@ -185,6 +219,6 @@
   <div id="popup-content" style="display:none;"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>

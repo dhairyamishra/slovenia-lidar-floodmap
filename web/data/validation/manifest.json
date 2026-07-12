@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "generated": "2026-07-11T23:44:02.179682+00:00",
+  "source": "Direkcija Republike Slovenije za vode (DRSV), IKPN",
+  "source_crs": "EPSG:3794",
+  "web_crs": "EPSG:4326",
+  "semantics": "official static hazard reference; not observed August 2023 extent",
+  "scenarios": [
+    {
+      "scenario": "q10",
+      "label": "Q10",
+      "file": "ikpn_q10.geojson",
+      "source_feature_count": 468,
+      "simplify_m": 2.0,
+      "sha256": "d34dddd2085610dc16e6483cc43454d50e2ca5099c385bb3f49e2b8278dfb893"
+    },
+    {
+      "scenario": "q100",
+      "label": "Q100",
+      "file": "ikpn_q100.geojson",
+      "source_feature_count": 472,
+      "simplify_m": 2.0,
+      "sha256": "e090c946f991b425ff6e87be33a57e4f60ef2f1d322173deb6e2058760364c03"
+    },
+    {
+      "scenario": "q500",
+      "label": "Q500",
+      "file": "ikpn_q500.geojson",
+      "source_feature_count": 368,
+      "simplify_m": 2.0,
+      "sha256": "615af8780cb21411133a8c5e1ca7e938f61e819701191b6b52adfa5da79dde85"
+    }
+  ]
+}

@@ -1,5 +1,57 @@
 {
-  "generated": "2026-07-09T05:36:42.808329+00:00",
+  "generated": "2026-07-11T18:12:15.721562+00:00",
+  "model": {
+    "version": "D19-baseline-v1",
+    "grid_res_m": 2.0,
+    "stream_area_m2": 10000.0,
+    "normalisation": "per-region-p2-p98",
+    "weights": [
+      {
+        "factor": "hand",
+        "weight": 0.25,
+        "invert": true
+      },
+      {
+        "factor": "twi",
+        "weight": 0.2,
+        "invert": false
+      },
+      {
+        "factor": "elev",
+        "weight": 0.15,
+        "invert": true
+      },
+      {
+        "factor": "slope",
+        "weight": 0.15,
+        "invert": true
+      },
+      {
+        "factor": "curv",
+        "weight": 0.1,
+        "invert": false
+      },
+      {
+        "factor": "interc",
+        "weight": 0.075,
+        "invert": true
+      },
+      {
+        "factor": "ndvi",
+        "weight": 0.075,
+        "invert": true
+      }
+    ],
+    "known_limitations": [
+      "per-tile-flow-routing",
+      "unconditioned-dem",
+      "region-relative-scores",
+      "not-probability-calibrated"
+    ],
+    "definition_digest": "sha256:11560dd7d57b0e51"
+  },
+  "calibration_digest": "sha256:60b3a69993963a02",
+  "dataset_digest": "sha256:4040d5ed1e50834d",
   "tile_count": 146,
   "union_bounds": {
     "west": 13.693745398455464,
@@ -58,7 +110,8 @@
           "slr_1_0m": "tiles/398_44/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/398_44/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "398_45",
@@ -106,7 +159,8 @@
           "slr_1_0m": "tiles/398_45/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/398_45/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "398_46",
@@ -154,7 +208,8 @@
           "slr_1_0m": "tiles/398_46/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/398_46/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "399_44",
@@ -202,7 +257,8 @@
           "slr_1_0m": "tiles/399_44/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/399_44/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "399_45",
@@ -250,7 +306,8 @@
           "slr_1_0m": "tiles/399_45/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/399_45/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "399_46",
@@ -298,7 +355,8 @@
           "slr_1_0m": "tiles/399_46/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/399_46/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "400_44",
@@ -346,7 +404,8 @@
           "slr_1_0m": "tiles/400_44/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/400_44/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "400_45",
@@ -394,7 +453,8 @@
           "slr_1_0m": "tiles/400_45/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/400_45/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "400_46",
@@ -442,7 +502,8 @@
           "slr_1_0m": "tiles/400_46/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/400_46/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "400_47",
@@ -490,7 +551,8 @@
           "slr_1_0m": "tiles/400_47/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/400_47/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "400_48",
@@ -538,7 +600,8 @@
           "slr_1_0m": "tiles/400_48/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/400_48/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "401_44",
@@ -586,7 +649,8 @@
           "slr_1_0m": "tiles/401_44/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/401_44/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "401_45",
@@ -634,7 +698,8 @@
           "slr_1_0m": "tiles/401_45/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/401_45/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "401_46",
@@ -682,7 +747,8 @@
           "slr_1_0m": "tiles/401_46/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/401_46/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "401_47",
@@ -730,7 +796,8 @@
           "slr_1_0m": "tiles/401_47/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/401_47/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "401_48",
@@ -778,7 +845,8 @@
           "slr_1_0m": "tiles/401_48/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/401_48/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "402_44",
@@ -826,7 +894,8 @@
           "slr_1_0m": "tiles/402_44/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/402_44/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "402_45",
@@ -874,7 +943,8 @@
           "slr_1_0m": "tiles/402_45/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/402_45/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "402_46",
@@ -922,7 +992,8 @@
           "slr_1_0m": "tiles/402_46/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/402_46/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "402_47",
@@ -970,7 +1041,8 @@
           "slr_1_0m": "tiles/402_47/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/402_47/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "402_48",
@@ -1018,7 +1090,8 @@
           "slr_1_0m": "tiles/402_48/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/402_48/coastal_slr_2_0m.png"
         }
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "455_100",
@@ -1061,7 +1134,8 @@
         "susceptibility": "tiles/455_100/susceptibility.png",
         "ndvi": "tiles/455_100/ndvi.png",
         "classification": "tiles/455_100/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "455_101",
@@ -1104,7 +1178,8 @@
         "susceptibility": "tiles/455_101/susceptibility.png",
         "ndvi": "tiles/455_101/ndvi.png",
         "classification": "tiles/455_101/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "455_102",
@@ -1147,7 +1222,8 @@
         "susceptibility": "tiles/455_102/susceptibility.png",
         "ndvi": "tiles/455_102/ndvi.png",
         "classification": "tiles/455_102/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "455_103",
@@ -1190,7 +1266,8 @@
         "susceptibility": "tiles/455_103/susceptibility.png",
         "ndvi": "tiles/455_103/ndvi.png",
         "classification": "tiles/455_103/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "455_104",
@@ -1233,7 +1310,8 @@
         "susceptibility": "tiles/455_104/susceptibility.png",
         "ndvi": "tiles/455_104/ndvi.png",
         "classification": "tiles/455_104/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "455_105",
@@ -1276,7 +1354,8 @@
         "susceptibility": "tiles/455_105/susceptibility.png",
         "ndvi": "tiles/455_105/ndvi.png",
         "classification": "tiles/455_105/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "455_96",
@@ -1319,7 +1398,8 @@
         "susceptibility": "tiles/455_96/susceptibility.png",
         "ndvi": "tiles/455_96/ndvi.png",
         "classification": "tiles/455_96/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "455_97",
@@ -1362,7 +1442,8 @@
         "susceptibility": "tiles/455_97/susceptibility.png",
         "ndvi": "tiles/455_97/ndvi.png",
         "classification": "tiles/455_97/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "455_98",
@@ -1405,7 +1486,8 @@
         "susceptibility": "tiles/455_98/susceptibility.png",
         "ndvi": "tiles/455_98/ndvi.png",
         "classification": "tiles/455_98/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "455_99",
@@ -1448,7 +1530,8 @@
         "susceptibility": "tiles/455_99/susceptibility.png",
         "ndvi": "tiles/455_99/ndvi.png",
         "classification": "tiles/455_99/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "456_100",
@@ -1491,7 +1574,8 @@
         "susceptibility": "tiles/456_100/susceptibility.png",
         "ndvi": "tiles/456_100/ndvi.png",
         "classification": "tiles/456_100/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "456_101",
@@ -1534,7 +1618,8 @@
         "susceptibility": "tiles/456_101/susceptibility.png",
         "ndvi": "tiles/456_101/ndvi.png",
         "classification": "tiles/456_101/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "456_102",
@@ -1577,7 +1662,8 @@
         "susceptibility": "tiles/456_102/susceptibility.png",
         "ndvi": "tiles/456_102/ndvi.png",
         "classification": "tiles/456_102/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "456_103",
@@ -1620,7 +1706,8 @@
         "susceptibility": "tiles/456_103/susceptibility.png",
         "ndvi": "tiles/456_103/ndvi.png",
         "classification": "tiles/456_103/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "456_104",
@@ -1663,7 +1750,8 @@
         "susceptibility": "tiles/456_104/susceptibility.png",
         "ndvi": "tiles/456_104/ndvi.png",
         "classification": "tiles/456_104/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "456_105",
@@ -1706,7 +1794,8 @@
         "susceptibility": "tiles/456_105/susceptibility.png",
         "ndvi": "tiles/456_105/ndvi.png",
         "classification": "tiles/456_105/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "456_96",
@@ -1749,7 +1838,8 @@
         "susceptibility": "tiles/456_96/susceptibility.png",
         "ndvi": "tiles/456_96/ndvi.png",
         "classification": "tiles/456_96/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "456_97",
@@ -1792,7 +1882,8 @@
         "susceptibility": "tiles/456_97/susceptibility.png",
         "ndvi": "tiles/456_97/ndvi.png",
         "classification": "tiles/456_97/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "456_98",
@@ -1835,7 +1926,8 @@
         "susceptibility": "tiles/456_98/susceptibility.png",
         "ndvi": "tiles/456_98/ndvi.png",
         "classification": "tiles/456_98/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "456_99",
@@ -1878,7 +1970,8 @@
         "susceptibility": "tiles/456_99/susceptibility.png",
         "ndvi": "tiles/456_99/ndvi.png",
         "classification": "tiles/456_99/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "457_100",
@@ -1921,7 +2014,8 @@
         "susceptibility": "tiles/457_100/susceptibility.png",
         "ndvi": "tiles/457_100/ndvi.png",
         "classification": "tiles/457_100/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "457_101",
@@ -1964,7 +2058,8 @@
         "susceptibility": "tiles/457_101/susceptibility.png",
         "ndvi": "tiles/457_101/ndvi.png",
         "classification": "tiles/457_101/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "457_102",
@@ -2007,7 +2102,8 @@
         "susceptibility": "tiles/457_102/susceptibility.png",
         "ndvi": "tiles/457_102/ndvi.png",
         "classification": "tiles/457_102/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "457_103",
@@ -2050,7 +2146,8 @@
         "susceptibility": "tiles/457_103/susceptibility.png",
         "ndvi": "tiles/457_103/ndvi.png",
         "classification": "tiles/457_103/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "457_104",
@@ -2093,7 +2190,8 @@
         "susceptibility": "tiles/457_104/susceptibility.png",
         "ndvi": "tiles/457_104/ndvi.png",
         "classification": "tiles/457_104/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "457_105",
@@ -2136,7 +2234,8 @@
         "susceptibility": "tiles/457_105/susceptibility.png",
         "ndvi": "tiles/457_105/ndvi.png",
         "classification": "tiles/457_105/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "457_96",
@@ -2179,7 +2278,8 @@
         "susceptibility": "tiles/457_96/susceptibility.png",
         "ndvi": "tiles/457_96/ndvi.png",
         "classification": "tiles/457_96/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "457_97",
@@ -2222,7 +2322,8 @@
         "susceptibility": "tiles/457_97/susceptibility.png",
         "ndvi": "tiles/457_97/ndvi.png",
         "classification": "tiles/457_97/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "457_98",
@@ -2265,7 +2366,8 @@
         "susceptibility": "tiles/457_98/susceptibility.png",
         "ndvi": "tiles/457_98/ndvi.png",
         "classification": "tiles/457_98/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "457_99",
@@ -2308,7 +2410,8 @@
         "susceptibility": "tiles/457_99/susceptibility.png",
         "ndvi": "tiles/457_99/ndvi.png",
         "classification": "tiles/457_99/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "458_100",
@@ -2351,7 +2454,8 @@
         "susceptibility": "tiles/458_100/susceptibility.png",
         "ndvi": "tiles/458_100/ndvi.png",
         "classification": "tiles/458_100/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "458_101",
@@ -2394,7 +2498,8 @@
         "susceptibility": "tiles/458_101/susceptibility.png",
         "ndvi": "tiles/458_101/ndvi.png",
         "classification": "tiles/458_101/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "458_102",
@@ -2437,7 +2542,8 @@
         "susceptibility": "tiles/458_102/susceptibility.png",
         "ndvi": "tiles/458_102/ndvi.png",
         "classification": "tiles/458_102/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "458_103",
@@ -2480,7 +2586,8 @@
         "susceptibility": "tiles/458_103/susceptibility.png",
         "ndvi": "tiles/458_103/ndvi.png",
         "classification": "tiles/458_103/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "458_104",
@@ -2523,7 +2630,8 @@
         "susceptibility": "tiles/458_104/susceptibility.png",
         "ndvi": "tiles/458_104/ndvi.png",
         "classification": "tiles/458_104/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "458_105",
@@ -2566,7 +2674,8 @@
         "susceptibility": "tiles/458_105/susceptibility.png",
         "ndvi": "tiles/458_105/ndvi.png",
         "classification": "tiles/458_105/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "458_96",
@@ -2609,7 +2718,8 @@
         "susceptibility": "tiles/458_96/susceptibility.png",
         "ndvi": "tiles/458_96/ndvi.png",
         "classification": "tiles/458_96/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "458_97",
@@ -2652,7 +2762,8 @@
         "susceptibility": "tiles/458_97/susceptibility.png",
         "ndvi": "tiles/458_97/ndvi.png",
         "classification": "tiles/458_97/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "458_98",
@@ -2695,7 +2806,8 @@
         "susceptibility": "tiles/458_98/susceptibility.png",
         "ndvi": "tiles/458_98/ndvi.png",
         "classification": "tiles/458_98/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "458_99",
@@ -2738,7 +2850,8 @@
         "susceptibility": "tiles/458_99/susceptibility.png",
         "ndvi": "tiles/458_99/ndvi.png",
         "classification": "tiles/458_99/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "459_100",
@@ -2781,7 +2894,8 @@
         "susceptibility": "tiles/459_100/susceptibility.png",
         "ndvi": "tiles/459_100/ndvi.png",
         "classification": "tiles/459_100/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "459_101",
@@ -2824,7 +2938,8 @@
         "susceptibility": "tiles/459_101/susceptibility.png",
         "ndvi": "tiles/459_101/ndvi.png",
         "classification": "tiles/459_101/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "459_102",
@@ -2867,7 +2982,8 @@
         "susceptibility": "tiles/459_102/susceptibility.png",
         "ndvi": "tiles/459_102/ndvi.png",
         "classification": "tiles/459_102/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "459_103",
@@ -2910,7 +3026,8 @@
         "susceptibility": "tiles/459_103/susceptibility.png",
         "ndvi": "tiles/459_103/ndvi.png",
         "classification": "tiles/459_103/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "459_104",
@@ -2953,7 +3070,8 @@
         "susceptibility": "tiles/459_104/susceptibility.png",
         "ndvi": "tiles/459_104/ndvi.png",
         "classification": "tiles/459_104/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "459_105",
@@ -2996,7 +3114,8 @@
         "susceptibility": "tiles/459_105/susceptibility.png",
         "ndvi": "tiles/459_105/ndvi.png",
         "classification": "tiles/459_105/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "459_96",
@@ -3039,7 +3158,8 @@
         "susceptibility": "tiles/459_96/susceptibility.png",
         "ndvi": "tiles/459_96/ndvi.png",
         "classification": "tiles/459_96/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "459_97",
@@ -3082,7 +3202,8 @@
         "susceptibility": "tiles/459_97/susceptibility.png",
         "ndvi": "tiles/459_97/ndvi.png",
         "classification": "tiles/459_97/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "459_98",
@@ -3125,7 +3246,8 @@
         "susceptibility": "tiles/459_98/susceptibility.png",
         "ndvi": "tiles/459_98/ndvi.png",
         "classification": "tiles/459_98/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "459_99",
@@ -3168,7 +3290,8 @@
         "susceptibility": "tiles/459_99/susceptibility.png",
         "ndvi": "tiles/459_99/ndvi.png",
         "classification": "tiles/459_99/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "460_100",
@@ -3211,7 +3334,8 @@
         "susceptibility": "tiles/460_100/susceptibility.png",
         "ndvi": "tiles/460_100/ndvi.png",
         "classification": "tiles/460_100/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "460_101",
@@ -3254,7 +3378,8 @@
         "susceptibility": "tiles/460_101/susceptibility.png",
         "ndvi": "tiles/460_101/ndvi.png",
         "classification": "tiles/460_101/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "460_102",
@@ -3297,7 +3422,8 @@
         "susceptibility": "tiles/460_102/susceptibility.png",
         "ndvi": "tiles/460_102/ndvi.png",
         "classification": "tiles/460_102/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "460_103",
@@ -3340,7 +3466,8 @@
         "susceptibility": "tiles/460_103/susceptibility.png",
         "ndvi": "tiles/460_103/ndvi.png",
         "classification": "tiles/460_103/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "460_104",
@@ -3383,7 +3510,8 @@
         "susceptibility": "tiles/460_104/susceptibility.png",
         "ndvi": "tiles/460_104/ndvi.png",
         "classification": "tiles/460_104/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "460_105",
@@ -3426,7 +3554,8 @@
         "susceptibility": "tiles/460_105/susceptibility.png",
         "ndvi": "tiles/460_105/ndvi.png",
         "classification": "tiles/460_105/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "460_96",
@@ -3469,7 +3598,8 @@
         "susceptibility": "tiles/460_96/susceptibility.png",
         "ndvi": "tiles/460_96/ndvi.png",
         "classification": "tiles/460_96/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "460_97",
@@ -3512,7 +3642,8 @@
         "susceptibility": "tiles/460_97/susceptibility.png",
         "ndvi": "tiles/460_97/ndvi.png",
         "classification": "tiles/460_97/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "460_98",
@@ -3555,7 +3686,8 @@
         "susceptibility": "tiles/460_98/susceptibility.png",
         "ndvi": "tiles/460_98/ndvi.png",
         "classification": "tiles/460_98/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "460_99",
@@ -3598,7 +3730,8 @@
         "susceptibility": "tiles/460_99/susceptibility.png",
         "ndvi": "tiles/460_99/ndvi.png",
         "classification": "tiles/460_99/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "461_100",
@@ -3641,7 +3774,8 @@
         "susceptibility": "tiles/461_100/susceptibility.png",
         "ndvi": "tiles/461_100/ndvi.png",
         "classification": "tiles/461_100/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "461_101",
@@ -3684,7 +3818,8 @@
         "susceptibility": "tiles/461_101/susceptibility.png",
         "ndvi": "tiles/461_101/ndvi.png",
         "classification": "tiles/461_101/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "461_102",
@@ -3727,7 +3862,8 @@
         "susceptibility": "tiles/461_102/susceptibility.png",
         "ndvi": "tiles/461_102/ndvi.png",
         "classification": "tiles/461_102/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "461_103",
@@ -3770,7 +3906,8 @@
         "susceptibility": "tiles/461_103/susceptibility.png",
         "ndvi": "tiles/461_103/ndvi.png",
         "classification": "tiles/461_103/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "461_104",
@@ -3813,7 +3950,8 @@
         "susceptibility": "tiles/461_104/susceptibility.png",
         "ndvi": "tiles/461_104/ndvi.png",
         "classification": "tiles/461_104/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "461_105",
@@ -3856,7 +3994,8 @@
         "susceptibility": "tiles/461_105/susceptibility.png",
         "ndvi": "tiles/461_105/ndvi.png",
         "classification": "tiles/461_105/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "461_96",
@@ -3899,7 +4038,8 @@
         "susceptibility": "tiles/461_96/susceptibility.png",
         "ndvi": "tiles/461_96/ndvi.png",
         "classification": "tiles/461_96/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "461_97",
@@ -3942,7 +4082,8 @@
         "susceptibility": "tiles/461_97/susceptibility.png",
         "ndvi": "tiles/461_97/ndvi.png",
         "classification": "tiles/461_97/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "461_98",
@@ -3985,7 +4126,8 @@
         "susceptibility": "tiles/461_98/susceptibility.png",
         "ndvi": "tiles/461_98/ndvi.png",
         "classification": "tiles/461_98/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "461_99",
@@ -4028,7 +4170,8 @@
         "susceptibility": "tiles/461_99/susceptibility.png",
         "ndvi": "tiles/461_99/ndvi.png",
         "classification": "tiles/461_99/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "462_100",
@@ -4071,7 +4214,8 @@
         "susceptibility": "tiles/462_100/susceptibility.png",
         "ndvi": "tiles/462_100/ndvi.png",
         "classification": "tiles/462_100/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "462_101",
@@ -4114,7 +4258,8 @@
         "susceptibility": "tiles/462_101/susceptibility.png",
         "ndvi": "tiles/462_101/ndvi.png",
         "classification": "tiles/462_101/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "462_102",
@@ -4157,7 +4302,8 @@
         "susceptibility": "tiles/462_102/susceptibility.png",
         "ndvi": "tiles/462_102/ndvi.png",
         "classification": "tiles/462_102/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "462_103",
@@ -4200,7 +4346,8 @@
         "susceptibility": "tiles/462_103/susceptibility.png",
         "ndvi": "tiles/462_103/ndvi.png",
         "classification": "tiles/462_103/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "462_104",
@@ -4243,7 +4390,8 @@
         "susceptibility": "tiles/462_104/susceptibility.png",
         "ndvi": "tiles/462_104/ndvi.png",
         "classification": "tiles/462_104/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "462_105",
@@ -4286,7 +4434,8 @@
         "susceptibility": "tiles/462_105/susceptibility.png",
         "ndvi": "tiles/462_105/ndvi.png",
         "classification": "tiles/462_105/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "462_96",
@@ -4329,7 +4478,8 @@
         "susceptibility": "tiles/462_96/susceptibility.png",
         "ndvi": "tiles/462_96/ndvi.png",
         "classification": "tiles/462_96/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "462_97",
@@ -4372,7 +4522,8 @@
         "susceptibility": "tiles/462_97/susceptibility.png",
         "ndvi": "tiles/462_97/ndvi.png",
         "classification": "tiles/462_97/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "462_98",
@@ -4415,7 +4566,8 @@
         "susceptibility": "tiles/462_98/susceptibility.png",
         "ndvi": "tiles/462_98/ndvi.png",
         "classification": "tiles/462_98/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "462_99",
@@ -4458,7 +4610,8 @@
         "susceptibility": "tiles/462_99/susceptibility.png",
         "ndvi": "tiles/462_99/ndvi.png",
         "classification": "tiles/462_99/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "463_100",
@@ -4501,7 +4654,8 @@
         "susceptibility": "tiles/463_100/susceptibility.png",
         "ndvi": "tiles/463_100/ndvi.png",
         "classification": "tiles/463_100/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "463_101",
@@ -4544,7 +4698,8 @@
         "susceptibility": "tiles/463_101/susceptibility.png",
         "ndvi": "tiles/463_101/ndvi.png",
         "classification": "tiles/463_101/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "463_102",
@@ -4587,7 +4742,8 @@
         "susceptibility": "tiles/463_102/susceptibility.png",
         "ndvi": "tiles/463_102/ndvi.png",
         "classification": "tiles/463_102/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "463_103",
@@ -4630,7 +4786,8 @@
         "susceptibility": "tiles/463_103/susceptibility.png",
         "ndvi": "tiles/463_103/ndvi.png",
         "classification": "tiles/463_103/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "463_104",
@@ -4673,7 +4830,8 @@
         "susceptibility": "tiles/463_104/susceptibility.png",
         "ndvi": "tiles/463_104/ndvi.png",
         "classification": "tiles/463_104/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "463_105",
@@ -4716,7 +4874,8 @@
         "susceptibility": "tiles/463_105/susceptibility.png",
         "ndvi": "tiles/463_105/ndvi.png",
         "classification": "tiles/463_105/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "463_96",
@@ -4759,7 +4918,8 @@
         "susceptibility": "tiles/463_96/susceptibility.png",
         "ndvi": "tiles/463_96/ndvi.png",
         "classification": "tiles/463_96/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "463_97",
@@ -4802,7 +4962,8 @@
         "susceptibility": "tiles/463_97/susceptibility.png",
         "ndvi": "tiles/463_97/ndvi.png",
         "classification": "tiles/463_97/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "463_98",
@@ -4845,7 +5006,8 @@
         "susceptibility": "tiles/463_98/susceptibility.png",
         "ndvi": "tiles/463_98/ndvi.png",
         "classification": "tiles/463_98/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "463_99",
@@ -4888,7 +5050,8 @@
         "susceptibility": "tiles/463_99/susceptibility.png",
         "ndvi": "tiles/463_99/ndvi.png",
         "classification": "tiles/463_99/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "464_100",
@@ -4931,7 +5094,8 @@
         "susceptibility": "tiles/464_100/susceptibility.png",
         "ndvi": "tiles/464_100/ndvi.png",
         "classification": "tiles/464_100/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "464_101",
@@ -4974,7 +5138,8 @@
         "susceptibility": "tiles/464_101/susceptibility.png",
         "ndvi": "tiles/464_101/ndvi.png",
         "classification": "tiles/464_101/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "464_102",
@@ -5017,7 +5182,8 @@
         "susceptibility": "tiles/464_102/susceptibility.png",
         "ndvi": "tiles/464_102/ndvi.png",
         "classification": "tiles/464_102/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "464_103",
@@ -5060,7 +5226,8 @@
         "susceptibility": "tiles/464_103/susceptibility.png",
         "ndvi": "tiles/464_103/ndvi.png",
         "classification": "tiles/464_103/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "464_104",
@@ -5103,7 +5270,8 @@
         "susceptibility": "tiles/464_104/susceptibility.png",
         "ndvi": "tiles/464_104/ndvi.png",
         "classification": "tiles/464_104/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "464_105",
@@ -5146,7 +5314,8 @@
         "susceptibility": "tiles/464_105/susceptibility.png",
         "ndvi": "tiles/464_105/ndvi.png",
         "classification": "tiles/464_105/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "464_96",
@@ -5189,7 +5358,8 @@
         "susceptibility": "tiles/464_96/susceptibility.png",
         "ndvi": "tiles/464_96/ndvi.png",
         "classification": "tiles/464_96/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "464_97",
@@ -5232,7 +5402,8 @@
         "susceptibility": "tiles/464_97/susceptibility.png",
         "ndvi": "tiles/464_97/ndvi.png",
         "classification": "tiles/464_97/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "464_98",
@@ -5275,7 +5446,8 @@
         "susceptibility": "tiles/464_98/susceptibility.png",
         "ndvi": "tiles/464_98/ndvi.png",
         "classification": "tiles/464_98/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "464_99",
@@ -5318,7 +5490,8 @@
         "susceptibility": "tiles/464_99/susceptibility.png",
         "ndvi": "tiles/464_99/ndvi.png",
         "classification": "tiles/464_99/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "486_132",
@@ -5361,7 +5534,8 @@
         "susceptibility": "tiles/486_132/susceptibility.png",
         "ndvi": "tiles/486_132/ndvi.png",
         "classification": "tiles/486_132/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "486_133",
@@ -5404,7 +5578,8 @@
         "susceptibility": "tiles/486_133/susceptibility.png",
         "ndvi": "tiles/486_133/ndvi.png",
         "classification": "tiles/486_133/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "486_134",
@@ -5447,7 +5622,8 @@
         "susceptibility": "tiles/486_134/susceptibility.png",
         "ndvi": "tiles/486_134/ndvi.png",
         "classification": "tiles/486_134/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "486_135",
@@ -5490,7 +5666,8 @@
         "susceptibility": "tiles/486_135/susceptibility.png",
         "ndvi": "tiles/486_135/ndvi.png",
         "classification": "tiles/486_135/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "486_136",
@@ -5533,7 +5710,8 @@
         "susceptibility": "tiles/486_136/susceptibility.png",
         "ndvi": "tiles/486_136/ndvi.png",
         "classification": "tiles/486_136/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "487_132",
@@ -5576,7 +5754,8 @@
         "susceptibility": "tiles/487_132/susceptibility.png",
         "ndvi": "tiles/487_132/ndvi.png",
         "classification": "tiles/487_132/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "487_133",
@@ -5619,7 +5798,8 @@
         "susceptibility": "tiles/487_133/susceptibility.png",
         "ndvi": "tiles/487_133/ndvi.png",
         "classification": "tiles/487_133/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "487_134",
@@ -5662,7 +5842,8 @@
         "susceptibility": "tiles/487_134/susceptibility.png",
         "ndvi": "tiles/487_134/ndvi.png",
         "classification": "tiles/487_134/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "487_135",
@@ -5705,7 +5886,8 @@
         "susceptibility": "tiles/487_135/susceptibility.png",
         "ndvi": "tiles/487_135/ndvi.png",
         "classification": "tiles/487_135/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "487_136",
@@ -5748,7 +5930,8 @@
         "susceptibility": "tiles/487_136/susceptibility.png",
         "ndvi": "tiles/487_136/ndvi.png",
         "classification": "tiles/487_136/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "488_132",
@@ -5791,7 +5974,8 @@
         "susceptibility": "tiles/488_132/susceptibility.png",
         "ndvi": "tiles/488_132/ndvi.png",
         "classification": "tiles/488_132/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "488_133",
@@ -5834,7 +6018,8 @@
         "susceptibility": "tiles/488_133/susceptibility.png",
         "ndvi": "tiles/488_133/ndvi.png",
         "classification": "tiles/488_133/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "488_134",
@@ -5877,7 +6062,8 @@
         "susceptibility": "tiles/488_134/susceptibility.png",
         "ndvi": "tiles/488_134/ndvi.png",
         "classification": "tiles/488_134/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "488_135",
@@ -5920,7 +6106,8 @@
         "susceptibility": "tiles/488_135/susceptibility.png",
         "ndvi": "tiles/488_135/ndvi.png",
         "classification": "tiles/488_135/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "488_136",
@@ -5963,7 +6150,8 @@
         "susceptibility": "tiles/488_136/susceptibility.png",
         "ndvi": "tiles/488_136/ndvi.png",
         "classification": "tiles/488_136/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "489_132",
@@ -6006,7 +6194,8 @@
         "susceptibility": "tiles/489_132/susceptibility.png",
         "ndvi": "tiles/489_132/ndvi.png",
         "classification": "tiles/489_132/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "489_133",
@@ -6049,7 +6238,8 @@
         "susceptibility": "tiles/489_133/susceptibility.png",
         "ndvi": "tiles/489_133/ndvi.png",
         "classification": "tiles/489_133/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "489_134",
@@ -6092,7 +6282,8 @@
         "susceptibility": "tiles/489_134/susceptibility.png",
         "ndvi": "tiles/489_134/ndvi.png",
         "classification": "tiles/489_134/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "489_135",
@@ -6135,7 +6326,8 @@
         "susceptibility": "tiles/489_135/susceptibility.png",
         "ndvi": "tiles/489_135/ndvi.png",
         "classification": "tiles/489_135/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "489_136",
@@ -6178,7 +6370,8 @@
         "susceptibility": "tiles/489_136/susceptibility.png",
         "ndvi": "tiles/489_136/ndvi.png",
         "classification": "tiles/489_136/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "490_132",
@@ -6221,7 +6414,8 @@
         "susceptibility": "tiles/490_132/susceptibility.png",
         "ndvi": "tiles/490_132/ndvi.png",
         "classification": "tiles/490_132/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "490_133",
@@ -6264,7 +6458,8 @@
         "susceptibility": "tiles/490_133/susceptibility.png",
         "ndvi": "tiles/490_133/ndvi.png",
         "classification": "tiles/490_133/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "490_134",
@@ -6307,7 +6502,8 @@
         "susceptibility": "tiles/490_134/susceptibility.png",
         "ndvi": "tiles/490_134/ndvi.png",
         "classification": "tiles/490_134/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "490_135",
@@ -6350,7 +6546,8 @@
         "susceptibility": "tiles/490_135/susceptibility.png",
         "ndvi": "tiles/490_135/ndvi.png",
         "classification": "tiles/490_135/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     },
     {
       "name": "490_136",
@@ -6393,7 +6590,8 @@
         "susceptibility": "tiles/490_136/susceptibility.png",
         "ndvi": "tiles/490_136/ndvi.png",
         "classification": "tiles/490_136/classification.png"
-      }
+      },
+      "model_version": "D19-baseline-v1"
     }
   ]
 }

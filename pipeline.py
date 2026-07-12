@@ -30,6 +30,7 @@ from PIL import Image
 import laspy
 
 import kernels  # Numba-accelerated DTM grouped-min + D8 accumulation
+from model_diagnostics import write_stratified_sample
 
 warnings.filterwarnings("ignore")
 
@@ -53,6 +54,9 @@ REGION_CAP = 7    # max risk points from any one CDN region. Scores are per-regi
                   # region holding the largest maximally-low-flat patch (e.g. Koper
                   # port). Capping de-clusters so every region's worst spots show.
 GLOBAL_CANDS_N = 500  # max entries kept in the global candidates file
+MODEL_VERSION = "D19-baseline-v1"
+DIAG_SAMPLES_PER_TILE = 2500
+DIAG_DIR = Path("output/diagnostics/samples")
 COASTAL_REGION = "01-koper"
 COASTAL_SLR_SCENARIOS = {
     "slr_0_5m": 0.5,
@@ -116,6 +120,57 @@ def composite_susc(norm_of):
         v = norm_of(nm)
         s = s + w * ((1.0 - v) if inv else v)
     return s
+
+
+def model_definition() -> dict:
+    """Machine-readable provenance for manifests and diagnostic reports."""
+    definition = {
+        "version": MODEL_VERSION,
+        "grid_res_m": GRID_RES,
+        "stream_area_m2": STREAM_AREA_M2,
+        "normalisation": "per-region-p2-p98",
+        "weights": [
+            {"factor": nm, "weight": w, "invert": inv}
+            for nm, w, inv in SUSC_WEIGHTS
+        ],
+        "known_limitations": [
+            "per-tile-flow-routing",
+            "unconditioned-dem",
+            "region-relative-scores",
+            "not-probability-calibrated",
+        ],
+    }
+    payload = json.dumps(definition, sort_keys=True, separators=(",", ":")).encode()
+    definition["definition_digest"] = "sha256:" + hashlib.sha256(payload).hexdigest()[:16]
+    return definition
+
+
+def file_digest(path: Path) -> str | None:
+    """Short content digest for small provenance/configuration files."""
+    if not path.exists():
+        return None
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()[:16]
+
+
+def write_diagnostic_sample(f: dict, normed: dict, susc: np.ndarray,
+                            susc_disp: np.ndarray, region: str) -> None:
+    """Write a deterministic, score-stratified full-grid sample for audits.
+
+    Samples live under ignored ``output/`` and deliberately include the entire
+    score distribution rather than only the top-ranked candidate tail. Equal
+    quotas across score deciles preserve rare high/low cells while keeping the
+    per-tile artifact small enough for routine full-dataset analysis.
+    """
+    write_stratified_sample(
+        DIAG_DIR / f"{f['tile_name']}.npz",
+        tile=f["tile_name"], region=region, model_version=MODEL_VERSION,
+        rows=f["rows"], cols=f["cols"], x0=f["x0"], y0=f["y0"],
+        grid_res=GRID_RES,
+        raw_factors={nm: f[FACTOR_KEYS[nm]] for nm in FACTOR_COLS},
+        normalized_factors=normed,
+        score=susc, display_score=susc_disp,
+        max_samples=DIAG_SAMPLES_PER_TILE,
+    )
 
 XFORM = Transformer.from_crs("EPSG:3794", "EPSG:4326", always_xy=True)
 
@@ -363,7 +418,8 @@ def export_tile(f: dict, const: dict, display: dict, region: str = "default") ->
     nc_arr             = f["nc_arr"]
 
     # ── Composite susceptibility (PER-REGION fixed-range normalisation, D17) ──
-    susc     = composite_susc(lambda nm: norm_fixed(f[FACTOR_KEYS[nm]], *const[nm]))
+    normed   = {nm: norm_fixed(f[FACTOR_KEYS[nm]], *const[nm]) for nm in FACTOR_COLS}
+    susc     = composite_susc(lambda nm: normed[nm])
     susc     = gaussian_filter(susc, sigma=1.0)
     # Confine scoring + display to cells with real ground returns. Sea / no-data
     # cells (coastal tiles) become NaN -> transparent in the PNG and excluded
@@ -373,6 +429,7 @@ def export_tile(f: dict, const: dict, display: dict, region: str = "default") ->
     # Display also uses a fixed range so heatmap colours mean the same thing
     # across tiles. susc itself is now a global score, so candidates use it raw.
     susc_disp = norm_fixed(susc, *display["susc"])
+    write_diagnostic_sample(f, normed, susc, susc_disp, region)
 
     # ── Export PNGs ───────────────────────────────────────────────────────────
     print("  Exporting PNGs...", end=" ", flush=True)
@@ -433,6 +490,7 @@ def export_tile(f: dict, const: dict, display: dict, region: str = "default") ->
                 "northing_3794": round(ey, 1),
                 "lon": lon, "lat": lat,
                 "tile": tile_name,
+                "model_version": MODEL_VERSION,
             })
             r0 = max(0, r_i - sep_cells); r1 = min(rows, r_i + sep_cells + 1)
             c0 = max(0, c_i - sep_cells); c1 = min(cols, c_i + sep_cells + 1)
@@ -459,6 +517,7 @@ def export_tile(f: dict, const: dict, display: dict, region: str = "default") ->
             "source": f["source"],
             "bounds": f["bounds"],
             "files": files,
+            "model_version": MODEL_VERSION,
         },
         "candidates": candidates,
     }
@@ -829,6 +888,8 @@ def main(tile_ids: list[str] | None = None, workers: int | None = None):
                 "easting_3794":  c["easting_3794"],
                 "northing_3794": c["northing_3794"],
                 "tile":          c["tile"],
+                "model_version": c.get("model_version", MODEL_VERSION),
+                "score_semantics": "relative-susceptibility-not-probability",
             },
         }
         for rank, c in enumerate(selected, 1)
@@ -850,6 +911,9 @@ def main(tile_ids: list[str] | None = None, workers: int | None = None):
     # Write merged manifest
     manifest = {
         "generated":    datetime.now(timezone.utc).isoformat(),
+        "model":        model_definition(),
+        "calibration_digest": file_digest(CALIB_PATH),
+        "dataset_digest": dataset_fingerprint()["digest"],
         "tile_count":   len(tile_metas),
         "union_bounds": union,
         "tiles":        tile_metas,

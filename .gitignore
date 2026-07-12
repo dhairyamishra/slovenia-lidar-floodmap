@@ -1,5 +1,6 @@
 # Large raw data — never commit
 /data/
+/validation/data/
 
 # Regenerable analysis outputs
 output/

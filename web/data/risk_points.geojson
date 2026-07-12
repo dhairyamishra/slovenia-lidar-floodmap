@@ -16,7 +16,9 @@
         "elevation_m": 403.3,
         "easting_3794": 488937.9,
         "northing_3794": 132887.9,
-        "tile": "488_132"
+        "tile": "488_132",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -34,7 +36,9 @@
         "elevation_m": -0.1,
         "easting_3794": 400927.8,
         "northing_3794": 46407.8,
-        "tile": "400_46"
+        "tile": "400_46",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -52,7 +56,9 @@
         "elevation_m": -0.1,
         "easting_3794": 400649.8,
         "northing_3794": 46453.8,
-        "tile": "400_46"
+        "tile": "400_46",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -70,7 +76,9 @@
         "elevation_m": 0.0,
         "easting_3794": 400331.8,
         "northing_3794": 46125.8,
-        "tile": "400_46"
+        "tile": "400_46",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -88,7 +96,9 @@
         "elevation_m": 286.7,
         "easting_3794": 464157.8,
         "northing_3794": 104311.9,
-        "tile": "464_104"
+        "tile": "464_104",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -106,7 +116,9 @@
         "elevation_m": -0.1,
         "easting_3794": 400787.8,
         "northing_3794": 46401.8,
-        "tile": "400_46"
+        "tile": "400_46",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -124,7 +136,9 @@
         "elevation_m": -0.1,
         "easting_3794": 400863.8,
         "northing_3794": 46403.8,
-        "tile": "400_46"
+        "tile": "400_46",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -142,7 +156,9 @@
         "elevation_m": 0.1,
         "easting_3794": 400221.8,
         "northing_3794": 46157.8,
-        "tile": "400_46"
+        "tile": "400_46",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -160,7 +176,9 @@
         "elevation_m": 402.7,
         "easting_3794": 488451.9,
         "northing_3794": 132595.9,
-        "tile": "488_132"
+        "tile": "488_132",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -178,7 +196,9 @@
         "elevation_m": -0.0,
         "easting_3794": 400391.8,
         "northing_3794": 46093.8,
-        "tile": "400_46"
+        "tile": "400_46",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -196,7 +216,9 @@
         "elevation_m": 402.5,
         "easting_3794": 488421.9,
         "northing_3794": 132533.9,
-        "tile": "488_132"
+        "tile": "488_132",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -214,7 +236,9 @@
         "elevation_m": 285.0,
         "easting_3794": 464277.8,
         "northing_3794": 101921.9,
-        "tile": "464_101"
+        "tile": "464_101",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -232,7 +256,9 @@
         "elevation_m": 286.6,
         "easting_3794": 464373.8,
         "northing_3794": 102115.9,
-        "tile": "464_102"
+        "tile": "464_102",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -250,7 +276,9 @@
         "elevation_m": 285.9,
         "easting_3794": 464593.8,
         "northing_3794": 102053.9,
-        "tile": "464_102"
+        "tile": "464_102",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -268,7 +296,9 @@
         "elevation_m": 289.9,
         "easting_3794": 464557.8,
         "northing_3794": 102315.9,
-        "tile": "464_102"
+        "tile": "464_102",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -286,7 +316,9 @@
         "elevation_m": 287.5,
         "easting_3794": 464637.8,
         "northing_3794": 102135.9,
-        "tile": "464_102"
+        "tile": "464_102",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -304,7 +336,9 @@
         "elevation_m": 287.9,
         "easting_3794": 464739.8,
         "northing_3794": 102131.9,
-        "tile": "464_102"
+        "tile": "464_102",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -322,7 +356,9 @@
         "elevation_m": 403.8,
         "easting_3794": 488529.9,
         "northing_3794": 132697.9,
-        "tile": "488_132"
+        "tile": "488_132",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -340,7 +376,9 @@
         "elevation_m": 400.1,
         "easting_3794": 488113.9,
         "northing_3794": 133316.0,
-        "tile": "488_133"
+        "tile": "488_133",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     },
     {
@@ -358,7 +396,9 @@
         "elevation_m": 404.3,
         "easting_3794": 488953.9,
         "northing_3794": 132939.9,
-        "tile": "488_132"
+        "tile": "488_132",
+        "model_version": "D19-baseline-v1",
+        "score_semantics": "relative-susceptibility-not-probability"
       }
     }
   ]

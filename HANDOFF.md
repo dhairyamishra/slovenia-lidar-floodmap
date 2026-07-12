@@ -1,10 +1,35 @@
 # Handoff - Slovenia CLSS LiDAR Flood, Coastal & Hydroclimate Demo
 
-**Status:** The app is a 146-tile, 3-region static MapLibre demo with D19 riverine susceptibility, D20 Koper coastal sea-level-rise overlays, and D21 ERA5-Land-style hydroclimate trigger UI implemented. The hydroclimate V1 is fixture-backed for `2023-08-04`; real ERA5-Land validation is still pending.
+**Status:** Phase 0 of the Aleks review is implemented (D22). The 146-tile app still carries D19 riverine susceptibility, D20 Koper coastal screens, and the D21 synthetic hydroclimate fixture, but D19 is now frozen as `D19-baseline-v1`, hidden by default, explicitly non-probabilistic, and covered by a reproducible full-grid diagnostic gate. Official/observed validation and mosaic hydrology are the active next phase.
 
 **Goal:** A polished, honest screening tool for Aleks / sledilnik.org that shows where detailed flood/coastal investigation should start. It is not a hydraulic, coastal, or probabilistic forecast model.
 
 > Authoritative context: `AGENTS.md`, `CLAUDE.md`, `DECISIONS.md`, and `PLAN.md`. This handoff is the current snapshot plus the latest implementation notes.
+> The active review/implementation tracker is `ALEKS_REVIEW_AND_ALGORITHM_PLAN.md`.
+
+## D22 Phase-0 implementation (2026-07-11)
+
+- Added `analyze_model.py`, `model_diagnostics.py`, `test_model_diagnostics.py`, and `requirements.txt`.
+- Pipeline writes model/calibration/dataset provenance plus deterministic score-stratified samples under ignored `output/diagnostics/samples/`.
+- Full 146-tile rerun succeeded in 516 s with 3 workers; 145 land-bearing tiles emitted 360,790 samples (`400_48` is all sea).
+- Baseline audit fails as intended: median warm fraction 0.9879, strongly red 0.9219, full-grid score/elevation Pearson −0.4742 and Spearman −0.5057.
+- Per-region Pearson: Koper −0.7675, Ljubljana −0.8181, Kamnik/Savinja −0.6239.
+- UI now defaults D19 and review markers off, removes probability-like percentages, labels D19 as unvalidated and D21 as synthetic, and shows a screening-only notice.
+- Verification: four unit tests pass, JS syntax passes, and the rendered local app was browser-checked. Only upstream basemap missing-sprite warnings appeared.
+
+Next entry point: acquire/rasterize official Slovenian hazard maps and an observed August 2023 Savinja extent, then build mosaic-level Savinja hydrology before selecting new weights.
+
+## D23 official-validation implementation (2026-07-11)
+
+- Added `validation/sources.json`, `validation/README.md`, `download_validation.py`, `prepare_validation_web.py`, `evaluate_validation.py`, and validation tests.
+- Official DRSV downloads are scoped to three separate EPSG:3794 study envelopes, paginated, deduplicated, checksummed, and kept under gitignored `validation/data/`.
+- Acquired IKPN validity + Q10/Q100/Q500, all three IKG Q100 depth classes, four IKRPN classes, and official flow lines.
+- Added optional blue official Q10/Q100/Q500 reference controls to the app; Q100 is selected but the layer is off by default.
+- Static Q100 benchmark inside official validity: 151,435 samples, 55,309 positives. D19 AUC/AP = 0.5972/0.4109; HAND-only = 0.6908/0.4985. HAND-only is now the minimum baseline.
+- Per-region D19 AUC: Koper 0.5368, Ljubljana 0.6117, Kamnik 0.6648. Median tile AUC across 91 two-class tiles: 0.6239 (IQR 0.5285–0.7415).
+- Ten unit tests and JS/Python syntax checks pass; official selector and default-off semantics were browser-verified.
+
+Updated next entry point: obtain a vetted August 2023 Savinja observed footprint and ARSO event forcing; meanwhile implement mosaic-level Savinja routing/HAND and evaluate it against the frozen HAND-only and D19 baselines. Do not tune D19 weights on the Q100 reference.
 
 ## Context
 

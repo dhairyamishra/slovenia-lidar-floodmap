@@ -1,4 +1,4 @@
-# Slovenia CLSS LiDAR — Flood, Coastal, Hydroclimate & Forest Risk
+# Slovenia CLSS LiDAR — Flood Susceptibility & Terrain Screening
 
 An interactive web map overlaying riverine flood susceptibility, Koper coastal sea-level-rise exposure, ERA5-Land-style hydroclimate trigger state, and forest-NDVI analysis derived from Slovenia's national airborne LiDAR dataset (CLSS — *Ciklično lasersko skeniranje*) onto a dark basemap styled after the national viewer at [clss.si](https://clss.si).
 
@@ -6,11 +6,11 @@ An interactive web map overlaying riverine flood susceptibility, Koper coastal s
 
 ## Map layers in action
 
-The interface lets you combine the derived analysis layers, adjust each layer's opacity, and switch the ranked high-risk markers on or off. The examples below show how the same controls reveal different terrain and land-use patterns across the three study regions.
+The interface lets you combine derived screening layers and adjust opacity. The unvalidated D19 susceptibility raster and its region-capped review points are off by default. These outputs are relative indices, not probability, modeled depth, or official flood hazard.
 
 ### Flood susceptibility
 
-Blue cells have lower relative susceptibility and red cells have higher relative susceptibility within each calibrated region. Numbered markers identify the globally ranked high-risk candidates; they are region-capped so one independently normalised region cannot dominate the list.
+Blue cells have lower relative susceptibility and red cells have higher relative susceptibility within each calibrated region. This legacy D19 palette is retained as a comparison baseline, but a Phase-0 audit found that it saturates most valid land with warm/red colors. Numbered points are region-capped review candidates, not a globally comparable probability ranking.
 
 <table>
   <tr>
@@ -71,13 +71,14 @@ The source is a three-dimensional CLSS LiDAR point cloud: individual returns rec
 
 | Layer | Description |
 |---|---|
-| Flood Susceptibility | Weighted composite (HAND 25 % + TWI 20 % + elevation 15 % + slope 15 % + plan curvature 10 % + canopy interception 7.5 % + NDVI health 7.5 %) — blue (low) → red (high) |
-| Coastal Inundation | Koper-only bathtub sea-level-rise screen for +0.5 m / +1.0 m / +2.0 m scenarios; shades connected low-lying land, leaves sea/no-data transparent |
-| Hydroclimate Trigger | Coarse temporal priming layer based on soil moisture, wetting trend, and 90-day precipitation/snowmelt input. V1 ships a deterministic Aug-2023 Savinja fixture; real ERA5-Land NetCDF ingestion is supported separately |
-| Hydro-Primed Risk Points | Existing LiDAR candidates re-ranked by `event_score = static_susceptibility * hydro_index` for the selected hydroclimate date |
+| Relative Terrain Susceptibility | Unvalidated D19 weighted composite (HAND 25 % + TWI 20 % + elevation 15 % + slope 15 % + plan curvature 10 % + canopy interception 7.5 % + NDVI health 7.5 %); region-relative, not probability |
+| Official DRSV Hazard Reference | Optional blue Q10/Q100/Q500 IKPN extent, downloaded from the official EPSG:3794 service and simplified for web display |
+| Connected Coastal Low-Land Exposure | Koper-only bathtub screen for +0.5 m / +1.0 m / +2.0 m scenarios; not surge or hydraulic inundation |
+| Hydroclimate Trigger | Synthetic Aug-2023 Savinja fixture for UI testing. Real ERA5-Land ingestion remains experimental and must not be presented as evidence yet |
+| Terrain Candidates Under Trigger | Existing D19 candidates re-ranked by an uncalibrated synthetic combined index for interface testing |
 | Forest NDVI | Per-cell NDVI from 16-bit NIR/R channels — red (stressed) → green (healthy) |
 | Land Classification | Ground, low/med/high vegetation, building returns |
-| Risk Markers | Top-20 highest-susceptibility cells (capped at 7 per CDN region so per-region-normalised scores stay comparable), shown as numbered pins |
+| Review Points | Top-20 D19 susceptibility candidates, capped at 7 per CDN region for presentation balance; scores remain non-comparable across regions |
 
 ## Dataset
 
@@ -99,6 +100,10 @@ python -m http.server 8765 --directory web
 The pipeline reads `GKOT_*.laz` from `data/` and writes all `web/data/` assets.
 
 ```bash
+# Recommended isolated environment
+python -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+
 # 1. Download tiles from the CDN (square grid around a centre, a bbox, or a list)
 python download_tiles.py --center 460 100 --radius 4        # 9×9 Ljubljana block
 
@@ -109,6 +114,16 @@ python pipeline.py --calibrate
 python pipeline.py
 # or a subset (merges into the existing manifest + global candidates):
 python pipeline.py 460_100 461_100
+
+# 4. Write output/diagnostics/model_audit.{json,md}
+python analyze_model.py
+# CI/release gate: exit nonzero when an available threshold fails
+python analyze_model.py --strict
+
+# 5. Acquire official reference layers and evaluate the frozen baseline
+python download_validation.py
+python prepare_validation_web.py
+python evaluate_validation.py
 ```
 
 Requires: `laspy`, `lazrs`, `numpy`, `scipy`, `pyproj`, `Pillow`, `numba` (the hot DTM/D8/HAND loops in `kernels.py` are Numba-JIT'd). Tiles fan out across processes — `--workers N` overrides the RAM-bound default.
@@ -141,21 +156,32 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 
 | Path | Description |
 |---|---|
-| `web/data/tiles/<name>/susceptibility.png` | Composite flood-risk overlay (RdYlBu_r) |
-| `web/data/tiles/<name>/coastal_slr_0_5m.png` etc. | Koper-only coastal inundation overlays for +0.5 m, +1.0 m, +2.0 m sea-level scenarios |
+| `web/data/tiles/<name>/susceptibility.png` | Legacy D19 relative-susceptibility overlay (RdYlBu_r; unvalidated baseline) |
+| `web/data/tiles/<name>/coastal_slr_0_5m.png` etc. | Koper-only connected low-land exposure overlays for +0.5 m, +1.0 m, +2.0 m scenarios |
 | `web/data/tiles/<name>/ndvi.png` | Forest-health NDVI (RdYlGn, percentile-stretched) |
 | `web/data/tiles/<name>/classification.png` | Land-cover classes |
 | `web/data/manifest.json` | Tile registry (bounds + file paths) consumed by the web app |
-| `web/data/candidates.json` | Global ranked list of top-500 risk candidates |
-| `web/data/risk_points.geojson` | Top-20 flood-risk points (de-duplicated at 50 m, capped at 7 per CDN region) |
+| `web/data/candidates.json` | Top-500 D19 susceptibility review candidates; not global probabilities |
+| `web/data/risk_points.geojson` | Top-20 review points (de-duplicated at 50 m, presentation-capped at 7 per region) |
 | `web/data/hydroclimate/*.geojson` | Hydroclimate trigger grid and hydro-primed risk points for available dates |
 | `calibration.json` | Per-region normalisation constants + dataset fingerprint |
+| `output/diagnostics/samples/*.npz` | Ignored deterministic full-grid factor/score samples emitted by the pipeline |
+| `output/diagnostics/model_audit.*` | Ignored audit reports from `analyze_model.py` |
+| `validation/sources.json` | Versioned official DRSV source/layer inventory and pending event-data requirements |
+| `validation/data/*` | Gitignored official source downloads plus acquisition manifest/checksums |
+| `web/data/validation/*` | Compact WGS84 Q10/Q100/Q500 reference layers used by the app |
+| `output/diagnostics/validation_q100.*` | Gitignored D19/baseline evaluation against official Q100 inside its validity domain |
 
 ## Scripts
 
 | Script | Purpose |
 |---|---|
 | `pipeline.py` | **Canonical pipeline.** Processes all `GKOT_*.laz` → riverine PNGs, Koper coastal scenario PNGs, manifest, candidates, and risk points. Supports subset runs and `--calibrate`. |
+| `analyze_model.py` | Phase-0 audit: display saturation, candidate concentration, full-grid altitude association, factor association, and descriptive ablations. |
+| `model_diagnostics.py` | NumPy-only deterministic score-stratified sampling contract shared by pipeline and tests. |
+| `download_validation.py` | Downloads/paginates/deduplicates official DRSV layers for three study-region envelopes and records provenance. |
+| `prepare_validation_web.py` | Dissolves, simplifies, and transforms official Q10/Q100/Q500 references for MapLibre. |
+| `evaluate_validation.py` | Labels diagnostic samples inside official IKPN validity and reports D19/HAND/TWI baseline metrics. |
 | `hydroclimate.py` | ERA5-Land-style hydroclimate trigger pipeline. Builds fixture assets for V1 and can derive from local ERA5-Land NetCDF files with xarray. |
 | `download_tiles.py` | Downloads CLSS GKOT tiles from the CDN with region auto-discovery and a probe cache. `--center/--radius`, `--bbox`, `--tiles`, `--dry-run`, `--pipeline`. |
 | `kernels.py` | Numba `@njit(cache=True)` hot loops — DTM grouped-min, D8 accumulation, HAND grid — bit-identical to the original pure-Python loops but ~70–150× faster. |

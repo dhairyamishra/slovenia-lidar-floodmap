@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "crs": "EPSG:3794",
+  "provider": "Direkcija Republike Slovenije za vode (DRSV)",
+  "provider_portal": "https://geohub.gov.si/ags/rest/services/DRSV",
+  "catalogue": "https://podatki.gov.si/dataset/integralna-karta-poplavne-nevarnosti-ikpn",
+  "license": "CC BY 4.0 (verify against each OPSI resource at acquisition time)",
+  "layers": [
+    {
+      "id": "ikpn_validity",
+      "kind": "official_hydraulic_study_validity",
+      "url": "https://geohub.gov.si/ags/rest/services/DRSV/IKPN/MapServer/4005"
+    },
+    {
+      "id": "ikpn_q10",
+      "kind": "official_hazard_extent",
+      "scenario": "Q10",
+      "url": "https://geohub.gov.si/ags/rest/services/DRSV/IKPN/MapServer/4006"
+    },
+    {
+      "id": "ikpn_q100",
+      "kind": "official_hazard_extent",
+      "scenario": "Q100",
+      "url": "https://geohub.gov.si/ags/rest/services/DRSV/IKPN/MapServer/4007"
+    },
+    {
+      "id": "ikpn_q500",
+      "kind": "official_hazard_extent",
+      "scenario": "Q500",
+      "url": "https://geohub.gov.si/ags/rest/services/DRSV/IKPN/MapServer/4008"
+    },
+    {
+      "id": "ikg_q100_depth_lt_0_5m",
+      "kind": "official_q100_depth_class",
+      "depth_class": "<0.5 m",
+      "url": "https://geohub.gov.si/ags/rest/services/DRSV/IKG/MapServer/4001"
+    },
+    {
+      "id": "ikg_q100_depth_0_5_to_1_5m",
+      "kind": "official_q100_depth_class",
+      "depth_class": "0.5-1.5 m",
+      "url": "https://geohub.gov.si/ags/rest/services/DRSV/IKG/MapServer/4002"
+    },
+    {
+      "id": "ikg_q100_depth_ge_1_5m",
+      "kind": "official_q100_depth_class",
+      "depth_class": ">=1.5 m",
+      "url": "https://geohub.gov.si/ags/rest/services/DRSV/IKG/MapServer/4003"
+    },
+    {
+      "id": "ikrpn_high",
+      "kind": "official_hazard_class",
+      "hazard_class": "high",
+      "url": "https://geohub.gov.si/ags/rest/services/DRSV/IKRPN/MapServer/4011"
+    },
+    {
+      "id": "ikrpn_medium",
+      "kind": "official_hazard_class",
+      "hazard_class": "medium",
+      "url": "https://geohub.gov.si/ags/rest/services/DRSV/IKRPN/MapServer/4012"
+    },
+    {
+      "id": "ikrpn_low",
+      "kind": "official_hazard_class",
+      "hazard_class": "low",
+      "url": "https://geohub.gov.si/ags/rest/services/DRSV/IKRPN/MapServer/4013"
+    },
+    {
+      "id": "ikrpn_residual",
+      "kind": "official_hazard_class",
+      "hazard_class": "residual",
+      "url": "https://geohub.gov.si/ags/rest/services/DRSV/IKRPN/MapServer/4014"
+    },
+    {
+      "id": "official_flow_lines",
+      "kind": "hydrography_flow_line",
+      "url": "https://geohub.gov.si/ags/rest/services/DRSV/Pregled/MapServer/3006"
+    }
+  ],
+  "pending_sources": [
+    {
+      "id": "savinja_2023_observed_extent",
+      "kind": "observed_event_extent",
+      "date": "2023-08-04",
+      "status": "not_acquired",
+      "requirement": "Official event polygon or independently derived/vetted Sentinel-1 or partner imagery extent"
+    },
+    {
+      "id": "arso_event_forcing",
+      "kind": "observed_hydroclimate",
+      "date_range": "2023-08-03/2023-08-08",
+      "status": "not_acquired",
+      "requirement": "Gauge/station precipitation, stage, and discharge with station metadata"
+    }
+  ]
+}

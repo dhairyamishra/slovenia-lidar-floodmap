@@ -1,5 +1,11 @@
 # Plan — Multi-Region Expansion + Model Redesign + Performance
 
+> **Current model-quality plan (2026-07-11):** See
+> [`ALEKS_REVIEW_AND_ALGORITHM_PLAN.md`](ALEKS_REVIEW_AND_ALGORITHM_PLAN.md) for
+> the active audit, validation strategy, algorithm redesign, visual redesign,
+> experiment log, and interruption/restart checklist prompted by Aleks's review.
+> This file remains the historical multi-region expansion plan.
+
 > **Trigger:** Aleks (the stakeholder) saw the Ljubljana demo, called it "amazing," and offered to loop in his team at **[sledilnik.org](https://sledilnik.org/)** (the civic-data org behind Slovenia's national COVID-19 tracker). He flagged **two known flood sites** as test cases. This plan responds to that.
 >
 > **Companion docs:** [`HANDOFF.md`](HANDOFF.md) (snapshot + model deep-dive), [`DECISIONS.md`](DECISIONS.md) (decision log, append new ones here), [`CLAUDE.md`](CLAUDE.md) (authoritative context). This plan supersedes the "Open decisions / next steps" list at the bottom of HANDOFF.md.

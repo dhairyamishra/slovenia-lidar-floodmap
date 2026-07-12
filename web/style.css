@@ -122,6 +122,12 @@ html, body {
   margin-bottom: 2px;
 }
 
+.layer-warning {
+  color: #fbbf24;
+  border-left: 2px solid rgba(251, 191, 36, 0.65);
+  padding-left: 7px;
+}
+
 /* Toggle switch */
 .layer-toggle { position: relative; display: inline-block; width: 34px; height: 18px; flex-shrink: 0; }
 .layer-toggle input { opacity: 0; width: 0; height: 0; }
@@ -263,6 +269,14 @@ html, body {
   margin-bottom: 8px;
 }
 .info-text strong { color: #e6edf3; font-weight: 500; }
+
+.screening-notice {
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background: rgba(120, 53, 15, 0.18);
+  border-radius: 5px;
+  padding: 8px;
+}
 
 /* ── Risk markers (DOM) ──────────────────────────────────────────────────── */
 .risk-marker {

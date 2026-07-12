@@ -10,8 +10,10 @@ Promise.all([
   fetch('data/manifest.json').then(r => r.json()),
   fetch('data/risk_points.geojson').then(r => r.json()),
   optionalJson('data/hydroclimate/manifest.json'),
+  optionalJson('data/validation/manifest.json'),
 ])
-  .then(([manifest, riskPoints, hydroManifest]) => initMap(manifest, riskPoints, hydroManifest))
+  .then(([manifest, riskPoints, hydroManifest, validationManifest]) =>
+    initMap(manifest, riskPoints, hydroManifest, validationManifest))
   .catch(err => {
     document.body.innerHTML =
       `<div style="color:#e74c3c;padding:40px;font-family:monospace">
@@ -21,7 +23,7 @@ Promise.all([
       </div>`;
   });
 
-function initMap(manifest, riskPoints, hydroManifest) {
+function initMap(manifest, riskPoints, hydroManifest, validationManifest) {
   const ub = manifest.union_bounds;
 
   const map = window._map = new maplibregl.Map({
@@ -44,15 +46,22 @@ function initMap(manifest, riskPoints, hydroManifest) {
 
     manifest.tiles.forEach(tile => addTileLayers(map, tile));
     addRiskPoints(map, riskPoints);
+    setRiskVisible(false);
 
-    initHydroClimate(map, hydroManifest).then(hydroState => {
-      wireControls(map, manifest.tiles, hydroState);
+    Promise.all([
+      initHydroClimate(map, hydroManifest),
+      initOfficialValidation(map, validationManifest),
+    ]).then(([hydroState, validationState]) => {
+      wireControls(map, manifest.tiles, hydroState, validationState);
     });
   });
 }
 
 const LAYER_TYPES = [
-  { key: 'susceptibility', defaultOpacity: 0.75, defaultVisible: true  },
+  // D19 remains available as a transparent baseline, but it is not the default:
+  // its region-relative score is unvalidated and the committed raster saturates
+  // most land with alarm colours (see ALEKS_REVIEW_AND_ALGORITHM_PLAN.md).
+  { key: 'susceptibility', defaultOpacity: 0.55, defaultVisible: false },
   { key: 'ndvi',           defaultOpacity: 0.75, defaultVisible: false },
   { key: 'classification', defaultOpacity: 0.80, defaultVisible: false },
 ];
@@ -61,6 +70,12 @@ const COASTAL_SCENARIOS = [
   { key: 'slr_0_5m', label: '+0.5 m' },
   { key: 'slr_1_0m', label: '+1.0 m' },
   { key: 'slr_2_0m', label: '+2.0 m' },
+];
+
+const OFFICIAL_SCENARIOS = [
+  { key: 'q10', label: 'Q10' },
+  { key: 'q100', label: 'Q100' },
+  { key: 'q500', label: 'Q500' },
 ];
 
 function addTileLayers(map, tile) {
@@ -117,10 +132,10 @@ function addRiskPoints(map, riskPoints) {
           <span class="popup-key">Tile</span>
           <span class="popup-val">${p.tile}</span></div>` : '';
       popup.setLngLat([lng, lat]).setHTML(`
-        <div class="popup-rank">Risk location #${p.rank}</div>
+        <div class="popup-rank">Review point #${p.rank}</div>
         <div class="popup-row">
-          <span class="popup-key">Risk score</span>
-          <span class="popup-val">${(p.risk_score * 100).toFixed(1)}%</span>
+          <span class="popup-key">Relative susceptibility</span>
+          <span class="popup-val">${Number(p.risk_score).toFixed(3)}</span>
         </div>
         <div class="popup-row">
           <span class="popup-key">Elevation</span>
@@ -173,26 +188,26 @@ function addHydroRiskPoints(map, riskPoints, visible) {
 
     el.addEventListener('click', () => {
       popup.setLngLat([lng, lat]).setHTML(`
-        <div class="popup-rank">Hydro-primed #${p.rank}</div>
+        <div class="popup-rank">Synthetic trigger review #${p.rank}</div>
         <div class="popup-row">
-          <span class="popup-key">Event score</span>
-          <span class="popup-val">${(p.event_score * 100).toFixed(1)}%</span>
+          <span class="popup-key">Combined index</span>
+          <span class="popup-val">${Number(p.event_score).toFixed(3)}</span>
         </div>
         <div class="popup-row">
-          <span class="popup-key">Static risk</span>
-          <span class="popup-val">${(p.static_risk_score * 100).toFixed(1)}%</span>
+          <span class="popup-key">Terrain index</span>
+          <span class="popup-val">${Number(p.static_risk_score).toFixed(3)}</span>
         </div>
         <div class="popup-row">
           <span class="popup-key">Hydro index</span>
-          <span class="popup-val">${(p.hydro_index * 100).toFixed(1)}%</span>
+          <span class="popup-val">${Number(p.hydro_index).toFixed(3)}</span>
         </div>
         <div class="popup-row">
           <span class="popup-key">Soil moisture</span>
-          <span class="popup-val">${(p.soil_moisture_norm * 100).toFixed(0)}%</span>
+          <span class="popup-val">${Number(p.soil_moisture_norm).toFixed(3)}</span>
         </div>
         <div class="popup-row">
           <span class="popup-key">90-day water</span>
-          <span class="popup-val">${(p.water90_norm * 100).toFixed(0)}%</span>
+          <span class="popup-val">${Number(p.water90_norm).toFixed(3)}</span>
         </div>
         <div class="popup-row">
           <span class="popup-key">Tile</span>
@@ -253,22 +268,22 @@ async function initHydroClimate(map, hydroManifest) {
   map.on('click', 'layer-hydro-trigger', e => {
     const p = e.features[0].properties;
     popup.setLngLat(e.lngLat).setHTML(`
-      <div class="popup-rank">Hydroclimate trigger</div>
-      <div class="popup-row">
-        <span class="popup-key">Hydro index</span>
-        <span class="popup-val">${(p.hydro_index * 100).toFixed(1)}%</span>
+        <div class="popup-rank">Synthetic hydroclimate fixture</div>
+        <div class="popup-row">
+          <span class="popup-key">Hydro index</span>
+          <span class="popup-val">${Number(p.hydro_index).toFixed(3)}</span>
       </div>
       <div class="popup-row">
         <span class="popup-key">Soil moisture</span>
-        <span class="popup-val">${(p.soil_moisture_norm * 100).toFixed(0)}%</span>
+          <span class="popup-val">${Number(p.soil_moisture_norm).toFixed(3)}</span>
       </div>
       <div class="popup-row">
         <span class="popup-key">90-day water</span>
-        <span class="popup-val">${(p.water90_norm * 100).toFixed(0)}%</span>
+          <span class="popup-val">${Number(p.water90_norm).toFixed(3)}</span>
       </div>
       <div class="popup-row">
         <span class="popup-key">Wetting trend</span>
-        <span class="popup-val">${(p.wetting_trend_norm * 100).toFixed(0)}%</span>
+          <span class="popup-val">${Number(p.wetting_trend_norm).toFixed(3)}</span>
       </div>`
     ).addTo(map);
   });
@@ -285,6 +300,35 @@ async function initHydroClimate(map, hydroManifest) {
   };
 }
 
+async function initOfficialValidation(map, validationManifest) {
+  if (!validationManifest || !validationManifest.scenarios) {
+    return { available: false };
+  }
+  const byScenario = Object.fromEntries(
+    validationManifest.scenarios.map(entry => [entry.scenario, entry])
+  );
+  OFFICIAL_SCENARIOS.forEach(({ key }) => {
+    const entry = byScenario[key];
+    if (!entry) return;
+    map.addSource(`src-official-${key}`, {
+      type: 'geojson',
+      data: `data/validation/${entry.file}`,
+    });
+    map.addLayer({
+      id: `layer-official-${key}`,
+      type: 'fill',
+      source: `src-official-${key}`,
+      paint: {
+        'fill-color': '#38bdf8',
+        'fill-opacity': 0.32,
+        'fill-outline-color': '#bae6fd',
+      },
+      layout: { visibility: 'none' },
+    });
+  });
+  return { available: true, byScenario };
+}
+
 async function setHydroDate(map, hydroState, date, markersVisible) {
   const entry = hydroState.datesByValue[date];
   if (!entry) return;
@@ -299,7 +343,7 @@ async function setHydroDate(map, hydroState, date, markersVisible) {
 
 const KEY_ALIAS = { susc: 'susceptibility', ndvi: 'ndvi', cls: 'classification' };
 
-function wireControls(map, tiles, hydroState) {
+function wireControls(map, tiles, hydroState, validationState) {
   const tileNames = tiles.map(t => t.name);
 
   Object.entries(KEY_ALIAS).forEach(([alias, key]) => {
@@ -364,6 +408,43 @@ function wireControls(map, tiles, hydroState) {
   }
 
   wireHydroControls(map, hydroState);
+  wireOfficialValidationControls(map, validationState);
+}
+
+function wireOfficialValidationControls(map, validationState) {
+  const toggle = document.getElementById('toggle-official');
+  const scenario = document.getElementById('official-scenario');
+  const opacity = document.getElementById('opacity-official');
+  const value = document.getElementById('val-official');
+
+  if (!validationState || !validationState.available) {
+    toggle.disabled = true;
+    scenario.disabled = true;
+    opacity.disabled = true;
+    return;
+  }
+
+  function updateVisibility() {
+    OFFICIAL_SCENARIOS.forEach(({ key }) => {
+      if (!validationState.byScenario[key]) return;
+      map.setLayoutProperty(
+        `layer-official-${key}`,
+        'visibility',
+        toggle.checked && scenario.value === key ? 'visible' : 'none'
+      );
+    });
+  }
+  toggle.addEventListener('change', updateVisibility);
+  scenario.addEventListener('change', updateVisibility);
+  opacity.addEventListener('input', () => {
+    const next = opacity.value / 100;
+    OFFICIAL_SCENARIOS.forEach(({ key }) => {
+      if (validationState.byScenario[key]) {
+        map.setPaintProperty(`layer-official-${key}`, 'fill-opacity', next);
+      }
+    });
+    value.textContent = opacity.value + '%';
+  });
 }
 
 function wireHydroControls(map, hydroState) {
