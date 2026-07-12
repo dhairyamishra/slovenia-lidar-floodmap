@@ -1,12 +1,29 @@
 # Handoff - Slovenia CLSS LiDAR Flood, Coastal & Hydroclimate Demo
 
-**Status:** Phases 1–4 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D27). D19 communication is repaired, validation is locked, and both Savinja and Ljubljana have continuous conditioned mosaic hydrology. Phase 5 is the interpretable replacement-model benchmark; no replacement has been published to the web yet.
+**Status:** Phases 1–4 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D27). Phase 5 candidates are implemented, but the D28 development selection gate failed. The locked test remains unopened, no replacement is approved, and no replacement has been published to the web.
 
 **Goal:** A polished, honest screening tool for Aleks / sledilnik.org that shows where detailed flood/coastal investigation should start. It is not a hydraulic, coastal, or probabilistic forecast model.
 
 > Authoritative context: `AGENTS.md`, `CLAUDE.md`, `DECISIONS.md`, and `PLAN.md`. This handoff is the current snapshot plus the latest implementation notes.
 > The active review/implementation tracker is `ALEKS_REVIEW_AND_ALGORITHM_PLAN.md`.
 > The focused red-map/model-replacement tracker is `FLOOD_MODEL_REPLACEMENT_PLAN.md`.
+
+## D28 Phase-5 development benchmark — gate failed (2026-07-12)
+
+- Added `benchmark_replacement.py`, `test_benchmark_replacement.py`, and the explicit scikit-learn dependency.
+- Implemented B0 mosaic HAND with channel-distance applicability, B1 fixed drainage rules, frozen B2 D19/per-tile HAND references, nonnegative-coefficient monotonic logistic M1, and monotonic histogram-gradient-boosting M2.
+- Features: mosaic HAND, channel distance, 250 m valley position, 250 m relief, accumulation, order; TWI and slope were tested individually and together. Absolute elevation is not an input.
+- Used 10 spatial leave-one-easting-column-out development folds; adjacent columns in the same region are excluded from training. Dataset: 84,358 eligible samples, 27,541 Q100-positive.
+- Tested 250/500/1000/2000 m channel-distance applicability. Best B0 is 500 m: AUC/AP 0.7447/0.5049.
+- Best challenger is `m2_plus_twi_slope_d500m`: AUC/AP 0.7647/0.5819, top-10% precision/recall 0.6536/0.2002, low-flat negative flagged fraction 0.0598 versus B0 0.0753.
+- Gate result: **fail**. AUC gain is +0.0200 (required +0.03) and low-flat reduction is 20.58% (required 30%); AP gain +0.0770 and recall change +0.0369 pass their parts.
+- Shortcut audit also remains concerning: best-challenger score/elevation Pearson is −0.6002 in Ljubljana and −0.3800 in Savinja despite excluding absolute elevation. Drainage-relative geometry can still correlate with basin elevation.
+- M2 out-of-fold permutation AUC drops are led by valley position 0.0675, mosaic HAND 0.0444, flatness 0.0337, and local relief 0.0217. TWI, accumulation, and stream order add little.
+- `output/replacement_model/development_report.json` and `MODEL_CARD.md` are reproducible ignored artifacts. `finalize` refuses to open the locked test while `selected_candidate` is null.
+
+**Why:** The approved gate exists to prevent publishing a more complex model merely because one metric improves. The challenger clearly improves ranking precision, but it does not reduce the broad low-flat/altitude shortcut enough to justify replacing mosaic HAND.
+
+**Next entry point:** Do not weaken the gate or open the locked test. Add genuinely new information: vetted observed August-2023 extent, mapped levee/embankment and imperviousness/drainage features, or independent basin/event labels. Re-run `python benchmark_replacement.py develop`; only implement the one-time `finalize` path after a candidate passes all development gates.
 
 ## D27 Phase-4 Ljubljana mosaic hydrology (2026-07-12)
 

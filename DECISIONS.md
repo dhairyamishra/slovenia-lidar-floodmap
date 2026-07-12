@@ -286,6 +286,18 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 **Reversible:** Select `--region savinja` to reproduce D26 independently; remove the `ljubljana` region spec and D27 feature exports to return to the Phase-3 script. D19 and all committed web assets remain unchanged, so rollback requires no web-data regeneration.
 
+### D28 — Reject the first replacement candidates; keep the locked test closed
+
+**Decision:** Benchmark the full predeclared static candidate ladder on development data only: 500 m-applicable mosaic HAND (B0), fixed drainage rules (B1), frozen D19/per-tile HAND (B2), nonnegative monotonic logistic models (M1), and monotonic histogram-gradient-boosting models (M2). Test TWI and slope individually and together, plus 250/500/1000/2000 m channel-distance applicability. Use leave-one-easting-column-out folds with adjacent same-region columns excluded. Reject every challenger because none meets all approved +0.03 AUC, +0.03 AP, 30% low-flat-control reduction, and no-more-than-0.05 recall-loss criteria. Do not access the locked test and do not generate a production replacement.
+
+**Why:** On 84,358 development samples, best B0 mosaic HAND at 500 m scores ROC-AUC/AP 0.7447/0.5049. The strongest challenger, M2 with TWI+slope at 500 m, scores 0.7647/0.5819 and reduces the low-flat flagged fraction from 0.0753 to 0.0598. Its +0.0770 AP and +0.0369 recall change are encouraging, but +0.0200 AUC and 20.58% low-flat reduction miss the gate. It also remains strongly elevation-associated within Ljubljana (Pearson −0.6002) even without absolute elevation as an input. Opening the locked test or relaxing thresholds now would turn the test into another development set.
+
+**Result:** `benchmark_replacement.py develop` produces a model card, all model/region/control/operating metrics, applicability comparisons, altitude audits, and out-of-fold permutation importance while recording `locked_test_accessed: false`. The `finalize` command deliberately refuses to run while no development candidate is selected. D19 remains a visibly demoted experimental baseline; mosaic features remain research inputs rather than public hazard classes.
+
+**Caveats:** Labels are static DRSV Q100 planning polygons, not observed events. Samples were originally stratified by D19 score deciles and cannot estimate area prevalence. The spatial fold family is not an independent multi-basin/event corpus. Exact SHAP was not added; M2 uses out-of-fold permutation importance and monotonic constraints. The next improvement should add missing physical/observational information, not more post-hoc hyperparameter search.
+
+**Reversible:** Remove the benchmark script/tests and scikit-learn dependency. No committed web output depends on D28, and the locked test has not been consumed.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

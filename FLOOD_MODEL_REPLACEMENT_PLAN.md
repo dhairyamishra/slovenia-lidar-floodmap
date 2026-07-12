@@ -12,6 +12,8 @@
 - [x] Phase 4 — Ljubljana mosaic hydrology.
 - [ ] Phase 5+ — model benchmark, sparse production output, scenario evidence.
 
+**Phase-5 gate update (D28):** B0/B1/B2/M1/M2, spatial folds, TWI/slope additions, negative controls, and distance applicability were implemented. No candidate met all approved development thresholds, so the locked test remains closed and no replacement is selected or published.
+
 **Problem:** The frozen `D19-baseline-v1` overlay renders most low, flat land as strongly red. It is visually alarming, strongly associated with elevation, and performs worse than HAND-only against the official DRSV Q100 reference. The replacement must reduce false positives through drainage connectivity and scenario evidence, not cosmetic weight or color changes.
 
 ## 1. Evidence and proposed decision
@@ -282,7 +284,7 @@ Do not show cell-level probability unless the target is defined, multiple indepe
 | 2 | Validation lock | Rasters, spatial blocks, controls | **Complete — D25** |
 | 3 | Savinja mosaic | Continuous conditioned hydrology | **Complete — D26** |
 | 4 | Ljubljana mosaic | Continuous basin features | **Complete — D27** |
-| 5 | Model benchmark | Candidate comparison/model card | D1 |
+| 5 | Model benchmark | Candidate comparison/model card | **Implemented; selection gate failed — D28** |
 | 6 | Sparse production output | Validated classes/applicability | E3 |
 | 7 | Event/scenario evidence | Savinja hindcast and stage/HAND | F2 evaluated |
 | 8 | Hydraulic/probability decision | Evidence-based scope decision | F3/F4 recorded |

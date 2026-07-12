@@ -7,3 +7,4 @@ numba>=0.60,<0.67
 matplotlib>=3.8,<4
 psutil>=5.9,<8
 shapely>=2.0,<3
+scikit-learn>=1.5,<2

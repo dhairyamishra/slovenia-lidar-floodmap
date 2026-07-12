@@ -130,6 +130,10 @@ python mosaic_hydrology.py --region savinja --rebuild-dtm
 python mosaic_hydrology.py --region ljubljana --rebuild-dtm
 # Later runs reuse the cached mosaic DTM:
 python mosaic_hydrology.py --region ljubljana
+
+# 7. Run the development-only spatial replacement benchmark
+python benchmark_replacement.py develop
+# finalize remains locked until the report names a passing candidate
 ```
 
 Requires: `laspy`, `lazrs`, `numpy`, `scipy`, `pyproj`, `Pillow`, `numba` (the hot DTM/D8/HAND loops in `kernels.py` are Numba-JIT'd). Tiles fan out across processes — `--workers N` overrides the RAM-bound default.
@@ -184,6 +188,8 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `output/mosaic/<region>/manifest.json` | Gitignored reproducibility manifest, digests, seam checks, conditioning/threshold sensitivities, and development-only benchmark |
 | `output/mosaic/<region>/tiles/*.npz` | Thirteen continuous mosaic-derived feature grids cut back to web-tile bounds after routing (25 Savinja; 100 Ljubljana) |
 | `output/mosaic/<region>/qa_overview.png` | Conditioned terrain, accumulation, HAND, and official/derived-channel QA overview |
+| `output/replacement_model/development_report.json` | Gitignored spatial-CV candidate metrics, controls, shortcut audit, gates, and locked-test status |
+| `output/replacement_model/MODEL_CARD.md` | Gitignored development model card; currently records that no candidate passed |
 
 ## Scripts
 
@@ -199,6 +205,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `prepare_validation_contract.py` | Generates packed multi-resolution label grids and expanded frozen split metadata. |
 | `validation_grid.py` | Deterministic rasterization, mask packing, split assignment, and digest helpers. |
 | `mosaic_hydrology.py` | Builds continuous Savinja or Ljubljana DTMs, compares conditioning/D8/MFD/threshold sensitivities without locked-test access, exports exact receiver/connectivity/terrain features and tile windows, and records QA/provenance. |
+| `benchmark_replacement.py` | Development-only B0/B1/B2/M1/M2 spatial benchmark with monotonic models, applicability masks, negative controls, shortcut audits, and a locked finalization guard. |
 | `hydroclimate.py` | ERA5-Land-style hydroclimate trigger pipeline. Builds fixture assets for V1 and can derive from local ERA5-Land NetCDF files with xarray. |
 | `download_tiles.py` | Downloads CLSS GKOT tiles from the CDN with region auto-discovery and a probe cache. `--center/--radius`, `--bbox`, `--tiles`, `--dry-run`, `--pipeline`. |
 | `kernels.py` | Numba `@njit(cache=True)` hot loops — DTM grouped-min, D8 accumulation, HAND grid — bit-identical to the original pure-Python loops but ~70–150× faster. |
