@@ -6,11 +6,11 @@ An interactive web map overlaying riverine flood susceptibility, Koper coastal s
 
 ## Map layers in action
 
-The interface lets you combine derived screening layers and adjust opacity. The unvalidated D19 susceptibility raster and its region-capped review points are off by default. These outputs are relative indices, not probability, modeled depth, or official flood hazard.
+The interface lets you combine derived screening layers and adjust opacity. The experimental D19 baseline and its region-capped review points are off by default. Its normal display is a sparse purple review mask; the original saturated red surface remains available only for technical audit. Neither is probability, modeled depth, or official flood hazard.
 
 ### Flood susceptibility
 
-Blue cells have lower relative susceptibility and red cells have higher relative susceptibility within each calibrated region. This legacy D19 palette is retained as a comparison baseline, but a Phase-0 audit found that it saturates most valid land with warm/red colors. Numbered points are region-capped review candidates, not a globally comparable probability ranking.
+The default D19 view shows only the upper band of its fixed regional display scale in purple. This is an unvalidated display cutoff for sparse review—not a hazard class or area percentile. The original blue-to-red D19 surface is retained as a selectable frozen diagnostic because a Phase-0 audit found that it saturates most valid land with warm/red colors. Numbered points are region-capped review candidates, not a globally comparable probability ranking.
 
 <table>
   <tr>
@@ -71,8 +71,8 @@ The source is a three-dimensional CLSS LiDAR point cloud: individual returns rec
 
 | Layer | Description |
 |---|---|
-| Relative Terrain Susceptibility | Unvalidated D19 weighted composite (HAND 25 % + TWI 20 % + elevation 15 % + slope 15 % + plan curvature 10 % + canopy interception 7.5 % + NDVI health 7.5 %); region-relative, not probability |
-| Official DRSV Hazard Reference | Optional blue Q10/Q100/Q500 IKPN extent, downloaded from the official EPSG:3794 service and simplified for web display |
+| Experimental D19 Terrain Baseline | Frozen unvalidated weighted composite; sparse purple review mask by default and original saturated raster for diagnostics only |
+| Official DRSV Hazard Reference | Blue Q10/Q100/Q500 IKPN extent plus hydraulic-study validity and official Q100 depth classes |
 | Connected Coastal Low-Land Exposure | Koper-only bathtub screen for +0.5 m / +1.0 m / +2.0 m scenarios; not surge or hydraulic inundation |
 | Hydroclimate Trigger | Synthetic Aug-2023 Savinja fixture for UI testing. Real ERA5-Land ingestion remains experimental and must not be presented as evidence yet |
 | Terrain Candidates Under Trigger | Existing D19 candidates re-ranked by an uncalibrated synthetic combined index for interface testing |
@@ -157,6 +157,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | Path | Description |
 |---|---|
 | `web/data/tiles/<name>/susceptibility.png` | Legacy D19 relative-susceptibility overlay (RdYlBu_r; unvalidated baseline) |
+| `web/data/tiles/<name>/susceptibility_d19_review.png` | Sparse purple D19 display mask; visual-review cutoff only |
 | `web/data/tiles/<name>/coastal_slr_0_5m.png` etc. | Koper-only connected low-land exposure overlays for +0.5 m, +1.0 m, +2.0 m scenarios |
 | `web/data/tiles/<name>/ndvi.png` | Forest-health NDVI (RdYlGn, percentile-stretched) |
 | `web/data/tiles/<name>/classification.png` | Land-cover classes |
@@ -169,7 +170,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `output/diagnostics/model_audit.*` | Ignored audit reports from `analyze_model.py` |
 | `validation/sources.json` | Versioned official DRSV source/layer inventory and pending event-data requirements |
 | `validation/data/*` | Gitignored official source downloads plus acquisition manifest/checksums |
-| `web/data/validation/*` | Compact WGS84 Q10/Q100/Q500 reference layers used by the app |
+| `web/data/validation/*` | Compact WGS84 Q10/Q100/Q500, validity, and Q100 depth layers used by the app |
 | `output/diagnostics/validation_q100.*` | Gitignored D19/baseline evaluation against official Q100 inside its validity domain |
 
 ## Scripts
@@ -181,6 +182,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `model_diagnostics.py` | NumPy-only deterministic score-stratified sampling contract shared by pipeline and tests. |
 | `download_validation.py` | Downloads/paginates/deduplicates official DRSV layers for three study-region envelopes and records provenance. |
 | `prepare_validation_web.py` | Dissolves, simplifies, and transforms official Q10/Q100/Q500 references for MapLibre. |
+| `prepare_d19_web.py` | Migrates committed legacy D19 colors into compact sparse review PNGs without rerunning LAZ processing. |
 | `evaluate_validation.py` | Labels diagnostic samples inside official IKPN validity and reports D19/HAND/TWI baseline metrics. |
 | `hydroclimate.py` | ERA5-Land-style hydroclimate trigger pipeline. Builds fixture assets for V1 and can derive from local ERA5-Land NetCDF files with xarray. |
 | `download_tiles.py` | Downloads CLSS GKOT tiles from the CDN with region auto-discovery and a probe cache. `--center/--radius`, `--bbox`, `--tiles`, `--dry-run`, `--pipeline`. |

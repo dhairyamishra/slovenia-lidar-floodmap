@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "generated": "2026-07-11T23:44:02.179682+00:00",
+  "schema_version": 2,
+  "generated": "2026-07-12T05:46:28.040240+00:00",
   "source": "Direkcija Republike Slovenije za vode (DRSV), IKPN",
   "source_crs": "EPSG:3794",
   "web_crs": "EPSG:4326",
@@ -30,5 +30,39 @@
       "simplify_m": 2.0,
       "sha256": "615af8780cb21411133a8c5e1ca7e938f61e819701191b6b52adfa5da79dde85"
     }
-  ]
+  ],
+  "layers": {
+    "validity": {
+      "kind": "official_hydraulic_study_validity",
+      "label": "DRSV study validity",
+      "file": "ikpn_validity.geojson",
+      "source_feature_count": 4,
+      "simplify_m": 2.0,
+      "sha256": "e4b8202621c0b8fda72e261db69896adbbf397a09c7cff33f67c9206ea2da0fc"
+    },
+    "depth_lt_0_5m": {
+      "kind": "official_q100_depth_class",
+      "label": "Q100 depth < 0.5 m",
+      "file": "ikg_q100_depth_lt_0_5m.geojson",
+      "source_feature_count": 712,
+      "simplify_m": 2.0,
+      "sha256": "b41feadb4bfbf628bcf362c608ab5326e5938caff860ff1e76e9eaf94de2cfc6"
+    },
+    "depth_0_5_to_1_5m": {
+      "kind": "official_q100_depth_class",
+      "label": "Q100 depth 0.5\u20131.5 m",
+      "file": "ikg_q100_depth_0_5_to_1_5m.geojson",
+      "source_feature_count": 823,
+      "simplify_m": 2.0,
+      "sha256": "66ec9afd6de3b815c718b13915a93041eb5256aa96d67ffb0237bd7815ec5ea5"
+    },
+    "depth_ge_1_5m": {
+      "kind": "official_q100_depth_class",
+      "label": "Q100 depth \u2265 1.5 m",
+      "file": "ikg_q100_depth_ge_1_5m.geojson",
+      "source_feature_count": 331,
+      "simplify_m": 2.0,
+      "sha256": "5b39184e0225acb83113ab8592aab2d9aea79dc03c61b2d21f3852980f79dcbd"
+    }
+  }
 }

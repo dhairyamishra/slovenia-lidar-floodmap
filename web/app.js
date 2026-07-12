@@ -58,10 +58,11 @@ function initMap(manifest, riskPoints, hydroManifest, validationManifest) {
 }
 
 const LAYER_TYPES = [
-  // D19 remains available as a transparent baseline, but it is not the default:
-  // its region-relative score is unvalidated and the committed raster saturates
-  // most land with alarm colours (see ALEKS_REVIEW_AND_ALGORITHM_PLAN.md).
-  { key: 'susceptibility', defaultOpacity: 0.55, defaultVisible: false },
+  // D19 is frozen and available in two non-hazard display modes. The sparse
+  // review mask is the default when enabled; the full diagnostic surface is
+  // deliberately separate and never visible on initial load.
+  { key: 'd19_review',     defaultOpacity: 0.70, defaultVisible: false },
+  { key: 'd19_diagnostic', defaultOpacity: 0.55, defaultVisible: false },
   { key: 'ndvi',           defaultOpacity: 0.75, defaultVisible: false },
   { key: 'classification', defaultOpacity: 0.80, defaultVisible: false },
 ];
@@ -326,7 +327,61 @@ async function initOfficialValidation(map, validationManifest) {
       layout: { visibility: 'none' },
     });
   });
-  return { available: true, byScenario };
+  const extra = validationManifest.layers || {};
+  const validity = extra.validity;
+  if (validity) {
+    map.addSource('src-official-validity', {
+      type: 'geojson',
+      data: `data/validation/${validity.file}`,
+    });
+    map.addLayer({
+      id: 'layer-official-validity-fill',
+      type: 'fill',
+      source: 'src-official-validity',
+      paint: { 'fill-color': '#94a3b8', 'fill-opacity': 0.05 },
+      layout: { visibility: 'none' },
+    });
+    map.addLayer({
+      id: 'layer-official-validity-line',
+      type: 'line',
+      source: 'src-official-validity',
+      paint: {
+        'line-color': '#cbd5e1',
+        'line-width': 1.4,
+        'line-opacity': 0.9,
+        'line-dasharray': [3, 2],
+      },
+      layout: { visibility: 'none' },
+    });
+  }
+
+  const depthSpecs = [
+    ['depth_lt_0_5m', '#bae6fd'],
+    ['depth_0_5_to_1_5m', '#38bdf8'],
+    ['depth_ge_1_5m', '#075985'],
+  ];
+  const depthKeys = [];
+  depthSpecs.forEach(([key, color]) => {
+    const entry = extra[key];
+    if (!entry) return;
+    depthKeys.push(key);
+    map.addSource(`src-official-${key}`, {
+      type: 'geojson',
+      data: `data/validation/${entry.file}`,
+    });
+    map.addLayer({
+      id: `layer-official-${key}`,
+      type: 'fill',
+      source: `src-official-${key}`,
+      paint: {
+        'fill-color': color,
+        'fill-opacity': 0.48,
+        'fill-outline-color': color,
+      },
+      layout: { visibility: 'none' },
+    });
+  });
+  return { available: true, byScenario, validity: Boolean(validity), depthKeys };
 }
 
 async function setHydroDate(map, hydroState, date, markersVisible) {
@@ -341,7 +396,7 @@ async function setHydroDate(map, hydroState, date, markersVisible) {
   addHydroRiskPoints(map, dynamicRisk, markersVisible);
 }
 
-const KEY_ALIAS = { susc: 'susceptibility', ndvi: 'ndvi', cls: 'classification' };
+const KEY_ALIAS = { ndvi: 'ndvi', cls: 'classification' };
 
 function wireControls(map, tiles, hydroState, validationState) {
   const tileNames = tiles.map(t => t.name);
@@ -363,6 +418,8 @@ function wireControls(map, tiles, hydroState, validationState) {
       valEl.textContent = slider.value + '%';
     });
   });
+
+  wireD19Controls(map, tiles);
 
   document.getElementById('toggle-risk')
     .addEventListener('change', e => setRiskVisible(e.target.checked));
@@ -411,18 +468,63 @@ function wireControls(map, tiles, hydroState, validationState) {
   wireOfficialValidationControls(map, validationState);
 }
 
+function wireD19Controls(map, tiles) {
+  const toggle = document.getElementById('toggle-susc');
+  const mode = document.getElementById('d19-display-mode');
+  const opacity = document.getElementById('opacity-susc');
+  const value = document.getElementById('val-susc');
+  const keys = ['d19_review', 'd19_diagnostic'];
+  const tileNames = tiles.map(tile => tile.name);
+
+  function updateVisibility() {
+    keys.forEach(key => {
+      tileNames.forEach(name => {
+        const layerId = `layer-${key}-${name}`;
+        if (!map.getLayer(layerId)) return;
+        map.setLayoutProperty(
+          layerId,
+          'visibility',
+          toggle.checked && mode.value === key ? 'visible' : 'none'
+        );
+      });
+    });
+  }
+
+  toggle.addEventListener('change', updateVisibility);
+  mode.addEventListener('change', updateVisibility);
+  opacity.addEventListener('input', () => {
+    const next = opacity.value / 100;
+    keys.forEach(key => tileNames.forEach(name => {
+      const layerId = `layer-${key}-${name}`;
+      if (map.getLayer(layerId)) map.setPaintProperty(layerId, 'raster-opacity', next);
+    }));
+    value.textContent = opacity.value + '%';
+  });
+}
+
 function wireOfficialValidationControls(map, validationState) {
   const toggle = document.getElementById('toggle-official');
   const scenario = document.getElementById('official-scenario');
   const opacity = document.getElementById('opacity-official');
   const value = document.getElementById('val-official');
+  const validityToggle = document.getElementById('toggle-official-validity');
+  const depthToggle = document.getElementById('toggle-official-depth');
+  const comparisonToggle = document.getElementById('toggle-q100-comparison');
+  const d19Toggle = document.getElementById('toggle-susc');
+  const d19Mode = document.getElementById('d19-display-mode');
 
   if (!validationState || !validationState.available) {
     toggle.disabled = true;
     scenario.disabled = true;
     opacity.disabled = true;
+    validityToggle.disabled = true;
+    depthToggle.disabled = true;
+    comparisonToggle.disabled = true;
     return;
   }
+
+  validityToggle.disabled = !validationState.validity;
+  depthToggle.disabled = validationState.depthKeys.length === 0;
 
   function updateVisibility() {
     OFFICIAL_SCENARIOS.forEach(({ key }) => {
@@ -433,9 +535,36 @@ function wireOfficialValidationControls(map, validationState) {
         toggle.checked && scenario.value === key ? 'visible' : 'none'
       );
     });
+    if (validationState.validity) {
+      const visibility = validityToggle.checked ? 'visible' : 'none';
+      map.setLayoutProperty('layer-official-validity-fill', 'visibility', visibility);
+      map.setLayoutProperty('layer-official-validity-line', 'visibility', visibility);
+    }
+    validationState.depthKeys.forEach(key => {
+      map.setLayoutProperty(
+        `layer-official-${key}`,
+        'visibility',
+        toggle.checked && depthToggle.checked && scenario.value === 'q100' ? 'visible' : 'none'
+      );
+    });
   }
   toggle.addEventListener('change', updateVisibility);
   scenario.addEventListener('change', updateVisibility);
+  validityToggle.addEventListener('change', updateVisibility);
+  depthToggle.addEventListener('change', updateVisibility);
+  comparisonToggle.addEventListener('change', () => {
+    const enabled = comparisonToggle.checked;
+    toggle.checked = enabled;
+    validityToggle.checked = enabled;
+    d19Toggle.checked = enabled;
+    if (enabled) {
+      scenario.value = 'q100';
+      depthToggle.checked = false;
+      d19Mode.value = 'd19_review';
+    }
+    d19Toggle.dispatchEvent(new Event('change'));
+    updateVisibility();
+  });
   opacity.addEventListener('input', () => {
     const next = opacity.value / 100;
     OFFICIAL_SCENARIOS.forEach(({ key }) => {

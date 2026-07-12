@@ -232,4 +232,22 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 ---
 
+## 2026-07-12
+
+### D24 — Demote D19 visually; expose official validity, depth, and Q100 comparison
+
+**Decision:** Keep the original `D19-baseline-v1` susceptibility raster unchanged for reproducibility, but replace its normal public display with a sparse purple review mask. The mask reports only values at or above 0.925 on the fixed regional display scale (the upper 7.5% of that scale); this is explicitly a display cutoff, not a hazard threshold or land-area percentile. The original red surface remains available only as “Frozen red diagnostic surface.” The app now also exposes the DRSV hydraulic-study validity domain, three official Q100 depth classes, and a Q100 comparison control that turns on official extent, validity, and the sparse D19 mask together.
+
+**Why:** The D22 audit showed that the old raster painted a median 92.19% of valid tile area strongly red. Hiding the defect or retuning weights would destroy the evidence without improving skill. Preserving the original artifact while giving ordinary users a sparse neutral review display makes the known failure legible and reversible. The validity boundary prevents “no official polygon” from being interpreted as dry outside the official study domain, while depth classes distinguish official hydraulic evidence from the experimental terrain score.
+
+**Implementation:** `pipeline.py` now writes `susceptibility_d19_review.png` alongside the unchanged original. `prepare_d19_web.py` migrates committed legacy PNGs without a full LAZ rerun by recovering their nearest `RdYlBu_r` display index; future pipeline runs render directly from the unquantized score. Fully transparent RGB is zeroed and the review PNG is palette-quantized, reducing 146 new assets to 4.6 MB. `prepare_validation_web.py` schema v2 adds compact validity and Q100-depth assets. The web UI provides sparse/full D19 modes, validity/depth toggles, explicit comparison semantics, and accessible names for the new controls.
+
+**Result:** A representative saturated Ljubljana tile (`460_100`) has 11.8% visible pixels in the sparse review asset rather than presenting the full surface. Fourteen unit tests pass; JavaScript syntax and diff checks pass. Browser verification confirmed Q100 comparison activates D19 review + Q100 + validity, produced no console errors, and has no horizontal overflow at a 390 × 844 viewport.
+
+**Caveats:** The sparse mask is communication triage, not a better flood model. Its 0.925 cutoff was chosen for legible review and has no calibrated precision/recall. Visual overlap is not a combined model. Phase 2 must lock spatial validation and operating-point rules before any threshold becomes a reported screening class.
+
+**Reversible:** Remove the `d19_review`/`d19_diagnostic` manifest entries and generated review PNGs, restore the legacy susceptibility layer wiring, and remove ancillary official controls/assets. The frozen `susceptibility.png` files remain unchanged throughout.
+
+---
+
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

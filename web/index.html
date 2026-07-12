@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CLSS Slovenia — Flood Susceptibility &amp; Terrain Screening</title>
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
@@ -31,7 +31,7 @@
       <p class="panel-intro">Each switch adds a different kind of evidence. They are screens for exploration, not a flood forecast or a single combined score.</p>
       <ol class="reading-steps">
         <li><span>1</span><p><strong>Start with the official reference.</strong> Choose Q100 for a familiar planning comparison.</p></li>
-        <li><span>2</span><p><strong>Add terrain susceptibility.</strong> Look for agreement or disagreement, then inspect the local setting.</p></li>
+        <li><span>2</span><p><strong>Add the experimental terrain baseline.</strong> Use its sparse review mask to inspect agreement or disagreement.</p></li>
         <li><span>3</span><p><strong>Add the context layer for the question.</strong> Land cover for local setting, coastal exposure for Koper, or hydroclimate for the Savinja demonstration.</p></li>
       </ol>
       <p class="panel-tip"><strong>Opacity tip:</strong> 30&ndash;50% is best for comparing an overlay with roads and terrain beneath it.</p>
@@ -43,30 +43,37 @@
       <!-- Flood susceptibility -->
       <div class="layer-row">
         <label class="layer-toggle">
-          <input type="checkbox" id="toggle-susc">
+          <input type="checkbox" id="toggle-susc" aria-label="Experimental D19 Terrain Baseline">
           <span class="toggle-track"></span>
         </label>
-        <span class="layer-name">Relative Terrain Susceptibility</span>
+        <span class="layer-name">Experimental D19 Terrain Baseline</span>
       </div>
       <div class="legend-bar" id="legend-susc">
-        <div class="legend-gradient" style="background: linear-gradient(to right, rgba(251,191,36,0.2), #f59e0b, #c2410c, #86198f);"></div>
-        <div class="legend-labels"><span>Lower relative</span><span>Higher relative</span></div>
+        <div class="legend-gradient" style="background: linear-gradient(to right, rgba(237,233,254,0.15), #a78bfa, #581c87);"></div>
+        <div class="legend-labels"><span>Lower experimental score</span><span>Higher</span></div>
+      </div>
+      <div class="select-row">
+        <span class="slider-label">Display</span>
+        <select id="d19-display-mode" class="scenario-select">
+          <option value="d19_review" selected>Sparse review mask</option>
+          <option value="d19_diagnostic">Frozen red diagnostic surface</option>
+        </select>
       </div>
       <div class="slider-row">
         <span class="slider-label">Opacity</span>
         <input type="range" id="opacity-susc" min="0" max="100" value="55" class="slider">
         <span class="slider-val" id="val-susc">55%</span>
       </div>
-      <p class="layer-description"><strong>Shows:</strong> a LiDAR-derived relative pattern of terrain near drainage and flat, wet-prone ground. Brighter colors mean higher relative screening score within that region.</p>
-      <p class="layer-use"><strong>Use with:</strong> Official reference to compare patterns; Land Classification to see whether a highlighted patch is ground, vegetation, or building.</p>
-      <p class="layer-hint layer-warning">D19 baseline: region-relative and unvalidated. Colors are not flood probability, predicted damage, or modeled water depth.</p>
+      <p class="layer-description"><strong>Shows:</strong> the frozen D19 experimental score. The default mask keeps only the upper 7.5% of its fixed regional display scale; that display cutoff is not a hazard threshold or an area percentile.</p>
+      <p class="layer-use"><strong>Use with:</strong> Q100 Comparison to inspect overlap and overprediction inside the official study domain. The frozen red diagnostic mode exposes the original saturated artifact only for technical audit.</p>
+      <p class="layer-hint layer-warning">D19 failed the current selection gate and is retained as a comparison baseline. Purple does not mean flood probability, danger, damage, or depth.</p>
 
       <div class="divider"></div>
 
       <!-- Official DRSV hazard reference -->
       <div class="layer-row">
         <label class="layer-toggle">
-          <input type="checkbox" id="toggle-official">
+          <input type="checkbox" id="toggle-official" aria-label="Official DRSV Hazard Reference">
           <span class="toggle-track"></span>
         </label>
         <span class="layer-name">Official DRSV Hazard Reference</span>
@@ -89,8 +96,41 @@
         <span class="slider-val" id="val-official">32%</span>
       </div>
       <p class="layer-description"><strong>Shows:</strong> published static IKPN / DRSV hazard extent where it overlaps the study area. Q10, Q100, and Q500 are discharge-return-period scenarios, not live conditions.</p>
-      <p class="layer-use"><strong>Use with:</strong> Terrain Susceptibility for a transparent model-versus-reference check. Start at Q100; switch scenarios to see how the official extent changes.</p>
+      <p class="layer-use"><strong>Use with:</strong> the experimental D19 baseline for a transparent model-versus-reference check. Start at Q100; switch scenarios to see how the official extent changes.</p>
       <p class="layer-hint">This is not the observed August 2023 event extent.</p>
+      <div class="layer-row layer-row--compact">
+        <label class="layer-toggle">
+          <input type="checkbox" id="toggle-official-validity" aria-label="Show hydraulic-study validity">
+          <span class="toggle-track"></span>
+        </label>
+        <span class="layer-name layer-name--secondary">Show hydraulic-study validity</span>
+      </div>
+      <p class="layer-hint">A missing official polygon is evidence of “outside extent” only inside this dashed validity boundary.</p>
+      <div class="layer-row layer-row--compact">
+        <label class="layer-toggle">
+          <input type="checkbox" id="toggle-official-depth" aria-label="Show Q100 depth classes">
+          <span class="toggle-track"></span>
+        </label>
+        <span class="layer-name layer-name--secondary">Show Q100 depth classes</span>
+      </div>
+      <div class="depth-legend">
+        <span><i style="background:#bae6fd"></i>&lt;0.5 m</span>
+        <span><i style="background:#38bdf8"></i>0.5&ndash;1.5 m</span>
+        <span><i style="background:#075985"></i>&ge;1.5 m</span>
+      </div>
+      <div class="layer-row layer-row--compact comparison-row">
+        <label class="layer-toggle">
+          <input type="checkbox" id="toggle-q100-comparison" aria-label="Q100 comparison mode">
+          <span class="toggle-track"></span>
+        </label>
+        <span class="layer-name layer-name--secondary">Q100 comparison mode</span>
+      </div>
+      <div class="comparison-legend">
+        <span><i class="swatch-official"></i>Official</span>
+        <span><i class="swatch-d19"></i>D19-only signal</span>
+        <span><i class="swatch-overlap"></i>Visual overlap</span>
+      </div>
+      <p class="layer-hint">Turns on Q100, validity, and the sparse D19 mask together. The blend is a visual comparison, not a new combined model.</p>
 
       <div class="divider"></div>
 
@@ -137,7 +177,7 @@
         <span class="slider-val" id="val-cls">80%</span>
       </div>
       <p class="layer-description"><strong>Shows:</strong> LiDAR return classes: ground, low/mid/high vegetation, and buildings. It describes local surface context, not exposure or asset value.</p>
-      <p class="layer-use"><strong>Use with:</strong> Terrain Susceptibility or review points to check what a highlighted location contains before drawing conclusions.</p>
+      <p class="layer-use"><strong>Use with:</strong> the experimental D19 baseline or review points to check what a highlighted location contains before drawing conclusions.</p>
 
       <div class="divider"></div>
 
@@ -212,7 +252,7 @@
           <input type="checkbox" id="toggle-risk">
           <span class="toggle-track"></span>
         </label>
-        <span class="layer-name">High-Susceptibility Review Points</span>
+        <span class="layer-name">Experimental D19 Review Points</span>
       </div>
       <p class="layer-description"><strong>Shows:</strong> spaced locations with high terrain-screening scores, selected for review rather than prediction.</p>
       <p class="layer-use"><strong>Use with:</strong> enable a context layer first, then click a point to inspect its terrain details. The list is capped per region, so it is not a national ranking.</p>
@@ -243,6 +283,6 @@
   <div id="popup-content" style="display:none;"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=8"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>

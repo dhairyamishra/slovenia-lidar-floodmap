@@ -77,6 +77,7 @@ CALIB_PCTL = (2, 98)   # percentiles used to derive each factor's [lo, hi]
 # (sane drainage density). Per-tile accumulation is edge-truncated, so this is
 # lower than a regional-DEM threshold would be.
 STREAM_AREA_M2 = 10_000.0
+D19_REVIEW_THRESHOLD = 0.925  # upper 7.5% of fixed regional display scale
 DEFAULT_CONSTANTS = {
     "twi":    [4.0, 15.0],
     "hand":   [0.0, 60.0],
@@ -211,6 +212,43 @@ def colormap_to_rgba(arr, cmap_name, vmin=0, vmax=1, nodata_mask=None):
     # Row-0 in numpy = south; row-0 in image = north — flip vertically.
     return Image.fromarray(np.flipud(rgba), mode='RGBA').resize(
         (OUT_SIZE, OUT_SIZE), Image.LANCZOS)
+
+
+def d19_display_to_rgba(display_score, review=False, nodata_mask=None):
+    """Render frozen D19 values with non-hazard purple semantics.
+
+    The review view is deliberately sparse and display-only: the 0.925 cutoff is
+    the upper 7.5% of the fixed regional display scale, not a validated hazard
+    or probability threshold. The original RdYlBu raster remains unchanged.
+    """
+    score = np.clip(display_score, 0.0, 1.0)
+    stops = np.array([0.0, 0.55, 1.0], dtype=np.float32)
+    colors = np.array([
+        [237, 233, 254],  # lavender
+        [167, 139, 250],  # violet
+        [88, 28, 135],    # deep purple
+    ], dtype=np.float32)
+    rgb = np.column_stack([
+        np.interp(score.ravel(), stops, colors[:, channel])
+        for channel in range(3)
+    ]).reshape((*score.shape, 3)).astype(np.uint8)
+    if review:
+        strength = np.clip(
+            (score - D19_REVIEW_THRESHOLD) / (1.0 - D19_REVIEW_THRESHOLD), 0, 1
+        )
+        alpha = np.where(score >= D19_REVIEW_THRESHOLD, 135 + 100 * strength, 0)
+    else:
+        alpha = 45 + 175 * score
+    rgba = np.dstack([rgb, alpha.astype(np.uint8)])
+    if review:
+        rgba[rgba[..., 3] == 0, :3] = 0  # compress fully transparent background
+    if nodata_mask is not None:
+        rgba[nodata_mask, 3] = 0
+    image = Image.fromarray(np.flipud(rgba), mode='RGBA').resize(
+        (OUT_SIZE, OUT_SIZE), Image.LANCZOS)
+    if review:
+        image = image.quantize(colors=64, method=Image.Quantize.FASTOCTREE)
+    return image
 
 
 def coastal_mask_to_rgba(mask):
@@ -436,6 +474,9 @@ def export_tile(f: dict, const: dict, display: dict, region: str = "default") ->
 
     colormap_to_rgba(susc_disp, "RdYlBu_r",
                      nodata_mask=~ground_cov).save(out_dir / "susceptibility.png")
+    d19_display_to_rgba(susc_disp, review=True, nodata_mask=~ground_cov).save(
+        out_dir / "susceptibility_d19_review.png"
+    )
     # NDVI display keeps its per-tile p5–p95 veg-cell stretch (D08): this layer
     # is a forest-health visualisation, not a cross-tile risk score.
     mn_ndvi     = f["mn_ndvi"]
@@ -505,6 +546,9 @@ def export_tile(f: dict, const: dict, display: dict, region: str = "default") ->
     tile_prefix = f"tiles/{tile_name}"
     files = {
         "susceptibility": f"{tile_prefix}/susceptibility.png",
+        "d19_review": f"{tile_prefix}/susceptibility_d19_review.png",
+        # Full diagnostic mode intentionally reuses the frozen original raster.
+        "d19_diagnostic": f"{tile_prefix}/susceptibility.png",
         "ndvi":           f"{tile_prefix}/ndvi.png",
         "classification": f"{tile_prefix}/classification.png",
     }

@@ -1,5 +1,7 @@
 # Aleks Review: Flood Algorithm, Validation, Differentiation, and Map Redesign
 
+> Focused implementation tracker for the red-map remediation and D19 replacement: [`FLOOD_MODEL_REPLACEMENT_PLAN.md`](FLOOD_MODEL_REPLACEMENT_PLAN.md). Review and approve that plan before beginning the next implementation slice.
+
 **Created:** 2026-07-11
 **Status:** Active execution plan
 **Owner:** Project team

@@ -1,11 +1,28 @@
 # Handoff - Slovenia CLSS LiDAR Flood, Coastal & Hydroclimate Demo
 
-**Status:** Phase 0 of the Aleks review is implemented (D22). The 146-tile app still carries D19 riverine susceptibility, D20 Koper coastal screens, and the D21 synthetic hydroclimate fixture, but D19 is now frozen as `D19-baseline-v1`, hidden by default, explicitly non-probabilistic, and covered by a reproducible full-grid diagnostic gate. Official/observed validation and mosaic hydrology are the active next phase.
+**Status:** Phase 1 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` is complete (D24). D19 remains frozen and off by default, but its normal display is now a sparse purple review mask; the original saturated red raster is retained only for technical audit. Official DRSV validity, Q100 depth, and Q100 comparison controls are implemented. Phase 2 validation locking is next.
 
 **Goal:** A polished, honest screening tool for Aleks / sledilnik.org that shows where detailed flood/coastal investigation should start. It is not a hydraulic, coastal, or probabilistic forecast model.
 
 > Authoritative context: `AGENTS.md`, `CLAUDE.md`, `DECISIONS.md`, and `PLAN.md`. This handoff is the current snapshot plus the latest implementation notes.
 > The active review/implementation tracker is `ALEKS_REVIEW_AND_ALGORITHM_PLAN.md`.
+> The focused red-map/model-replacement tracker is `FLOOD_MODEL_REPLACEMENT_PLAN.md`.
+
+## D24 Phase-1 communication repair (2026-07-12)
+
+- Renamed the public control to **Experimental D19 Terrain Baseline** and kept it/review points off by default.
+- Preserved every original `susceptibility.png`; diagnostic mode deliberately reuses that frozen red artifact.
+- Added a purple sparse review asset at display score ≥0.925. This is an unvalidated display rule, not a probability/hazard threshold or area percentile.
+- Added `prepare_d19_web.py` for one-time legacy asset migration and native future export in `pipeline.py`.
+- Generated 146 palette-quantized review PNGs totaling 4.6 MB. Representative Ljubljana tile `460_100` is 11.8% visible in review mode.
+- Extended `prepare_validation_web.py` to schema v2 with official validity and all three Q100 depth classes.
+- Added validity, Q100 depth, and Q100 comparison controls. Comparison mode activates Q100 + validity + sparse D19; it is explicitly a visual overlay, not a combined score.
+- Added `test_phase1_web.py`; all 14 repository tests pass. JavaScript syntax and diff checks pass.
+- Browser verification: comparison state correct, no console errors, and no horizontal overflow at 390 × 844.
+
+**Why:** D19 underperforms HAND-only and the full red map is misleading. Phase 1 fixes claim and display semantics without pretending to improve predictive skill or erasing the failed baseline.
+
+**Next entry point:** Phase 2—create versioned evaluation rasters, fixed spatial development/test blocks, boundary uncertainty variants, and negative controls before fitting or choosing thresholds.
 
 ## D22 Phase-0 implementation (2026-07-11)
 

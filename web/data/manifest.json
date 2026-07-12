@@ -109,7 +109,9 @@
           "slr_0_5m": "tiles/398_44/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/398_44/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/398_44/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/398_44/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/398_44/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -158,7 +160,9 @@
           "slr_0_5m": "tiles/398_45/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/398_45/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/398_45/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/398_45/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/398_45/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -207,7 +211,9 @@
           "slr_0_5m": "tiles/398_46/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/398_46/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/398_46/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/398_46/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/398_46/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -256,7 +262,9 @@
           "slr_0_5m": "tiles/399_44/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/399_44/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/399_44/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/399_44/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/399_44/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -305,7 +313,9 @@
           "slr_0_5m": "tiles/399_45/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/399_45/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/399_45/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/399_45/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/399_45/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -354,7 +364,9 @@
           "slr_0_5m": "tiles/399_46/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/399_46/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/399_46/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/399_46/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/399_46/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -403,7 +415,9 @@
           "slr_0_5m": "tiles/400_44/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/400_44/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/400_44/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/400_44/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/400_44/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -452,7 +466,9 @@
           "slr_0_5m": "tiles/400_45/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/400_45/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/400_45/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/400_45/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/400_45/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -501,7 +517,9 @@
           "slr_0_5m": "tiles/400_46/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/400_46/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/400_46/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/400_46/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/400_46/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -550,7 +568,9 @@
           "slr_0_5m": "tiles/400_47/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/400_47/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/400_47/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/400_47/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/400_47/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -599,7 +619,9 @@
           "slr_0_5m": "tiles/400_48/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/400_48/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/400_48/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/400_48/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/400_48/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -648,7 +670,9 @@
           "slr_0_5m": "tiles/401_44/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/401_44/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/401_44/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/401_44/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/401_44/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -697,7 +721,9 @@
           "slr_0_5m": "tiles/401_45/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/401_45/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/401_45/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/401_45/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/401_45/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -746,7 +772,9 @@
           "slr_0_5m": "tiles/401_46/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/401_46/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/401_46/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/401_46/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/401_46/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -795,7 +823,9 @@
           "slr_0_5m": "tiles/401_47/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/401_47/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/401_47/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/401_47/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/401_47/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -844,7 +874,9 @@
           "slr_0_5m": "tiles/401_48/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/401_48/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/401_48/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/401_48/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/401_48/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -893,7 +925,9 @@
           "slr_0_5m": "tiles/402_44/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/402_44/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/402_44/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/402_44/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/402_44/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -942,7 +976,9 @@
           "slr_0_5m": "tiles/402_45/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/402_45/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/402_45/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/402_45/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/402_45/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -991,7 +1027,9 @@
           "slr_0_5m": "tiles/402_46/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/402_46/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/402_46/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/402_46/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/402_46/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1040,7 +1078,9 @@
           "slr_0_5m": "tiles/402_47/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/402_47/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/402_47/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/402_47/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/402_47/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1089,7 +1129,9 @@
           "slr_0_5m": "tiles/402_48/coastal_slr_0_5m.png",
           "slr_1_0m": "tiles/402_48/coastal_slr_1_0m.png",
           "slr_2_0m": "tiles/402_48/coastal_slr_2_0m.png"
-        }
+        },
+        "d19_review": "tiles/402_48/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/402_48/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1133,7 +1175,9 @@
       "files": {
         "susceptibility": "tiles/455_100/susceptibility.png",
         "ndvi": "tiles/455_100/ndvi.png",
-        "classification": "tiles/455_100/classification.png"
+        "classification": "tiles/455_100/classification.png",
+        "d19_review": "tiles/455_100/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/455_100/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1177,7 +1221,9 @@
       "files": {
         "susceptibility": "tiles/455_101/susceptibility.png",
         "ndvi": "tiles/455_101/ndvi.png",
-        "classification": "tiles/455_101/classification.png"
+        "classification": "tiles/455_101/classification.png",
+        "d19_review": "tiles/455_101/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/455_101/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1221,7 +1267,9 @@
       "files": {
         "susceptibility": "tiles/455_102/susceptibility.png",
         "ndvi": "tiles/455_102/ndvi.png",
-        "classification": "tiles/455_102/classification.png"
+        "classification": "tiles/455_102/classification.png",
+        "d19_review": "tiles/455_102/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/455_102/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1265,7 +1313,9 @@
       "files": {
         "susceptibility": "tiles/455_103/susceptibility.png",
         "ndvi": "tiles/455_103/ndvi.png",
-        "classification": "tiles/455_103/classification.png"
+        "classification": "tiles/455_103/classification.png",
+        "d19_review": "tiles/455_103/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/455_103/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1309,7 +1359,9 @@
       "files": {
         "susceptibility": "tiles/455_104/susceptibility.png",
         "ndvi": "tiles/455_104/ndvi.png",
-        "classification": "tiles/455_104/classification.png"
+        "classification": "tiles/455_104/classification.png",
+        "d19_review": "tiles/455_104/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/455_104/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1353,7 +1405,9 @@
       "files": {
         "susceptibility": "tiles/455_105/susceptibility.png",
         "ndvi": "tiles/455_105/ndvi.png",
-        "classification": "tiles/455_105/classification.png"
+        "classification": "tiles/455_105/classification.png",
+        "d19_review": "tiles/455_105/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/455_105/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1397,7 +1451,9 @@
       "files": {
         "susceptibility": "tiles/455_96/susceptibility.png",
         "ndvi": "tiles/455_96/ndvi.png",
-        "classification": "tiles/455_96/classification.png"
+        "classification": "tiles/455_96/classification.png",
+        "d19_review": "tiles/455_96/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/455_96/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1441,7 +1497,9 @@
       "files": {
         "susceptibility": "tiles/455_97/susceptibility.png",
         "ndvi": "tiles/455_97/ndvi.png",
-        "classification": "tiles/455_97/classification.png"
+        "classification": "tiles/455_97/classification.png",
+        "d19_review": "tiles/455_97/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/455_97/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1485,7 +1543,9 @@
       "files": {
         "susceptibility": "tiles/455_98/susceptibility.png",
         "ndvi": "tiles/455_98/ndvi.png",
-        "classification": "tiles/455_98/classification.png"
+        "classification": "tiles/455_98/classification.png",
+        "d19_review": "tiles/455_98/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/455_98/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1529,7 +1589,9 @@
       "files": {
         "susceptibility": "tiles/455_99/susceptibility.png",
         "ndvi": "tiles/455_99/ndvi.png",
-        "classification": "tiles/455_99/classification.png"
+        "classification": "tiles/455_99/classification.png",
+        "d19_review": "tiles/455_99/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/455_99/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1573,7 +1635,9 @@
       "files": {
         "susceptibility": "tiles/456_100/susceptibility.png",
         "ndvi": "tiles/456_100/ndvi.png",
-        "classification": "tiles/456_100/classification.png"
+        "classification": "tiles/456_100/classification.png",
+        "d19_review": "tiles/456_100/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/456_100/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1617,7 +1681,9 @@
       "files": {
         "susceptibility": "tiles/456_101/susceptibility.png",
         "ndvi": "tiles/456_101/ndvi.png",
-        "classification": "tiles/456_101/classification.png"
+        "classification": "tiles/456_101/classification.png",
+        "d19_review": "tiles/456_101/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/456_101/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1661,7 +1727,9 @@
       "files": {
         "susceptibility": "tiles/456_102/susceptibility.png",
         "ndvi": "tiles/456_102/ndvi.png",
-        "classification": "tiles/456_102/classification.png"
+        "classification": "tiles/456_102/classification.png",
+        "d19_review": "tiles/456_102/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/456_102/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1705,7 +1773,9 @@
       "files": {
         "susceptibility": "tiles/456_103/susceptibility.png",
         "ndvi": "tiles/456_103/ndvi.png",
-        "classification": "tiles/456_103/classification.png"
+        "classification": "tiles/456_103/classification.png",
+        "d19_review": "tiles/456_103/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/456_103/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1749,7 +1819,9 @@
       "files": {
         "susceptibility": "tiles/456_104/susceptibility.png",
         "ndvi": "tiles/456_104/ndvi.png",
-        "classification": "tiles/456_104/classification.png"
+        "classification": "tiles/456_104/classification.png",
+        "d19_review": "tiles/456_104/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/456_104/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1793,7 +1865,9 @@
       "files": {
         "susceptibility": "tiles/456_105/susceptibility.png",
         "ndvi": "tiles/456_105/ndvi.png",
-        "classification": "tiles/456_105/classification.png"
+        "classification": "tiles/456_105/classification.png",
+        "d19_review": "tiles/456_105/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/456_105/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1837,7 +1911,9 @@
       "files": {
         "susceptibility": "tiles/456_96/susceptibility.png",
         "ndvi": "tiles/456_96/ndvi.png",
-        "classification": "tiles/456_96/classification.png"
+        "classification": "tiles/456_96/classification.png",
+        "d19_review": "tiles/456_96/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/456_96/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1881,7 +1957,9 @@
       "files": {
         "susceptibility": "tiles/456_97/susceptibility.png",
         "ndvi": "tiles/456_97/ndvi.png",
-        "classification": "tiles/456_97/classification.png"
+        "classification": "tiles/456_97/classification.png",
+        "d19_review": "tiles/456_97/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/456_97/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1925,7 +2003,9 @@
       "files": {
         "susceptibility": "tiles/456_98/susceptibility.png",
         "ndvi": "tiles/456_98/ndvi.png",
-        "classification": "tiles/456_98/classification.png"
+        "classification": "tiles/456_98/classification.png",
+        "d19_review": "tiles/456_98/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/456_98/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -1969,7 +2049,9 @@
       "files": {
         "susceptibility": "tiles/456_99/susceptibility.png",
         "ndvi": "tiles/456_99/ndvi.png",
-        "classification": "tiles/456_99/classification.png"
+        "classification": "tiles/456_99/classification.png",
+        "d19_review": "tiles/456_99/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/456_99/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2013,7 +2095,9 @@
       "files": {
         "susceptibility": "tiles/457_100/susceptibility.png",
         "ndvi": "tiles/457_100/ndvi.png",
-        "classification": "tiles/457_100/classification.png"
+        "classification": "tiles/457_100/classification.png",
+        "d19_review": "tiles/457_100/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/457_100/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2057,7 +2141,9 @@
       "files": {
         "susceptibility": "tiles/457_101/susceptibility.png",
         "ndvi": "tiles/457_101/ndvi.png",
-        "classification": "tiles/457_101/classification.png"
+        "classification": "tiles/457_101/classification.png",
+        "d19_review": "tiles/457_101/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/457_101/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2101,7 +2187,9 @@
       "files": {
         "susceptibility": "tiles/457_102/susceptibility.png",
         "ndvi": "tiles/457_102/ndvi.png",
-        "classification": "tiles/457_102/classification.png"
+        "classification": "tiles/457_102/classification.png",
+        "d19_review": "tiles/457_102/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/457_102/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2145,7 +2233,9 @@
       "files": {
         "susceptibility": "tiles/457_103/susceptibility.png",
         "ndvi": "tiles/457_103/ndvi.png",
-        "classification": "tiles/457_103/classification.png"
+        "classification": "tiles/457_103/classification.png",
+        "d19_review": "tiles/457_103/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/457_103/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2189,7 +2279,9 @@
       "files": {
         "susceptibility": "tiles/457_104/susceptibility.png",
         "ndvi": "tiles/457_104/ndvi.png",
-        "classification": "tiles/457_104/classification.png"
+        "classification": "tiles/457_104/classification.png",
+        "d19_review": "tiles/457_104/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/457_104/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2233,7 +2325,9 @@
       "files": {
         "susceptibility": "tiles/457_105/susceptibility.png",
         "ndvi": "tiles/457_105/ndvi.png",
-        "classification": "tiles/457_105/classification.png"
+        "classification": "tiles/457_105/classification.png",
+        "d19_review": "tiles/457_105/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/457_105/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2277,7 +2371,9 @@
       "files": {
         "susceptibility": "tiles/457_96/susceptibility.png",
         "ndvi": "tiles/457_96/ndvi.png",
-        "classification": "tiles/457_96/classification.png"
+        "classification": "tiles/457_96/classification.png",
+        "d19_review": "tiles/457_96/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/457_96/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2321,7 +2417,9 @@
       "files": {
         "susceptibility": "tiles/457_97/susceptibility.png",
         "ndvi": "tiles/457_97/ndvi.png",
-        "classification": "tiles/457_97/classification.png"
+        "classification": "tiles/457_97/classification.png",
+        "d19_review": "tiles/457_97/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/457_97/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2365,7 +2463,9 @@
       "files": {
         "susceptibility": "tiles/457_98/susceptibility.png",
         "ndvi": "tiles/457_98/ndvi.png",
-        "classification": "tiles/457_98/classification.png"
+        "classification": "tiles/457_98/classification.png",
+        "d19_review": "tiles/457_98/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/457_98/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2409,7 +2509,9 @@
       "files": {
         "susceptibility": "tiles/457_99/susceptibility.png",
         "ndvi": "tiles/457_99/ndvi.png",
-        "classification": "tiles/457_99/classification.png"
+        "classification": "tiles/457_99/classification.png",
+        "d19_review": "tiles/457_99/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/457_99/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2453,7 +2555,9 @@
       "files": {
         "susceptibility": "tiles/458_100/susceptibility.png",
         "ndvi": "tiles/458_100/ndvi.png",
-        "classification": "tiles/458_100/classification.png"
+        "classification": "tiles/458_100/classification.png",
+        "d19_review": "tiles/458_100/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/458_100/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2497,7 +2601,9 @@
       "files": {
         "susceptibility": "tiles/458_101/susceptibility.png",
         "ndvi": "tiles/458_101/ndvi.png",
-        "classification": "tiles/458_101/classification.png"
+        "classification": "tiles/458_101/classification.png",
+        "d19_review": "tiles/458_101/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/458_101/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2541,7 +2647,9 @@
       "files": {
         "susceptibility": "tiles/458_102/susceptibility.png",
         "ndvi": "tiles/458_102/ndvi.png",
-        "classification": "tiles/458_102/classification.png"
+        "classification": "tiles/458_102/classification.png",
+        "d19_review": "tiles/458_102/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/458_102/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2585,7 +2693,9 @@
       "files": {
         "susceptibility": "tiles/458_103/susceptibility.png",
         "ndvi": "tiles/458_103/ndvi.png",
-        "classification": "tiles/458_103/classification.png"
+        "classification": "tiles/458_103/classification.png",
+        "d19_review": "tiles/458_103/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/458_103/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2629,7 +2739,9 @@
       "files": {
         "susceptibility": "tiles/458_104/susceptibility.png",
         "ndvi": "tiles/458_104/ndvi.png",
-        "classification": "tiles/458_104/classification.png"
+        "classification": "tiles/458_104/classification.png",
+        "d19_review": "tiles/458_104/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/458_104/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2673,7 +2785,9 @@
       "files": {
         "susceptibility": "tiles/458_105/susceptibility.png",
         "ndvi": "tiles/458_105/ndvi.png",
-        "classification": "tiles/458_105/classification.png"
+        "classification": "tiles/458_105/classification.png",
+        "d19_review": "tiles/458_105/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/458_105/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2717,7 +2831,9 @@
       "files": {
         "susceptibility": "tiles/458_96/susceptibility.png",
         "ndvi": "tiles/458_96/ndvi.png",
-        "classification": "tiles/458_96/classification.png"
+        "classification": "tiles/458_96/classification.png",
+        "d19_review": "tiles/458_96/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/458_96/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2761,7 +2877,9 @@
       "files": {
         "susceptibility": "tiles/458_97/susceptibility.png",
         "ndvi": "tiles/458_97/ndvi.png",
-        "classification": "tiles/458_97/classification.png"
+        "classification": "tiles/458_97/classification.png",
+        "d19_review": "tiles/458_97/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/458_97/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2805,7 +2923,9 @@
       "files": {
         "susceptibility": "tiles/458_98/susceptibility.png",
         "ndvi": "tiles/458_98/ndvi.png",
-        "classification": "tiles/458_98/classification.png"
+        "classification": "tiles/458_98/classification.png",
+        "d19_review": "tiles/458_98/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/458_98/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2849,7 +2969,9 @@
       "files": {
         "susceptibility": "tiles/458_99/susceptibility.png",
         "ndvi": "tiles/458_99/ndvi.png",
-        "classification": "tiles/458_99/classification.png"
+        "classification": "tiles/458_99/classification.png",
+        "d19_review": "tiles/458_99/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/458_99/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2893,7 +3015,9 @@
       "files": {
         "susceptibility": "tiles/459_100/susceptibility.png",
         "ndvi": "tiles/459_100/ndvi.png",
-        "classification": "tiles/459_100/classification.png"
+        "classification": "tiles/459_100/classification.png",
+        "d19_review": "tiles/459_100/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/459_100/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2937,7 +3061,9 @@
       "files": {
         "susceptibility": "tiles/459_101/susceptibility.png",
         "ndvi": "tiles/459_101/ndvi.png",
-        "classification": "tiles/459_101/classification.png"
+        "classification": "tiles/459_101/classification.png",
+        "d19_review": "tiles/459_101/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/459_101/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -2981,7 +3107,9 @@
       "files": {
         "susceptibility": "tiles/459_102/susceptibility.png",
         "ndvi": "tiles/459_102/ndvi.png",
-        "classification": "tiles/459_102/classification.png"
+        "classification": "tiles/459_102/classification.png",
+        "d19_review": "tiles/459_102/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/459_102/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3025,7 +3153,9 @@
       "files": {
         "susceptibility": "tiles/459_103/susceptibility.png",
         "ndvi": "tiles/459_103/ndvi.png",
-        "classification": "tiles/459_103/classification.png"
+        "classification": "tiles/459_103/classification.png",
+        "d19_review": "tiles/459_103/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/459_103/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3069,7 +3199,9 @@
       "files": {
         "susceptibility": "tiles/459_104/susceptibility.png",
         "ndvi": "tiles/459_104/ndvi.png",
-        "classification": "tiles/459_104/classification.png"
+        "classification": "tiles/459_104/classification.png",
+        "d19_review": "tiles/459_104/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/459_104/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3113,7 +3245,9 @@
       "files": {
         "susceptibility": "tiles/459_105/susceptibility.png",
         "ndvi": "tiles/459_105/ndvi.png",
-        "classification": "tiles/459_105/classification.png"
+        "classification": "tiles/459_105/classification.png",
+        "d19_review": "tiles/459_105/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/459_105/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3157,7 +3291,9 @@
       "files": {
         "susceptibility": "tiles/459_96/susceptibility.png",
         "ndvi": "tiles/459_96/ndvi.png",
-        "classification": "tiles/459_96/classification.png"
+        "classification": "tiles/459_96/classification.png",
+        "d19_review": "tiles/459_96/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/459_96/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3201,7 +3337,9 @@
       "files": {
         "susceptibility": "tiles/459_97/susceptibility.png",
         "ndvi": "tiles/459_97/ndvi.png",
-        "classification": "tiles/459_97/classification.png"
+        "classification": "tiles/459_97/classification.png",
+        "d19_review": "tiles/459_97/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/459_97/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3245,7 +3383,9 @@
       "files": {
         "susceptibility": "tiles/459_98/susceptibility.png",
         "ndvi": "tiles/459_98/ndvi.png",
-        "classification": "tiles/459_98/classification.png"
+        "classification": "tiles/459_98/classification.png",
+        "d19_review": "tiles/459_98/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/459_98/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3289,7 +3429,9 @@
       "files": {
         "susceptibility": "tiles/459_99/susceptibility.png",
         "ndvi": "tiles/459_99/ndvi.png",
-        "classification": "tiles/459_99/classification.png"
+        "classification": "tiles/459_99/classification.png",
+        "d19_review": "tiles/459_99/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/459_99/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3333,7 +3475,9 @@
       "files": {
         "susceptibility": "tiles/460_100/susceptibility.png",
         "ndvi": "tiles/460_100/ndvi.png",
-        "classification": "tiles/460_100/classification.png"
+        "classification": "tiles/460_100/classification.png",
+        "d19_review": "tiles/460_100/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/460_100/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3377,7 +3521,9 @@
       "files": {
         "susceptibility": "tiles/460_101/susceptibility.png",
         "ndvi": "tiles/460_101/ndvi.png",
-        "classification": "tiles/460_101/classification.png"
+        "classification": "tiles/460_101/classification.png",
+        "d19_review": "tiles/460_101/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/460_101/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3421,7 +3567,9 @@
       "files": {
         "susceptibility": "tiles/460_102/susceptibility.png",
         "ndvi": "tiles/460_102/ndvi.png",
-        "classification": "tiles/460_102/classification.png"
+        "classification": "tiles/460_102/classification.png",
+        "d19_review": "tiles/460_102/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/460_102/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3465,7 +3613,9 @@
       "files": {
         "susceptibility": "tiles/460_103/susceptibility.png",
         "ndvi": "tiles/460_103/ndvi.png",
-        "classification": "tiles/460_103/classification.png"
+        "classification": "tiles/460_103/classification.png",
+        "d19_review": "tiles/460_103/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/460_103/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3509,7 +3659,9 @@
       "files": {
         "susceptibility": "tiles/460_104/susceptibility.png",
         "ndvi": "tiles/460_104/ndvi.png",
-        "classification": "tiles/460_104/classification.png"
+        "classification": "tiles/460_104/classification.png",
+        "d19_review": "tiles/460_104/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/460_104/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3553,7 +3705,9 @@
       "files": {
         "susceptibility": "tiles/460_105/susceptibility.png",
         "ndvi": "tiles/460_105/ndvi.png",
-        "classification": "tiles/460_105/classification.png"
+        "classification": "tiles/460_105/classification.png",
+        "d19_review": "tiles/460_105/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/460_105/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3597,7 +3751,9 @@
       "files": {
         "susceptibility": "tiles/460_96/susceptibility.png",
         "ndvi": "tiles/460_96/ndvi.png",
-        "classification": "tiles/460_96/classification.png"
+        "classification": "tiles/460_96/classification.png",
+        "d19_review": "tiles/460_96/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/460_96/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3641,7 +3797,9 @@
       "files": {
         "susceptibility": "tiles/460_97/susceptibility.png",
         "ndvi": "tiles/460_97/ndvi.png",
-        "classification": "tiles/460_97/classification.png"
+        "classification": "tiles/460_97/classification.png",
+        "d19_review": "tiles/460_97/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/460_97/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3685,7 +3843,9 @@
       "files": {
         "susceptibility": "tiles/460_98/susceptibility.png",
         "ndvi": "tiles/460_98/ndvi.png",
-        "classification": "tiles/460_98/classification.png"
+        "classification": "tiles/460_98/classification.png",
+        "d19_review": "tiles/460_98/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/460_98/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3729,7 +3889,9 @@
       "files": {
         "susceptibility": "tiles/460_99/susceptibility.png",
         "ndvi": "tiles/460_99/ndvi.png",
-        "classification": "tiles/460_99/classification.png"
+        "classification": "tiles/460_99/classification.png",
+        "d19_review": "tiles/460_99/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/460_99/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3773,7 +3935,9 @@
       "files": {
         "susceptibility": "tiles/461_100/susceptibility.png",
         "ndvi": "tiles/461_100/ndvi.png",
-        "classification": "tiles/461_100/classification.png"
+        "classification": "tiles/461_100/classification.png",
+        "d19_review": "tiles/461_100/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/461_100/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3817,7 +3981,9 @@
       "files": {
         "susceptibility": "tiles/461_101/susceptibility.png",
         "ndvi": "tiles/461_101/ndvi.png",
-        "classification": "tiles/461_101/classification.png"
+        "classification": "tiles/461_101/classification.png",
+        "d19_review": "tiles/461_101/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/461_101/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3861,7 +4027,9 @@
       "files": {
         "susceptibility": "tiles/461_102/susceptibility.png",
         "ndvi": "tiles/461_102/ndvi.png",
-        "classification": "tiles/461_102/classification.png"
+        "classification": "tiles/461_102/classification.png",
+        "d19_review": "tiles/461_102/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/461_102/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3905,7 +4073,9 @@
       "files": {
         "susceptibility": "tiles/461_103/susceptibility.png",
         "ndvi": "tiles/461_103/ndvi.png",
-        "classification": "tiles/461_103/classification.png"
+        "classification": "tiles/461_103/classification.png",
+        "d19_review": "tiles/461_103/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/461_103/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3949,7 +4119,9 @@
       "files": {
         "susceptibility": "tiles/461_104/susceptibility.png",
         "ndvi": "tiles/461_104/ndvi.png",
-        "classification": "tiles/461_104/classification.png"
+        "classification": "tiles/461_104/classification.png",
+        "d19_review": "tiles/461_104/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/461_104/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -3993,7 +4165,9 @@
       "files": {
         "susceptibility": "tiles/461_105/susceptibility.png",
         "ndvi": "tiles/461_105/ndvi.png",
-        "classification": "tiles/461_105/classification.png"
+        "classification": "tiles/461_105/classification.png",
+        "d19_review": "tiles/461_105/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/461_105/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4037,7 +4211,9 @@
       "files": {
         "susceptibility": "tiles/461_96/susceptibility.png",
         "ndvi": "tiles/461_96/ndvi.png",
-        "classification": "tiles/461_96/classification.png"
+        "classification": "tiles/461_96/classification.png",
+        "d19_review": "tiles/461_96/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/461_96/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4081,7 +4257,9 @@
       "files": {
         "susceptibility": "tiles/461_97/susceptibility.png",
         "ndvi": "tiles/461_97/ndvi.png",
-        "classification": "tiles/461_97/classification.png"
+        "classification": "tiles/461_97/classification.png",
+        "d19_review": "tiles/461_97/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/461_97/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4125,7 +4303,9 @@
       "files": {
         "susceptibility": "tiles/461_98/susceptibility.png",
         "ndvi": "tiles/461_98/ndvi.png",
-        "classification": "tiles/461_98/classification.png"
+        "classification": "tiles/461_98/classification.png",
+        "d19_review": "tiles/461_98/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/461_98/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4169,7 +4349,9 @@
       "files": {
         "susceptibility": "tiles/461_99/susceptibility.png",
         "ndvi": "tiles/461_99/ndvi.png",
-        "classification": "tiles/461_99/classification.png"
+        "classification": "tiles/461_99/classification.png",
+        "d19_review": "tiles/461_99/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/461_99/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4213,7 +4395,9 @@
       "files": {
         "susceptibility": "tiles/462_100/susceptibility.png",
         "ndvi": "tiles/462_100/ndvi.png",
-        "classification": "tiles/462_100/classification.png"
+        "classification": "tiles/462_100/classification.png",
+        "d19_review": "tiles/462_100/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/462_100/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4257,7 +4441,9 @@
       "files": {
         "susceptibility": "tiles/462_101/susceptibility.png",
         "ndvi": "tiles/462_101/ndvi.png",
-        "classification": "tiles/462_101/classification.png"
+        "classification": "tiles/462_101/classification.png",
+        "d19_review": "tiles/462_101/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/462_101/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4301,7 +4487,9 @@
       "files": {
         "susceptibility": "tiles/462_102/susceptibility.png",
         "ndvi": "tiles/462_102/ndvi.png",
-        "classification": "tiles/462_102/classification.png"
+        "classification": "tiles/462_102/classification.png",
+        "d19_review": "tiles/462_102/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/462_102/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4345,7 +4533,9 @@
       "files": {
         "susceptibility": "tiles/462_103/susceptibility.png",
         "ndvi": "tiles/462_103/ndvi.png",
-        "classification": "tiles/462_103/classification.png"
+        "classification": "tiles/462_103/classification.png",
+        "d19_review": "tiles/462_103/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/462_103/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4389,7 +4579,9 @@
       "files": {
         "susceptibility": "tiles/462_104/susceptibility.png",
         "ndvi": "tiles/462_104/ndvi.png",
-        "classification": "tiles/462_104/classification.png"
+        "classification": "tiles/462_104/classification.png",
+        "d19_review": "tiles/462_104/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/462_104/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4433,7 +4625,9 @@
       "files": {
         "susceptibility": "tiles/462_105/susceptibility.png",
         "ndvi": "tiles/462_105/ndvi.png",
-        "classification": "tiles/462_105/classification.png"
+        "classification": "tiles/462_105/classification.png",
+        "d19_review": "tiles/462_105/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/462_105/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4477,7 +4671,9 @@
       "files": {
         "susceptibility": "tiles/462_96/susceptibility.png",
         "ndvi": "tiles/462_96/ndvi.png",
-        "classification": "tiles/462_96/classification.png"
+        "classification": "tiles/462_96/classification.png",
+        "d19_review": "tiles/462_96/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/462_96/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4521,7 +4717,9 @@
       "files": {
         "susceptibility": "tiles/462_97/susceptibility.png",
         "ndvi": "tiles/462_97/ndvi.png",
-        "classification": "tiles/462_97/classification.png"
+        "classification": "tiles/462_97/classification.png",
+        "d19_review": "tiles/462_97/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/462_97/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4565,7 +4763,9 @@
       "files": {
         "susceptibility": "tiles/462_98/susceptibility.png",
         "ndvi": "tiles/462_98/ndvi.png",
-        "classification": "tiles/462_98/classification.png"
+        "classification": "tiles/462_98/classification.png",
+        "d19_review": "tiles/462_98/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/462_98/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4609,7 +4809,9 @@
       "files": {
         "susceptibility": "tiles/462_99/susceptibility.png",
         "ndvi": "tiles/462_99/ndvi.png",
-        "classification": "tiles/462_99/classification.png"
+        "classification": "tiles/462_99/classification.png",
+        "d19_review": "tiles/462_99/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/462_99/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4653,7 +4855,9 @@
       "files": {
         "susceptibility": "tiles/463_100/susceptibility.png",
         "ndvi": "tiles/463_100/ndvi.png",
-        "classification": "tiles/463_100/classification.png"
+        "classification": "tiles/463_100/classification.png",
+        "d19_review": "tiles/463_100/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/463_100/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4697,7 +4901,9 @@
       "files": {
         "susceptibility": "tiles/463_101/susceptibility.png",
         "ndvi": "tiles/463_101/ndvi.png",
-        "classification": "tiles/463_101/classification.png"
+        "classification": "tiles/463_101/classification.png",
+        "d19_review": "tiles/463_101/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/463_101/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4741,7 +4947,9 @@
       "files": {
         "susceptibility": "tiles/463_102/susceptibility.png",
         "ndvi": "tiles/463_102/ndvi.png",
-        "classification": "tiles/463_102/classification.png"
+        "classification": "tiles/463_102/classification.png",
+        "d19_review": "tiles/463_102/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/463_102/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4785,7 +4993,9 @@
       "files": {
         "susceptibility": "tiles/463_103/susceptibility.png",
         "ndvi": "tiles/463_103/ndvi.png",
-        "classification": "tiles/463_103/classification.png"
+        "classification": "tiles/463_103/classification.png",
+        "d19_review": "tiles/463_103/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/463_103/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4829,7 +5039,9 @@
       "files": {
         "susceptibility": "tiles/463_104/susceptibility.png",
         "ndvi": "tiles/463_104/ndvi.png",
-        "classification": "tiles/463_104/classification.png"
+        "classification": "tiles/463_104/classification.png",
+        "d19_review": "tiles/463_104/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/463_104/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4873,7 +5085,9 @@
       "files": {
         "susceptibility": "tiles/463_105/susceptibility.png",
         "ndvi": "tiles/463_105/ndvi.png",
-        "classification": "tiles/463_105/classification.png"
+        "classification": "tiles/463_105/classification.png",
+        "d19_review": "tiles/463_105/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/463_105/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4917,7 +5131,9 @@
       "files": {
         "susceptibility": "tiles/463_96/susceptibility.png",
         "ndvi": "tiles/463_96/ndvi.png",
-        "classification": "tiles/463_96/classification.png"
+        "classification": "tiles/463_96/classification.png",
+        "d19_review": "tiles/463_96/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/463_96/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -4961,7 +5177,9 @@
       "files": {
         "susceptibility": "tiles/463_97/susceptibility.png",
         "ndvi": "tiles/463_97/ndvi.png",
-        "classification": "tiles/463_97/classification.png"
+        "classification": "tiles/463_97/classification.png",
+        "d19_review": "tiles/463_97/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/463_97/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5005,7 +5223,9 @@
       "files": {
         "susceptibility": "tiles/463_98/susceptibility.png",
         "ndvi": "tiles/463_98/ndvi.png",
-        "classification": "tiles/463_98/classification.png"
+        "classification": "tiles/463_98/classification.png",
+        "d19_review": "tiles/463_98/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/463_98/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5049,7 +5269,9 @@
       "files": {
         "susceptibility": "tiles/463_99/susceptibility.png",
         "ndvi": "tiles/463_99/ndvi.png",
-        "classification": "tiles/463_99/classification.png"
+        "classification": "tiles/463_99/classification.png",
+        "d19_review": "tiles/463_99/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/463_99/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5093,7 +5315,9 @@
       "files": {
         "susceptibility": "tiles/464_100/susceptibility.png",
         "ndvi": "tiles/464_100/ndvi.png",
-        "classification": "tiles/464_100/classification.png"
+        "classification": "tiles/464_100/classification.png",
+        "d19_review": "tiles/464_100/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/464_100/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5137,7 +5361,9 @@
       "files": {
         "susceptibility": "tiles/464_101/susceptibility.png",
         "ndvi": "tiles/464_101/ndvi.png",
-        "classification": "tiles/464_101/classification.png"
+        "classification": "tiles/464_101/classification.png",
+        "d19_review": "tiles/464_101/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/464_101/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5181,7 +5407,9 @@
       "files": {
         "susceptibility": "tiles/464_102/susceptibility.png",
         "ndvi": "tiles/464_102/ndvi.png",
-        "classification": "tiles/464_102/classification.png"
+        "classification": "tiles/464_102/classification.png",
+        "d19_review": "tiles/464_102/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/464_102/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5225,7 +5453,9 @@
       "files": {
         "susceptibility": "tiles/464_103/susceptibility.png",
         "ndvi": "tiles/464_103/ndvi.png",
-        "classification": "tiles/464_103/classification.png"
+        "classification": "tiles/464_103/classification.png",
+        "d19_review": "tiles/464_103/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/464_103/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5269,7 +5499,9 @@
       "files": {
         "susceptibility": "tiles/464_104/susceptibility.png",
         "ndvi": "tiles/464_104/ndvi.png",
-        "classification": "tiles/464_104/classification.png"
+        "classification": "tiles/464_104/classification.png",
+        "d19_review": "tiles/464_104/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/464_104/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5313,7 +5545,9 @@
       "files": {
         "susceptibility": "tiles/464_105/susceptibility.png",
         "ndvi": "tiles/464_105/ndvi.png",
-        "classification": "tiles/464_105/classification.png"
+        "classification": "tiles/464_105/classification.png",
+        "d19_review": "tiles/464_105/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/464_105/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5357,7 +5591,9 @@
       "files": {
         "susceptibility": "tiles/464_96/susceptibility.png",
         "ndvi": "tiles/464_96/ndvi.png",
-        "classification": "tiles/464_96/classification.png"
+        "classification": "tiles/464_96/classification.png",
+        "d19_review": "tiles/464_96/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/464_96/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5401,7 +5637,9 @@
       "files": {
         "susceptibility": "tiles/464_97/susceptibility.png",
         "ndvi": "tiles/464_97/ndvi.png",
-        "classification": "tiles/464_97/classification.png"
+        "classification": "tiles/464_97/classification.png",
+        "d19_review": "tiles/464_97/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/464_97/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5445,7 +5683,9 @@
       "files": {
         "susceptibility": "tiles/464_98/susceptibility.png",
         "ndvi": "tiles/464_98/ndvi.png",
-        "classification": "tiles/464_98/classification.png"
+        "classification": "tiles/464_98/classification.png",
+        "d19_review": "tiles/464_98/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/464_98/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5489,7 +5729,9 @@
       "files": {
         "susceptibility": "tiles/464_99/susceptibility.png",
         "ndvi": "tiles/464_99/ndvi.png",
-        "classification": "tiles/464_99/classification.png"
+        "classification": "tiles/464_99/classification.png",
+        "d19_review": "tiles/464_99/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/464_99/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5533,7 +5775,9 @@
       "files": {
         "susceptibility": "tiles/486_132/susceptibility.png",
         "ndvi": "tiles/486_132/ndvi.png",
-        "classification": "tiles/486_132/classification.png"
+        "classification": "tiles/486_132/classification.png",
+        "d19_review": "tiles/486_132/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/486_132/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5577,7 +5821,9 @@
       "files": {
         "susceptibility": "tiles/486_133/susceptibility.png",
         "ndvi": "tiles/486_133/ndvi.png",
-        "classification": "tiles/486_133/classification.png"
+        "classification": "tiles/486_133/classification.png",
+        "d19_review": "tiles/486_133/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/486_133/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5621,7 +5867,9 @@
       "files": {
         "susceptibility": "tiles/486_134/susceptibility.png",
         "ndvi": "tiles/486_134/ndvi.png",
-        "classification": "tiles/486_134/classification.png"
+        "classification": "tiles/486_134/classification.png",
+        "d19_review": "tiles/486_134/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/486_134/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5665,7 +5913,9 @@
       "files": {
         "susceptibility": "tiles/486_135/susceptibility.png",
         "ndvi": "tiles/486_135/ndvi.png",
-        "classification": "tiles/486_135/classification.png"
+        "classification": "tiles/486_135/classification.png",
+        "d19_review": "tiles/486_135/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/486_135/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5709,7 +5959,9 @@
       "files": {
         "susceptibility": "tiles/486_136/susceptibility.png",
         "ndvi": "tiles/486_136/ndvi.png",
-        "classification": "tiles/486_136/classification.png"
+        "classification": "tiles/486_136/classification.png",
+        "d19_review": "tiles/486_136/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/486_136/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5753,7 +6005,9 @@
       "files": {
         "susceptibility": "tiles/487_132/susceptibility.png",
         "ndvi": "tiles/487_132/ndvi.png",
-        "classification": "tiles/487_132/classification.png"
+        "classification": "tiles/487_132/classification.png",
+        "d19_review": "tiles/487_132/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/487_132/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5797,7 +6051,9 @@
       "files": {
         "susceptibility": "tiles/487_133/susceptibility.png",
         "ndvi": "tiles/487_133/ndvi.png",
-        "classification": "tiles/487_133/classification.png"
+        "classification": "tiles/487_133/classification.png",
+        "d19_review": "tiles/487_133/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/487_133/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5841,7 +6097,9 @@
       "files": {
         "susceptibility": "tiles/487_134/susceptibility.png",
         "ndvi": "tiles/487_134/ndvi.png",
-        "classification": "tiles/487_134/classification.png"
+        "classification": "tiles/487_134/classification.png",
+        "d19_review": "tiles/487_134/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/487_134/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5885,7 +6143,9 @@
       "files": {
         "susceptibility": "tiles/487_135/susceptibility.png",
         "ndvi": "tiles/487_135/ndvi.png",
-        "classification": "tiles/487_135/classification.png"
+        "classification": "tiles/487_135/classification.png",
+        "d19_review": "tiles/487_135/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/487_135/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5929,7 +6189,9 @@
       "files": {
         "susceptibility": "tiles/487_136/susceptibility.png",
         "ndvi": "tiles/487_136/ndvi.png",
-        "classification": "tiles/487_136/classification.png"
+        "classification": "tiles/487_136/classification.png",
+        "d19_review": "tiles/487_136/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/487_136/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -5973,7 +6235,9 @@
       "files": {
         "susceptibility": "tiles/488_132/susceptibility.png",
         "ndvi": "tiles/488_132/ndvi.png",
-        "classification": "tiles/488_132/classification.png"
+        "classification": "tiles/488_132/classification.png",
+        "d19_review": "tiles/488_132/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/488_132/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6017,7 +6281,9 @@
       "files": {
         "susceptibility": "tiles/488_133/susceptibility.png",
         "ndvi": "tiles/488_133/ndvi.png",
-        "classification": "tiles/488_133/classification.png"
+        "classification": "tiles/488_133/classification.png",
+        "d19_review": "tiles/488_133/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/488_133/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6061,7 +6327,9 @@
       "files": {
         "susceptibility": "tiles/488_134/susceptibility.png",
         "ndvi": "tiles/488_134/ndvi.png",
-        "classification": "tiles/488_134/classification.png"
+        "classification": "tiles/488_134/classification.png",
+        "d19_review": "tiles/488_134/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/488_134/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6105,7 +6373,9 @@
       "files": {
         "susceptibility": "tiles/488_135/susceptibility.png",
         "ndvi": "tiles/488_135/ndvi.png",
-        "classification": "tiles/488_135/classification.png"
+        "classification": "tiles/488_135/classification.png",
+        "d19_review": "tiles/488_135/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/488_135/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6149,7 +6419,9 @@
       "files": {
         "susceptibility": "tiles/488_136/susceptibility.png",
         "ndvi": "tiles/488_136/ndvi.png",
-        "classification": "tiles/488_136/classification.png"
+        "classification": "tiles/488_136/classification.png",
+        "d19_review": "tiles/488_136/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/488_136/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6193,7 +6465,9 @@
       "files": {
         "susceptibility": "tiles/489_132/susceptibility.png",
         "ndvi": "tiles/489_132/ndvi.png",
-        "classification": "tiles/489_132/classification.png"
+        "classification": "tiles/489_132/classification.png",
+        "d19_review": "tiles/489_132/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/489_132/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6237,7 +6511,9 @@
       "files": {
         "susceptibility": "tiles/489_133/susceptibility.png",
         "ndvi": "tiles/489_133/ndvi.png",
-        "classification": "tiles/489_133/classification.png"
+        "classification": "tiles/489_133/classification.png",
+        "d19_review": "tiles/489_133/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/489_133/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6281,7 +6557,9 @@
       "files": {
         "susceptibility": "tiles/489_134/susceptibility.png",
         "ndvi": "tiles/489_134/ndvi.png",
-        "classification": "tiles/489_134/classification.png"
+        "classification": "tiles/489_134/classification.png",
+        "d19_review": "tiles/489_134/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/489_134/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6325,7 +6603,9 @@
       "files": {
         "susceptibility": "tiles/489_135/susceptibility.png",
         "ndvi": "tiles/489_135/ndvi.png",
-        "classification": "tiles/489_135/classification.png"
+        "classification": "tiles/489_135/classification.png",
+        "d19_review": "tiles/489_135/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/489_135/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6369,7 +6649,9 @@
       "files": {
         "susceptibility": "tiles/489_136/susceptibility.png",
         "ndvi": "tiles/489_136/ndvi.png",
-        "classification": "tiles/489_136/classification.png"
+        "classification": "tiles/489_136/classification.png",
+        "d19_review": "tiles/489_136/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/489_136/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6413,7 +6695,9 @@
       "files": {
         "susceptibility": "tiles/490_132/susceptibility.png",
         "ndvi": "tiles/490_132/ndvi.png",
-        "classification": "tiles/490_132/classification.png"
+        "classification": "tiles/490_132/classification.png",
+        "d19_review": "tiles/490_132/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/490_132/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6457,7 +6741,9 @@
       "files": {
         "susceptibility": "tiles/490_133/susceptibility.png",
         "ndvi": "tiles/490_133/ndvi.png",
-        "classification": "tiles/490_133/classification.png"
+        "classification": "tiles/490_133/classification.png",
+        "d19_review": "tiles/490_133/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/490_133/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6501,7 +6787,9 @@
       "files": {
         "susceptibility": "tiles/490_134/susceptibility.png",
         "ndvi": "tiles/490_134/ndvi.png",
-        "classification": "tiles/490_134/classification.png"
+        "classification": "tiles/490_134/classification.png",
+        "d19_review": "tiles/490_134/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/490_134/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6545,7 +6833,9 @@
       "files": {
         "susceptibility": "tiles/490_135/susceptibility.png",
         "ndvi": "tiles/490_135/ndvi.png",
-        "classification": "tiles/490_135/classification.png"
+        "classification": "tiles/490_135/classification.png",
+        "d19_review": "tiles/490_135/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/490_135/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     },
@@ -6589,9 +6879,20 @@
       "files": {
         "susceptibility": "tiles/490_136/susceptibility.png",
         "ndvi": "tiles/490_136/ndvi.png",
-        "classification": "tiles/490_136/classification.png"
+        "classification": "tiles/490_136/classification.png",
+        "d19_review": "tiles/490_136/susceptibility_d19_review.png",
+        "d19_diagnostic": "tiles/490_136/susceptibility.png"
       },
       "model_version": "D19-baseline-v1"
     }
-  ]
+  ],
+  "d19_display": {
+    "model_version": "D19-baseline-v1",
+    "default_mode": "review",
+    "review_threshold": 0.925,
+    "threshold_semantics": "upper-band-of-fixed-regional-display-scale-not-hazard",
+    "diagnostic_semantics": "frozen-full-experimental-score-surface-not-probability",
+    "source_asset": "susceptibility.png",
+    "migration": "nearest-RdYlBu_r-palette-index; future pipeline runs use raw display score"
+  }
 }
