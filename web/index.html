@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CLSS Slovenia — Flood Susceptibility &amp; Terrain Screening</title>
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 
@@ -26,8 +26,19 @@
 
   <!-- Side panel -->
   <aside class="panel" id="panel">
+    <div class="panel-section panel-section--guide">
+      <h3 class="panel-heading">How to read the map</h3>
+      <p class="panel-intro">Each switch adds a different kind of evidence. They are screens for exploration, not a flood forecast or a single combined score.</p>
+      <ol class="reading-steps">
+        <li><span>1</span><p><strong>Start with the official reference.</strong> Choose Q100 for a familiar planning comparison.</p></li>
+        <li><span>2</span><p><strong>Add terrain susceptibility.</strong> Look for agreement or disagreement, then inspect the local setting.</p></li>
+        <li><span>3</span><p><strong>Add the context layer for the question.</strong> Land cover for local setting, coastal exposure for Koper, or hydroclimate for the Savinja demonstration.</p></li>
+      </ol>
+      <p class="panel-tip"><strong>Opacity tip:</strong> 30&ndash;50% is best for comparing an overlay with roads and terrain beneath it.</p>
+    </div>
+
     <div class="panel-section">
-      <h3 class="panel-heading">Layers</h3>
+      <h3 class="panel-heading">Map layers</h3>
 
       <!-- Flood susceptibility -->
       <div class="layer-row">
@@ -46,7 +57,9 @@
         <input type="range" id="opacity-susc" min="0" max="100" value="55" class="slider">
         <span class="slider-val" id="val-susc">55%</span>
       </div>
-      <p class="layer-hint layer-warning">D19 baseline: region-relative and unvalidated. Colors are not flood probability or modeled water depth.</p>
+      <p class="layer-description"><strong>Shows:</strong> a LiDAR-derived relative pattern of terrain near drainage and flat, wet-prone ground. Brighter colors mean higher relative screening score within that region.</p>
+      <p class="layer-use"><strong>Use with:</strong> Official reference to compare patterns; Land Classification to see whether a highlighted patch is ground, vegetation, or building.</p>
+      <p class="layer-hint layer-warning">D19 baseline: region-relative and unvalidated. Colors are not flood probability, predicted damage, or modeled water depth.</p>
 
       <div class="divider"></div>
 
@@ -65,9 +78,9 @@
       <div class="select-row">
         <span class="slider-label">Scenario</span>
         <select id="official-scenario" class="scenario-select">
-          <option value="q10">Q10</option>
-          <option value="q100" selected>Q100</option>
-          <option value="q500">Q500</option>
+          <option value="q10">Q10 &mdash; more frequent</option>
+          <option value="q100" selected>Q100 &mdash; planning reference</option>
+          <option value="q500">Q500 &mdash; rarer, larger</option>
         </select>
       </div>
       <div class="slider-row">
@@ -75,7 +88,9 @@
         <input type="range" id="opacity-official" min="0" max="100" value="32" class="slider">
         <span class="slider-val" id="val-official">32%</span>
       </div>
-      <p class="layer-hint">Official static IKPN reference inside modeled study coverage; not the observed August 2023 event extent.</p>
+      <p class="layer-description"><strong>Shows:</strong> published static IKPN / DRSV hazard extent where it overlaps the study area. Q10, Q100, and Q500 are discharge-return-period scenarios, not live conditions.</p>
+      <p class="layer-use"><strong>Use with:</strong> Terrain Susceptibility for a transparent model-versus-reference check. Start at Q100; switch scenarios to see how the official extent changes.</p>
+      <p class="layer-hint">This is not the observed August 2023 event extent.</p>
 
       <div class="divider"></div>
 
@@ -96,6 +111,8 @@
         <input type="range" id="opacity-ndvi" min="0" max="100" value="75" class="slider">
         <span class="slider-val" id="val-ndvi">75%</span>
       </div>
+      <p class="layer-description"><strong>Shows:</strong> relative vegetation greenness from the LiDAR red and near-infrared returns. It is useful context for vegetation condition, not a flood-risk layer.</p>
+      <p class="layer-use"><strong>Use with:</strong> Land Classification to distinguish vegetation from built or bare surfaces. Compare within a tile; values are display-stretched per tile.</p>
 
       <div class="divider"></div>
 
@@ -119,6 +136,8 @@
         <input type="range" id="opacity-cls" min="0" max="100" value="80" class="slider">
         <span class="slider-val" id="val-cls">80%</span>
       </div>
+      <p class="layer-description"><strong>Shows:</strong> LiDAR return classes: ground, low/mid/high vegetation, and buildings. It describes local surface context, not exposure or asset value.</p>
+      <p class="layer-use"><strong>Use with:</strong> Terrain Susceptibility or review points to check what a highlighted location contains before drawing conclusions.</p>
 
       <div class="divider"></div>
 
@@ -147,7 +166,9 @@
         <input type="range" id="opacity-coastal" min="0" max="100" value="70" class="slider">
         <span class="slider-val" id="val-coastal">70%</span>
       </div>
-      <p class="layer-hint">Koper bathtub screen connected to mapped sea/no-data cells; not surge or hydraulic inundation.</p>
+      <p class="layer-description"><strong>Shows:</strong> Koper land below the selected sea-level increment that is connected to mapped sea cells. It is a low-land exposure screen, separate from the riverine model.</p>
+      <p class="layer-use"><strong>Use with:</strong> Land Classification to inspect the affected surface. Compare +0.5 m, +1.0 m, and +2.0 m as scenarios; do not combine this score with terrain susceptibility.</p>
+      <p class="layer-hint">Bathtub connectivity only &mdash; not surge, tides, waves, drainage, or hydraulic inundation.</p>
 
       <div class="divider"></div>
 
@@ -172,6 +193,7 @@
         <input type="range" id="opacity-hydro" min="0" max="100" value="55" class="slider">
         <span class="slider-val" id="val-hydro">55%</span>
       </div>
+      <p class="layer-description"><strong>Shows:</strong> a coarse indicator of catchment wetness and recent water input for the selected date. “Primed” means conditions conceptually favor runoff, not that flooding is occurring.</p>
       <div class="layer-row layer-row--compact">
         <label class="layer-toggle">
           <input type="checkbox" id="toggle-hydro-risk">
@@ -179,6 +201,7 @@
         </label>
         <span class="layer-name">Terrain Candidates Under Trigger</span>
       </div>
+      <p class="layer-use"><strong>Use with:</strong> turn on both Hydroclimate Trigger and Terrain Candidates to explore the project&rsquo;s &ldquo;when + where&rdquo; concept in Savinja.</p>
       <p class="layer-hint layer-warning">Synthetic Aug-2023 Savinja fixture for UI testing. It is not ERA5 evidence, probability, or a forecast.</p>
 
       <div class="divider"></div>
@@ -191,7 +214,8 @@
         </label>
         <span class="layer-name">High-Susceptibility Review Points</span>
       </div>
-      <p class="layer-hint">Region-capped D19 candidates for review; not a global probability ranking.</p>
+      <p class="layer-description"><strong>Shows:</strong> spaced locations with high terrain-screening scores, selected for review rather than prediction.</p>
+      <p class="layer-use"><strong>Use with:</strong> enable a context layer first, then click a point to inspect its terrain details. The list is capped per region, so it is not a national ranking.</p>
     </div>
 
     <div class="panel-section panel-section--info">
