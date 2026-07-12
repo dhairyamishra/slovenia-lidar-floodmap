@@ -1,12 +1,29 @@
 # Handoff - Slovenia CLSS LiDAR Flood, Coastal & Hydroclimate Demo
 
-**Status:** Phases 1–2 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D25). D19 communication is repaired, and the official static-reference evaluation is locked with versioned grids, spatial guards/tests, ambiguity buffers, and negative controls. Phase 3 Savinja mosaic hydrology is next.
+**Status:** Phases 1–3 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D26). D19 communication is repaired, validation is locked, and Savinja now has continuous conditioned mosaic hydrology. Phase 4 extends the same code path to Ljubljana.
 
 **Goal:** A polished, honest screening tool for Aleks / sledilnik.org that shows where detailed flood/coastal investigation should start. It is not a hydraulic, coastal, or probabilistic forecast model.
 
 > Authoritative context: `AGENTS.md`, `CLAUDE.md`, `DECISIONS.md`, and `PLAN.md`. This handoff is the current snapshot plus the latest implementation notes.
 > The active review/implementation tracker is `ALEKS_REVIEW_AND_ALGORITHM_PLAN.md`.
 > The focused red-map/model-replacement tracker is `FLOOD_MODEL_REPLACEMENT_PLAN.md`.
+
+## D26 Phase-3 Savinja mosaic hydrology (2026-07-12)
+
+- Added `mosaic_hydrology.py` and mosaic-safe Numba kernels for priority-flood conditioning, continuous receivers/accumulation, HAND, channel distance, Strahler order, and Freeman MFD sensitivity.
+- Assembled all 25 Savinja tiles into one 2 m, 2500×2500 EPSG:3794 grid from 346,901,854 ground returns. Large arrays, per-tile feature bundles, the manifest, and QA overview remain reproducible under ignored `output/mosaic/savinja/`.
+- Tested official flow-line alignment before terrain enforcement. The gentle burn failed its predeclared alignment acceptance test, so the selected terrain is the unburned priority-flood surface; the raw DTM and conditioning delta remain available.
+- Selected the 50,000 m² D8 stream threshold by development-only official-line alignment (precision 0.7687, recall 0.6706, F1 0.7163). The 10k and 100k thresholds and MFD routing remain recorded sensitivities.
+- Verified zero internal sinks, 14,340 receiver links crossing former tile seams, conditioned-DTM seam ratio 0.9968, HAND seam ratio 0.9742, and 75.84% of official seam cells within 20 m of a derived stream.
+- Cut seven feature grids back into all 25 exact tile windows after routing. Automated verification reports `all_exact: true`; no tile-local hydrology fallback occurs.
+- Development-only static Q100 benchmark: per-tile HAND AUC/AP 0.7387/0.1523; mosaic HAND 0.7894/0.1973. Guard and locked-test tiles were not evaluated (`locked_test_accessed: false`).
+- Added six mosaic tests; full repository suite is 30/30 passing. The legacy real-tile kernel benchmark remains bit-identical (DTM 206×, D8 76× on `488_134`).
+
+**Why:** D19's per-tile HAND terminates drainage at every 1 km edge. Routing the 5×5 terrain once removes artificial tile outlets and improves drainage-relative discrimination without reintroducing absolute elevation.
+
+**Caveats:** Source LAZ tiles provide no overlap halo; the outer mosaic boundary is intentionally open. Priority fill is implemented, while least-cost breaching is not; the rejected gentle burn is the bounded carve sensitivity. D8 and MFD have similar official-alignment F1 but only 0.4046 stream-cell Jaccard, so exact channel paths remain uncertain. The comparison uses a static planning Q100 reference, not the August 2023 observed event.
+
+**Next entry point:** Phase 4—parameterize the same mosaic pipeline for Ljubljana's 10×10 block, use memory-mapped/chunk-aware storage as needed, repeat seam/conditioning checks, and document underground urban-drainage limitations. Do not inspect replacement performance on the locked test during feature engineering.
 
 ## D25 Phase-2 validation lock (2026-07-12)
 

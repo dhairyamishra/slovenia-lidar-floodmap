@@ -124,6 +124,11 @@ python analyze_model.py --strict
 python download_validation.py
 python prepare_validation_web.py
 python evaluate_validation.py
+
+# 6. Build continuous Savinja hydrology (large outputs stay under ignored output/)
+python mosaic_hydrology.py --rebuild-dtm
+# Later runs reuse the cached mosaic DTM:
+python mosaic_hydrology.py
 ```
 
 Requires: `laspy`, `lazrs`, `numpy`, `scipy`, `pyproj`, `Pillow`, `numba` (the hot DTM/D8/HAND loops in `kernels.py` are Numba-JIT'd). Tiles fan out across processes — `--workers N` overrides the RAM-bound default.
@@ -175,6 +180,9 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `validation/data/*` | Gitignored official source downloads plus acquisition manifest/checksums |
 | `web/data/validation/*` | Compact WGS84 Q10/Q100/Q500, validity, and Q100 depth layers used by the app |
 | `output/diagnostics/validation_q100.*` | Gitignored D19/baseline evaluation against official Q100 inside its validity domain |
+| `output/mosaic/savinja/manifest.json` | Gitignored reproducibility manifest, digests, seam checks, sensitivities, and development-only benchmark |
+| `output/mosaic/savinja/tiles/*.npz` | Seven continuous mosaic-derived feature grids cut back to the 25 web-tile bounds after routing |
+| `output/mosaic/savinja/qa_overview.png` | Conditioned terrain, accumulation, HAND, and official/derived-channel QA overview |
 
 ## Scripts
 
@@ -189,6 +197,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `evaluate_validation.py` | Labels diagnostic samples inside official IKPN validity and reports D19/HAND/TWI baseline metrics. |
 | `prepare_validation_contract.py` | Generates packed multi-resolution label grids and expanded frozen split metadata. |
 | `validation_grid.py` | Deterministic rasterization, mask packing, split assignment, and digest helpers. |
+| `mosaic_hydrology.py` | Builds the continuous Savinja DTM, conditions and routes it once, runs D8/MFD/threshold sensitivities, exports mosaic features and exact tile windows, and records QA/provenance. |
 | `hydroclimate.py` | ERA5-Land-style hydroclimate trigger pipeline. Builds fixture assets for V1 and can derive from local ERA5-Land NetCDF files with xarray. |
 | `download_tiles.py` | Downloads CLSS GKOT tiles from the CDN with region auto-discovery and a probe cache. `--center/--radius`, `--bbox`, `--tiles`, `--dry-run`, `--pipeline`. |
 | `kernels.py` | Numba `@njit(cache=True)` hot loops — DTM grouped-min, D8 accumulation, HAND grid — bit-identical to the original pure-Python loops but ~70–150× faster. |

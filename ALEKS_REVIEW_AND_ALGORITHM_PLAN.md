@@ -425,14 +425,14 @@ The 2023 fixture must be visibly watermarked “synthetic demo” or removed fro
 
 ### Phase 2 — Fix hydrology (highest algorithm priority)
 
-- [ ] Mosaic Savinja first with overlap/halo and seam checks.
-- [ ] Add depression filling/breaching and official river-network alignment.
-- [ ] Compute mosaic accumulation, stream order, HAND, and distance-to-channel.
-- [ ] Compare D8 vs MFD sensitivity and threshold sensitivity.
-- [ ] Demonstrate continuity across every tile seam.
-- [ ] Cut features back into tiles without recomputing routing locally.
+- [x] Mosaic Savinja first with provenance and seam checks (the source tiles have no overlap/halo; this limitation is explicit in D26).
+- [x] Add priority-flood depression filling and bounded network-burn sensitivity; test official river-network alignment before accepting any burn.
+- [x] Compute mosaic accumulation, stream order, HAND, and distance-to-channel.
+- [x] Compare D8 vs MFD sensitivity and 10k/50k/100k m² stream thresholds.
+- [x] Demonstrate continuity across every tile seam.
+- [x] Cut seven features back into all 25 tiles without recomputing routing locally, with exact-array verification.
 
-**Exit gate:** Savinja HAND/channel features are continuous across the 5×5 block and outperform per-tile HAND against validation.
+**Exit gate: PASSED 2026-07-12 (D26).** The 5×5 mosaic has zero internal sinks, 14,340 receiver links cross former tile seams, and all 25 feature exports reproduce exact mosaic windows. On development-only static Q100 samples, mosaic HAND improves ROC-AUC/AP from 0.7387/0.1523 to 0.7894/0.1973. The locked test was not accessed.
 
 ### Phase 3 — Benchmark and select static model
 
@@ -483,6 +483,7 @@ Append each experiment; never overwrite an unfavorable result.
 | E002 | 2026-07-11 | `D19-baseline-v1` | Official DRSV IKPN Q100 + validity; 151,435 eligible samples, 55,309 Q100-positive | Descriptive held reference; per-tile stability, no fitting | Compare D19 with HAND/TWI/no-elevation-slope baselines | D19 ROC-AUC 0.5972 / AP 0.4109; HAND-only ROC-AUC 0.6908 / AP 0.4985; median tile AUC 0.6239 (IQR 0.5285–0.7415) | D19 region AUC: Koper 0.5368, Ljubljana 0.6117, Kamnik 0.6648 | Reject D19 as selected model; use HAND-only as minimum baseline and build mosaic HAND before fitting |
 
 | E003 | 2026-07-12 | `D19-baseline-v1`, validation contract v1 | DRSV validity/Q10/Q100/Q500/depth; 128,737 eligible samples after 10 m Q100 boundary exclusion | Frozen east-strip locked tests with 1 km guard columns; Koper evaluation-only | Lock label grids, spatial splits, ambiguity, and negative controls before replacement fitting | Locked test: D19 AUC/AP 0.6100/0.3737; HAND-only 0.7764/0.5548. Overall HAND-only 0.7130/0.4915 vs D19 0.6069/0.3922 | Low-flat Q100-negative flagged at development top-10% threshold: D19 0.1334, HAND-only 0.0904 | Freeze contract and preserve locked test for final replacement gate; proceed to Savinja mosaic hydrology |
+| E004 | 2026-07-12 | Savinja mosaic hydrology v1, input fingerprint `e7ebe35c…` | 25 CLSS tiles, 346,901,854 ground returns; DRSV flow lines; development-only Q100 samples | Savinja E486–488 development only; guard E489 and locked E490 excluded | Continuous priority-flood D8 routing, HAND, channel distance and Strahler; MFD and threshold sensitivities | Per-tile HAND AUC/AP 0.7387/0.1523; mosaic HAND 0.7894/0.1973; selected 50,000 m² D8 channel F1 0.7163 | Absolute elevation is not used in this feature gate; HAND is drainage-relative | Accept mosaic hydrology for Savinja; extend the same code path to Ljubljana before model fitting |
 
 ## 12. Decision gates
 

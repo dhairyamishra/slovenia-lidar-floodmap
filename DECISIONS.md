@@ -262,6 +262,18 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 **Reversible:** Remove the evaluation contract/grid files and helpers and revert `evaluate_validation.py` to descriptive whole-domain reporting. This is not recommended because it would reopen leakage and evaluation-shaping risks.
 
+### D26 — Replace tile-cut Savinja hydrology with one conditioned 5×5 mosaic
+
+**Decision:** Build Savinja hydrology once on a 2 m, 2500×2500 EPSG:3794 mosaic and only then cut the derived features back into the existing 25 tile bounds. Use an open-boundary priority-flood surface without forced river burning, continuous D8 receivers as the primary routing graph, a 50,000 m² contributing-area channel threshold, and Freeman MFD plus 10k/100k m² thresholds as sensitivities. Export HAND, accumulation, stream mask, Strahler order, channel distance, receiver, and conditioned DTM. Preserve the raw DTM, conditioning delta, input fingerprint, exact tile-export checks, and QA manifest under ignored `output/mosaic/savinja/`.
+
+**Why:** D19 computes HAND separately inside every 1 km tile, so cross-boundary flow terminates at artificial tile outlets. The real 25-tile run routes 14,340 receiver links across former seams and has zero internal sinks. On the frozen development portion only, mosaic HAND improves the static-Q100 ROC-AUC/AP from 0.7387/0.1523 for per-tile HAND to 0.7894/0.1973. This satisfies the Phase-3 feature gate without consulting the locked test or adding absolute elevation to the score.
+
+**Conditioning and sensitivity result:** Only 1.0013% of cells change under unburned priority fill (median change 0.120 m among changed cells, p99 3.707 m, maximum 8.856 m). Official flow lines have a median 2.248 m height above their local 20 m minimum and failed the acceptance rule for gentle network burning, so no carve was accepted. The selected 50k m² D8 network has official-line precision 0.7687, recall 0.6706, and F1 0.7163. MFD at the same threshold has F1 0.7182 but only 0.4046 stream-cell Jaccard with D8; it remains a sensitivity rather than silently changing the primary graph. Conditioned-DTM and HAND seam ratios are 0.9968 and 0.9742, and all seven features reproduce exact mosaic windows in every tile export.
+
+**Caveats:** CLSS source tiles have no overlap/halo, so seam evidence comes from continuity tests rather than duplicate-return reconciliation. The outer mosaic boundary is open and can truncate contributing area from outside the 5×5 block. Priority filling is implemented; least-cost breaching is not, and the rejected gentle burn is only a bounded carve sensitivity. Static Q100 is a planning reference, not an observed August 2023 footprint. Urban underground drainage is not represented. The locked-test partition remains unopened for replacement feature engineering.
+
+**Reversible:** The D19 per-tile outputs and kernels remain intact. Remove `mosaic_hydrology.py` and its new public kernels/tests, delete ignored `output/mosaic/savinja/`, and continue selecting the explicit per-tile baseline. No committed web raster depends on D26 yet.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*
