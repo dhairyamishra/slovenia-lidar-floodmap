@@ -169,6 +169,9 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `output/diagnostics/samples/*.npz` | Ignored deterministic full-grid factor/score samples emitted by the pipeline |
 | `output/diagnostics/model_audit.*` | Ignored audit reports from `analyze_model.py` |
 | `validation/sources.json` | Versioned official DRSV source/layer inventory and pending event-data requirements |
+| `validation/evaluation_contract.json` | Frozen grids, spatial splits, boundary buffers, controls, and selection policy |
+| `validation/rasters/*` | Packed versioned 2 m / 10 m / 20 m official label grids with digests |
+| `validation/evaluation_manifest.json` | Expanded tile assignments and grid provenance generated from the contract |
 | `validation/data/*` | Gitignored official source downloads plus acquisition manifest/checksums |
 | `web/data/validation/*` | Compact WGS84 Q10/Q100/Q500, validity, and Q100 depth layers used by the app |
 | `output/diagnostics/validation_q100.*` | Gitignored D19/baseline evaluation against official Q100 inside its validity domain |
@@ -184,6 +187,8 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `prepare_validation_web.py` | Dissolves, simplifies, and transforms official Q10/Q100/Q500 references for MapLibre. |
 | `prepare_d19_web.py` | Migrates committed legacy D19 colors into compact sparse review PNGs without rerunning LAZ processing. |
 | `evaluate_validation.py` | Labels diagnostic samples inside official IKPN validity and reports D19/HAND/TWI baseline metrics. |
+| `prepare_validation_contract.py` | Generates packed multi-resolution label grids and expanded frozen split metadata. |
+| `validation_grid.py` | Deterministic rasterization, mask packing, split assignment, and digest helpers. |
 | `hydroclimate.py` | ERA5-Land-style hydroclimate trigger pipeline. Builds fixture assets for V1 and can derive from local ERA5-Land NetCDF files with xarray. |
 | `download_tiles.py` | Downloads CLSS GKOT tiles from the CDN with region auto-discovery and a probe cache. `--center/--radius`, `--bbox`, `--tiles`, `--dry-run`, `--pipeline`. |
 | `kernels.py` | Numba `@njit(cache=True)` hot loops — DTM grouped-min, D8 accumulation, HAND grid — bit-identical to the original pure-Python loops but ~70–150× faster. |

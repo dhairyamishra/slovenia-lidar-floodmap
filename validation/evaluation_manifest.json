@@ -1,0 +1,852 @@
+{
+  "schema_version": 1,
+  "generated": "2026-07-12T16:21:55.973601+00:00",
+  "contract": "validation/evaluation_contract.json",
+  "contract_sha256": "8056dc9eb1f9bf9f1476d16390bf5eaa6ffa06efc062ab60fc595f9394d1b6d0",
+  "source_crs": "EPSG:3794",
+  "split_assignments": {
+    "398_44": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "398_45": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "398_46": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "399_44": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "399_45": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "399_46": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "400_44": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "400_45": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "400_46": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "400_47": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "400_48": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "401_44": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "401_45": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "401_46": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "401_47": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "401_48": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "402_44": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "402_45": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "402_46": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "402_47": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "402_48": {
+      "region": "01-koper",
+      "split": "evaluation_only"
+    },
+    "455_100": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "455_101": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "455_102": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "455_103": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "455_104": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "455_105": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "455_96": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "455_97": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "455_98": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "455_99": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "456_100": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "456_101": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "456_102": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "456_103": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "456_104": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "456_105": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "456_96": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "456_97": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "456_98": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "456_99": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "457_100": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "457_101": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "457_102": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "457_103": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "457_104": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "457_105": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "457_96": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "457_97": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "457_98": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "457_99": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "458_100": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "458_101": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "458_102": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "458_103": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "458_104": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "458_105": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "458_96": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "458_97": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "458_98": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "458_99": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "459_100": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "459_101": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "459_102": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "459_103": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "459_104": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "459_105": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "459_96": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "459_97": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "459_98": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "459_99": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "460_100": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "460_101": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "460_102": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "460_103": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "460_104": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "460_105": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "460_96": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "460_97": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "460_98": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "460_99": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "461_100": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "461_101": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "461_102": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "461_103": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "461_104": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "461_105": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "461_96": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "461_97": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "461_98": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "461_99": {
+      "region": "05-ljubljana",
+      "split": "development"
+    },
+    "462_100": {
+      "region": "05-ljubljana",
+      "split": "guard"
+    },
+    "462_101": {
+      "region": "05-ljubljana",
+      "split": "guard"
+    },
+    "462_102": {
+      "region": "05-ljubljana",
+      "split": "guard"
+    },
+    "462_103": {
+      "region": "05-ljubljana",
+      "split": "guard"
+    },
+    "462_104": {
+      "region": "05-ljubljana",
+      "split": "guard"
+    },
+    "462_105": {
+      "region": "05-ljubljana",
+      "split": "guard"
+    },
+    "462_96": {
+      "region": "05-ljubljana",
+      "split": "guard"
+    },
+    "462_97": {
+      "region": "05-ljubljana",
+      "split": "guard"
+    },
+    "462_98": {
+      "region": "05-ljubljana",
+      "split": "guard"
+    },
+    "462_99": {
+      "region": "05-ljubljana",
+      "split": "guard"
+    },
+    "463_100": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "463_101": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "463_102": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "463_103": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "463_104": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "463_105": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "463_96": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "463_97": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "463_98": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "463_99": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "464_100": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "464_101": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "464_102": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "464_103": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "464_104": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "464_105": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "464_96": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "464_97": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "464_98": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "464_99": {
+      "region": "05-ljubljana",
+      "split": "locked_test"
+    },
+    "486_132": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "486_133": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "486_134": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "486_135": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "486_136": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "487_132": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "487_133": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "487_134": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "487_135": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "487_136": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "488_132": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "488_133": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "488_134": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "488_135": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "488_136": {
+      "region": "08-kamnik",
+      "split": "development"
+    },
+    "489_132": {
+      "region": "08-kamnik",
+      "split": "guard"
+    },
+    "489_133": {
+      "region": "08-kamnik",
+      "split": "guard"
+    },
+    "489_134": {
+      "region": "08-kamnik",
+      "split": "guard"
+    },
+    "489_135": {
+      "region": "08-kamnik",
+      "split": "guard"
+    },
+    "489_136": {
+      "region": "08-kamnik",
+      "split": "guard"
+    },
+    "490_132": {
+      "region": "08-kamnik",
+      "split": "locked_test"
+    },
+    "490_133": {
+      "region": "08-kamnik",
+      "split": "locked_test"
+    },
+    "490_134": {
+      "region": "08-kamnik",
+      "split": "locked_test"
+    },
+    "490_135": {
+      "region": "08-kamnik",
+      "split": "locked_test"
+    },
+    "490_136": {
+      "region": "08-kamnik",
+      "split": "locked_test"
+    }
+  },
+  "rasters": [
+    {
+      "region": "01-koper",
+      "resolution_m": 2,
+      "path": "validation/rasters/01-koper_2m.npz",
+      "sha256": "edf7aeba8f29f15177601c04d71e2107da422392c86234232c4a6ef2b18f0ce6",
+      "grid": {
+        "xmin": 398000.0,
+        "ymin": 44000.0,
+        "xmax": 403000.0,
+        "ymax": 49000.0,
+        "resolution_m": 2,
+        "width": 2500,
+        "height": 2500,
+        "cell_anchor": "center",
+        "row_order": "north-to-south"
+      },
+      "positive_cell_counts": {
+        "validity": 1433666,
+        "q10": 199452,
+        "q100": 336047,
+        "q500": 621642,
+        "depth_lt_0_5m": 130954,
+        "depth_0_5_to_1_5m": 95065,
+        "depth_ge_1_5m": 48192,
+        "q100_boundary_10m": 228928,
+        "q100_boundary_20m": 381620
+      }
+    },
+    {
+      "region": "01-koper",
+      "resolution_m": 10,
+      "path": "validation/rasters/01-koper_10m.npz",
+      "sha256": "60d45428234d1ed61b4401c5dd79c8b0bac477f95c9c20a28144b4be0389a2a5",
+      "grid": {
+        "xmin": 398000.0,
+        "ymin": 44000.0,
+        "xmax": 403000.0,
+        "ymax": 49000.0,
+        "resolution_m": 10,
+        "width": 500,
+        "height": 500,
+        "cell_anchor": "center",
+        "row_order": "north-to-south"
+      },
+      "positive_cell_counts": {
+        "validity": 57915,
+        "q10": 9304,
+        "q100": 14749,
+        "q500": 25747,
+        "depth_lt_0_5m": 6489,
+        "depth_0_5_to_1_5m": 4822,
+        "depth_ge_1_5m": 2250,
+        "q100_boundary_10m": 9984,
+        "q100_boundary_20m": 16057
+      }
+    },
+    {
+      "region": "01-koper",
+      "resolution_m": 20,
+      "path": "validation/rasters/01-koper_20m.npz",
+      "sha256": "78f448d373bd823fe25c2f730c7cae26f364c14d19319ef5b887055500a4d2f6",
+      "grid": {
+        "xmin": 398000.0,
+        "ymin": 44000.0,
+        "xmax": 403000.0,
+        "ymax": 49000.0,
+        "resolution_m": 20,
+        "width": 250,
+        "height": 250,
+        "cell_anchor": "center",
+        "row_order": "north-to-south"
+      },
+      "positive_cell_counts": {
+        "validity": 14674,
+        "q10": 2799,
+        "q100": 4134,
+        "q500": 6668,
+        "depth_lt_0_5m": 2060,
+        "depth_0_5_to_1_5m": 1585,
+        "depth_ge_1_5m": 675,
+        "q100_boundary_10m": 2779,
+        "q100_boundary_20m": 4319
+      }
+    },
+    {
+      "region": "05-ljubljana",
+      "resolution_m": 2,
+      "path": "validation/rasters/05-ljubljana_2m.npz",
+      "sha256": "a38d3e93d646fbb78de95b73d4806c16fa10000259fbac46c8a4aac730838cc7",
+      "grid": {
+        "xmin": 455000.0,
+        "ymin": 96000.0,
+        "xmax": 465000.0,
+        "ymax": 106000.0,
+        "resolution_m": 2,
+        "width": 5000,
+        "height": 5000,
+        "cell_anchor": "center",
+        "row_order": "north-to-south"
+      },
+      "positive_cell_counts": {
+        "validity": 12694820,
+        "q10": 2261618,
+        "q100": 5024539,
+        "q500": 6323729,
+        "depth_lt_0_5m": 2159217,
+        "depth_0_5_to_1_5m": 2372017,
+        "depth_ge_1_5m": 564227,
+        "q100_boundary_10m": 1803114,
+        "q100_boundary_20m": 3030793
+      }
+    },
+    {
+      "region": "05-ljubljana",
+      "resolution_m": 10,
+      "path": "validation/rasters/05-ljubljana_10m.npz",
+      "sha256": "8acd4ddaa30a8d5968444f888df53116093e88905db321c34c1b09d5ae729c1f",
+      "grid": {
+        "xmin": 455000.0,
+        "ymin": 96000.0,
+        "xmax": 465000.0,
+        "ymax": 106000.0,
+        "resolution_m": 10,
+        "width": 1000,
+        "height": 1000,
+        "cell_anchor": "center",
+        "row_order": "north-to-south"
+      },
+      "positive_cell_counts": {
+        "validity": 509545,
+        "q10": 97598,
+        "q100": 210484,
+        "q500": 260461,
+        "depth_lt_0_5m": 98395,
+        "depth_0_5_to_1_5m": 103893,
+        "depth_ge_1_5m": 25253,
+        "q100_boundary_10m": 70533,
+        "q100_boundary_20m": 120805
+      }
+    },
+    {
+      "region": "05-ljubljana",
+      "resolution_m": 20,
+      "path": "validation/rasters/05-ljubljana_20m.npz",
+      "sha256": "cf48ead68263c5a7247e365bc6a6e57349f1c5df39174f5b3e5b99449a816418",
+      "grid": {
+        "xmin": 455000.0,
+        "ymin": 96000.0,
+        "xmax": 465000.0,
+        "ymax": 106000.0,
+        "resolution_m": 20,
+        "width": 500,
+        "height": 500,
+        "cell_anchor": "center",
+        "row_order": "north-to-south"
+      },
+      "positive_cell_counts": {
+        "validity": 128065,
+        "q10": 26771,
+        "q100": 55695,
+        "q500": 67322,
+        "depth_lt_0_5m": 28485,
+        "depth_0_5_to_1_5m": 28826,
+        "depth_ge_1_5m": 7261,
+        "q100_boundary_10m": 16931,
+        "q100_boundary_20m": 29813
+      }
+    },
+    {
+      "region": "08-kamnik",
+      "resolution_m": 2,
+      "path": "validation/rasters/08-kamnik_2m.npz",
+      "sha256": "0890afe5a53cb8b9ce2c6ccb9dd11d74cfa38af70dd2f32870d6ca604188f712",
+      "grid": {
+        "xmin": 486000.0,
+        "ymin": 132000.0,
+        "xmax": 491000.0,
+        "ymax": 137000.0,
+        "resolution_m": 2,
+        "width": 2500,
+        "height": 2500,
+        "cell_anchor": "center",
+        "row_order": "north-to-south"
+      },
+      "positive_cell_counts": {
+        "validity": 749484,
+        "q10": 38216,
+        "q100": 134310,
+        "q500": 191740,
+        "depth_lt_0_5m": 92367,
+        "depth_0_5_to_1_5m": 39660,
+        "depth_ge_1_5m": 3992,
+        "q100_boundary_10m": 155324,
+        "q100_boundary_20m": 260196
+      }
+    },
+    {
+      "region": "08-kamnik",
+      "resolution_m": 10,
+      "path": "validation/rasters/08-kamnik_10m.npz",
+      "sha256": "9fa61e9a490865ff26941b60d530e19b54f30ef1e31e87c1b6eddc54337e40f6",
+      "grid": {
+        "xmin": 486000.0,
+        "ymin": 132000.0,
+        "xmax": 491000.0,
+        "ymax": 137000.0,
+        "resolution_m": 10,
+        "width": 500,
+        "height": 500,
+        "cell_anchor": "center",
+        "row_order": "north-to-south"
+      },
+      "positive_cell_counts": {
+        "validity": 30479,
+        "q10": 1994,
+        "q100": 6339,
+        "q500": 8688,
+        "depth_lt_0_5m": 4049,
+        "depth_0_5_to_1_5m": 2364,
+        "depth_ge_1_5m": 389,
+        "q100_boundary_10m": 6588,
+        "q100_boundary_20m": 11051
+      }
+    },
+    {
+      "region": "08-kamnik",
+      "resolution_m": 20,
+      "path": "validation/rasters/08-kamnik_20m.npz",
+      "sha256": "4f5ee5cc5ada1f9a9359f6c5a9e380386c147a90023f8b1df39d2f574ef966ae",
+      "grid": {
+        "xmin": 486000.0,
+        "ymin": 132000.0,
+        "xmax": 491000.0,
+        "ymax": 137000.0,
+        "resolution_m": 20,
+        "width": 250,
+        "height": 250,
+        "cell_anchor": "center",
+        "row_order": "north-to-south"
+      },
+      "positive_cell_counts": {
+        "validity": 7778,
+        "q10": 652,
+        "q100": 1892,
+        "q500": 2515,
+        "depth_lt_0_5m": 1133,
+        "depth_0_5_to_1_5m": 821,
+        "depth_ge_1_5m": 183,
+        "q100_boundary_10m": 1737,
+        "q100_boundary_20m": 2947
+      }
+    }
+  ],
+  "semantics": {
+    "outside_validity": "unknown-not-dry",
+    "q100_boundary_masks": "ambiguous-exclude-or-report-separately",
+    "locked_test": "not-for-feature-threshold-or-hyperparameter-selection"
+  }
+}

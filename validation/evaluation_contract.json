@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "status": "locked-before-replacement-model-fitting",
+  "crs": "EPSG:3794",
+  "grid_resolutions_m": [2, 10, 20],
+  "boundary_uncertainty_buffers_m": [10, 20],
+  "label_layers": {
+    "validity": "ikpn_validity.geojson",
+    "q10": "ikpn_q10.geojson",
+    "q100": "ikpn_q100.geojson",
+    "q500": "ikpn_q500.geojson",
+    "depth_lt_0_5m": "ikg_q100_depth_lt_0_5m.geojson",
+    "depth_0_5_to_1_5m": "ikg_q100_depth_0_5_to_1_5m.geojson",
+    "depth_ge_1_5m": "ikg_q100_depth_ge_1_5m.geojson"
+  },
+  "spatial_splits": {
+    "05-ljubljana": {
+      "development": "tile_easting_km <= 461",
+      "guard": "tile_easting_km == 462",
+      "locked_test": "tile_easting_km >= 463",
+      "rationale": "Two eastern tile columns are locked; one full column prevents direct adjacency leakage."
+    },
+    "08-kamnik": {
+      "development": "tile_easting_km <= 488",
+      "guard": "tile_easting_km == 489",
+      "locked_test": "tile_easting_km >= 490",
+      "rationale": "Eastern column is locked; one full column separates the Savinja engineering pilot."
+    },
+    "01-koper": {
+      "evaluation_only": "all tiles",
+      "rationale": "Coastal SLR is a separate mechanism; Koper does not select the riverine replacement."
+    }
+  },
+  "negative_controls": {
+    "low_flat_q100_negative": {
+      "rule": "inside validity, outside Q100 and ambiguity buffer, norm_elev <= 0.35, norm_slope <= 0.25",
+      "purpose": "Detect the D19 low-flat basin shortcut."
+    },
+    "low_hand_q100_negative": {
+      "rule": "inside validity, outside Q100 and ambiguity buffer, norm_hand <= 0.20",
+      "purpose": "Detect false positives at low per-tile HAND endpoints or disconnected terrain."
+    },
+    "flat_upland_q100_negative": {
+      "rule": "inside validity, outside Q100 and ambiguity buffer, norm_elev >= 0.65, norm_slope <= 0.25",
+      "purpose": "Check whether flatness alone triggers the model away from the basin floor."
+    },
+    "terrace_like_q100_negative": {
+      "rule": "inside validity, outside Q100 and ambiguity buffer, 0.20 < norm_hand <= 0.45, norm_slope <= 0.35",
+      "purpose": "Approximate elevated/channel-adjacent terrace controls until mapped landform controls exist."
+    }
+  },
+  "selection_policy": {
+    "fit_and_threshold_data": "development only",
+    "guard_data": "excluded from fitting and final metrics",
+    "locked_test_data": "baseline reporting now; replacement model access only at final selection gate",
+    "koper_data": "report separately; never pool for riverine selection",
+    "random_pixel_splits": "prohibited"
+  },
+  "limitations": [
+    "official-static-hazard-reference-not-observed-event",
+    "negative-controls-are-q100-negative-not-proven-dry-events",
+    "diagnostic-samples-are-score-decile-stratified",
+    "august-2023-observed-extent-pending"
+  ]
+}

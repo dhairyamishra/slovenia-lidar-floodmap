@@ -37,6 +37,23 @@ Downloaded polygons are reference labels, not automatically perfect truth.
 Hydraulic study coverage, age, boundary uncertainty, and scenario semantics
 must remain visible in evaluation.
 
+## Frozen evaluation contract
+
+`evaluation_contract.json` locks the label layers, 2 m / 10 m / 20 m grids,
+Q100 boundary-ambiguity buffers, spatial development/guard/locked-test rules,
+and deterministic Q100-negative control cohorts before replacement fitting.
+
+```powershell
+python prepare_validation_contract.py
+python evaluate_validation.py
+```
+
+The generator writes nine compact versioned grids under `validation/rasters/`
+and an expanded `evaluation_manifest.json` with tile assignments, cell counts,
+and digests. Areas outside IKPN validity are unknown. Cells within the primary
+10 m Q100 boundary band are ambiguous. Koper is evaluation-only for riverine
+selection. The locked test must not guide Phase-3/4 feature engineering.
+
 ## Still missing
 
 The static hazard layers do not prove what flooded on 4 August 2023. Phase 1

@@ -1,6 +1,6 @@
 # Aleks Review: Flood Algorithm, Validation, Differentiation, and Map Redesign
 
-> Focused implementation tracker for the red-map remediation and D19 replacement: [`FLOOD_MODEL_REPLACEMENT_PLAN.md`](FLOOD_MODEL_REPLACEMENT_PLAN.md). Review and approve that plan before beginning the next implementation slice.
+> Approved active tracker for the red-map remediation and D19 replacement: [`FLOOD_MODEL_REPLACEMENT_PLAN.md`](FLOOD_MODEL_REPLACEMENT_PLAN.md). Completed phases must also update this roadmap, the experiment log, `DECISIONS.md`, and `HANDOFF.md`.
 
 **Created:** 2026-07-11
 **Status:** Active execution plan
@@ -419,9 +419,9 @@ The 2023 fixture must be visibly watermarked “synthetic demo” or removed fro
 - [ ] Obtain August 2023 Savinja observed flood extent from official or Sentinel-1 sources.
 - [ ] Acquire ARSO precipitation/discharge/stage series for relevant gauges/catchments.
 - [x] Record source URLs, OPSI license statement, CRS, acquisition timestamp, feature counts, regional envelopes, and content digests in the validation contract/manifest.
-- [ ] Build versioned validation rasters and negative-control polygons.
+- [x] Build versioned validation rasters and deterministic negative-control cohorts (D25; mapped partner/landform control polygons can be added later without changing the frozen rules).
 
-**Exit gate:** validation labels render in the app and can be sampled by the analysis pipeline.
+**Static-reference gate: PASSED 2026-07-12.** Official labels render in the app and are available as versioned 2 m / 10 m / 20 m packed evaluation grids. The analysis pipeline applies fixed development/guard/locked-test splits, boundary ambiguity, and negative controls. The August-2023 event and ARSO forcing tasks remain open and are required for the later hindcast/trigger gate.
 
 ### Phase 2 — Fix hydrology (highest algorithm priority)
 
@@ -481,6 +481,8 @@ Append each experiment; never overwrite an unfavorable result.
 | E000 | 2026-07-11 | Pre-provenance D19 outputs | 146 PNGs, top-500 candidates | Diagnostic only | Initial visual/candidate audit | Median warm ≈98.4%; median strongly red ≈90.1% | Candidate-tail analysis inconclusive; full-grid export missing | Reject current display; build diagnostics |
 | E001 | 2026-07-11 | `D19-baseline-v1`, digest `11560dd7d57b0e51` | 360,790 samples from 145 land-bearing tiles; 146 PNGs | Equal quota by score decile per tile; descriptive only | Full Phase-0 baseline audit + altitude ablations | Median warm 0.9879; strongly red 0.9219; candidate max-tile share 0.12 | Overall Pearson −0.4742 / Spearman −0.5057; per-region Pearson: Koper −0.7675, Ljubljana −0.8181, Kamnik −0.6239; removing elevation+slope still −0.3825 | Freeze D19 as non-default baseline; acquire labels and build mosaic hydrology before selecting weights |
 | E002 | 2026-07-11 | `D19-baseline-v1` | Official DRSV IKPN Q100 + validity; 151,435 eligible samples, 55,309 Q100-positive | Descriptive held reference; per-tile stability, no fitting | Compare D19 with HAND/TWI/no-elevation-slope baselines | D19 ROC-AUC 0.5972 / AP 0.4109; HAND-only ROC-AUC 0.6908 / AP 0.4985; median tile AUC 0.6239 (IQR 0.5285–0.7415) | D19 region AUC: Koper 0.5368, Ljubljana 0.6117, Kamnik 0.6648 | Reject D19 as selected model; use HAND-only as minimum baseline and build mosaic HAND before fitting |
+
+| E003 | 2026-07-12 | `D19-baseline-v1`, validation contract v1 | DRSV validity/Q10/Q100/Q500/depth; 128,737 eligible samples after 10 m Q100 boundary exclusion | Frozen east-strip locked tests with 1 km guard columns; Koper evaluation-only | Lock label grids, spatial splits, ambiguity, and negative controls before replacement fitting | Locked test: D19 AUC/AP 0.6100/0.3737; HAND-only 0.7764/0.5548. Overall HAND-only 0.7130/0.4915 vs D19 0.6069/0.3922 | Low-flat Q100-negative flagged at development top-10% threshold: D19 0.1334, HAND-only 0.0904 | Freeze contract and preserve locked test for final replacement gate; proceed to Savinja mosaic hydrology |
 
 ## 12. Decision gates
 

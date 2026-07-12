@@ -1,12 +1,30 @@
 # Handoff - Slovenia CLSS LiDAR Flood, Coastal & Hydroclimate Demo
 
-**Status:** Phase 1 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` is complete (D24). D19 remains frozen and off by default, but its normal display is now a sparse purple review mask; the original saturated red raster is retained only for technical audit. Official DRSV validity, Q100 depth, and Q100 comparison controls are implemented. Phase 2 validation locking is next.
+**Status:** Phases 1–2 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D25). D19 communication is repaired, and the official static-reference evaluation is locked with versioned grids, spatial guards/tests, ambiguity buffers, and negative controls. Phase 3 Savinja mosaic hydrology is next.
 
 **Goal:** A polished, honest screening tool for Aleks / sledilnik.org that shows where detailed flood/coastal investigation should start. It is not a hydraulic, coastal, or probabilistic forecast model.
 
 > Authoritative context: `AGENTS.md`, `CLAUDE.md`, `DECISIONS.md`, and `PLAN.md`. This handoff is the current snapshot plus the latest implementation notes.
 > The active review/implementation tracker is `ALEKS_REVIEW_AND_ALGORITHM_PLAN.md`.
 > The focused red-map/model-replacement tracker is `FLOOD_MODEL_REPLACEMENT_PLAN.md`.
+
+## D25 Phase-2 validation lock (2026-07-12)
+
+- Added committed `validation/evaluation_contract.json`: label layers, 2/10/20 m grids, 10/20 m boundary buffers, split rules, controls, and selection policy.
+- Added `validation_grid.py` and `prepare_validation_contract.py`.
+- Generated nine committed packed grids plus `validation/evaluation_manifest.json`; total size 1.82 MB with SHA-256 digests and positive-cell counts.
+- Frozen split: Ljubljana E455–461 development / E462 guard / E463–464 locked; Savinja E486–488 development / E489 guard / E490 locked; Koper evaluation-only.
+- Updated `evaluate_validation.py` to exclude the 10 m Q100 ambiguity band, report split metrics, and apply development top-10% thresholds to four negative-control cohorts.
+- Eligible diagnostic samples: 128,737 after excluding 22,698 ambiguous boundary samples.
+- Frozen locked-test result: D19 AUC/AP 0.6100/0.3737; HAND-only 0.7764/0.5548.
+- Low-flat Q100-negative flagged fraction: D19 0.1334 vs HAND-only 0.0904 using development-selected thresholds.
+- Added raster/split/control tests. Full repository verification is recorded with the Phase-2 commit.
+
+**Why:** This prevents random-pixel leakage and post-hoc reshaping of the test. It also makes “outside official extent” meaningful only inside validity and away from ambiguous boundaries.
+
+**Important discipline:** Do not inspect locked-test replacement results during Phase 3/4 feature engineering. Use development blocks and seam/physics tests. Open the locked test only at the final model-selection gate.
+
+**Next entry point:** Phase 3—build conditioned, continuous Savinja mosaic routing/HAND/channel-distance features, prove seam continuity, and compare only on development blocks until the final gate.
 
 ## D24 Phase-1 communication repair (2026-07-12)
 

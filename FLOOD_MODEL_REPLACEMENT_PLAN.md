@@ -1,13 +1,13 @@
 # Flood Terrain Model Replacement Plan
 
-**Status:** Approved and in progress. Phase 1 complete (D24); Phase 2 active.
+**Status:** Approved and in progress. Phases 1–2 complete (D24–D25); Phase 3 active.
 
 **Prepared:** 2026-07-12
 
 **Progress:**
 
 - [x] Phase 1 — communication repair, DRSV validity/depth, Q100 comparison.
-- [ ] Phase 2 — validation rasters, locked spatial splits, negative controls.
+- [x] Phase 2 — validation rasters, locked spatial splits, negative controls.
 - [ ] Phase 3 — Savinja mosaic hydrology.
 - [ ] Phase 4 — Ljubljana mosaic hydrology.
 - [ ] Phase 5+ — model benchmark, sparse production output, scenario evidence.
@@ -279,7 +279,7 @@ Do not show cell-level probability unless the target is defined, multiple indepe
 | Phase | Scope | Deliverable | Exit condition |
 |---|---|---|---|
 | 1 | Communication repair | Honest D19/DRSV comparison UI | **Complete — D24** |
-| 2 | Validation lock | Rasters, spatial blocks, controls | B4 |
+| 2 | Validation lock | Rasters, spatial blocks, controls | **Complete — D25** |
 | 3 | Savinja mosaic | Continuous conditioned hydrology | C6 Savinja |
 | 4 | Ljubljana mosaic | Continuous basin features | C6 Ljubljana |
 | 5 | Model benchmark | Candidate comparison/model card | D1 |

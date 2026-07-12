@@ -248,6 +248,20 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 **Reversible:** Remove the `d19_review`/`d19_diagnostic` manifest entries and generated review PNGs, restore the legacy susceptibility layer wiring, and remove ancillary official controls/assets. The frozen `susceptibility.png` files remain unchanged throughout.
 
+### D25 — Freeze multi-resolution labels, spatial test blocks, ambiguity, and negative controls
+
+**Decision:** Lock the static-reference evaluation contract before replacement-model fitting. Commit packed official-label grids at 2 m, 10 m, and 20 m for Koper, Ljubljana, and Kamnik/Savinja; exclude a 10 m band around Q100 boundaries from primary sample metrics; and use deterministic tile-column splits. Ljubljana development is E455–461, E462 is a 1 km guard, and E463–464 is locked test. Savinja development is E486–488, E489 is guard, and E490 is locked test. Koper is evaluation-only and cannot select the riverine model. Four deterministic Q100-negative control cohorts target low-flat, low-HAND, flat-upland, and terrace-like failures.
+
+**Why:** Random pixels leak nearly identical terrain between train and test. Boundary cells also overstate error where official polygon alignment and rasterization are uncertain. A one-tile guard prevents direct adjacency between development and test strips, while multi-resolution grids expose sensitivity to label scale. Koper must remain separate because coastal SLR is a different mechanism. Freezing these rules now prevents later feature/threshold choices from reshaping the evaluation in their favor.
+
+**Implementation:** `validation/evaluation_contract.json` is the human-readable contract. `validation_grid.py` provides deterministic split, rasterization, packing, and digest helpers. `prepare_validation_contract.py` creates nine versioned `.npz` grids plus `validation/evaluation_manifest.json`, including expanded tile assignments, cell counts, and SHA-256 digests. `evaluate_validation.py` now excludes ambiguous boundaries, reports development/locked/evaluation-only baselines, and applies development-selected top-10% thresholds to frozen controls.
+
+**Result:** Nine grid files total 1.82 MB. After excluding 22,698 ambiguous samples, 128,737 diagnostic samples remain. On the frozen locked test, D19 scores ROC-AUC 0.6100 / AP 0.3737 while HAND-only scores 0.7764 / 0.5548. At development top-10% thresholds, the low-flat Q100-negative cohort is flagged 13.34% by D19 versus 9.04% by HAND-only. These are static Q100 baselines, not final event skill.
+
+**Caveats:** Diagnostic samples remain score-decile/tile stratified, so area prevalence cannot be inferred from sample fractions. Negative controls mean “outside official Q100 inside validity,” not proven dry during every event. The east-strip test is fixed and spatially buffered but is one partition, not full spatial cross-validation. The locked test has now been used only to freeze baseline expectations; replacement development must not inspect it until the final selection gate.
+
+**Reversible:** Remove the evaluation contract/grid files and helpers and revert `evaluate_validation.py` to descriptive whole-domain reporting. This is not recommended because it would reopen leakage and evaluation-shaping risks.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*
