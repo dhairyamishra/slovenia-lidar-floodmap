@@ -1,12 +1,50 @@
 # Handoff - Slovenia CLSS LiDAR Flood, Coastal & Hydroclimate Demo
 
-**Status:** Phases 1–4 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D27). Phase 5 candidates are implemented, but the D28 development selection gate failed. D29 removes the synthetic hydroclimate grid and triggered-candidate visualizations from the public app while retaining their calculations. D30 replaces the former Q100/D19 transparency blend with calculated, clickable comparison categories and exact area shares. The locked test remains unopened and no replacement is approved.
+**Status:** Phases 1–4 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D27). Phase 5 candidates are implemented, but the D28 development selection gate failed. D29 removes the synthetic hydroclimate grid and triggered-candidate visualizations from the public app while retaining their calculations. D30 replaces the former Q100/D19 transparency blend with calculated, clickable comparison categories and exact area shares. D31 expands public LiDAR/reference coverage from 146 to 391 tiles while preserving the frozen evaluation contract. No replacement is approved.
 
 **Goal:** A polished, honest screening tool for Aleks / sledilnik.org that shows where detailed flood/coastal investigation should start. It is not a hydraulic, coastal, or probabilistic forecast model.
 
 > Authoritative context: `AGENTS.md`, `CLAUDE.md`, `DECISIONS.md`, and `PLAN.md`. This handoff is the current snapshot plus the latest implementation notes.
 > The active review/implementation tracker is `ALEKS_REVIEW_AND_ALGORITHM_PLAN.md`.
 > The focused red-map/model-replacement tracker is `FLOOD_MODEL_REPLACEMENT_PLAN.md`.
+
+## D31 Hydraulic-validity coverage expansion (2026-07-13)
+
+- Downloaded and header-verified 245 new GKOT LAZ tiles in ten bounded 5x5
+  chunks selected by overlap with official IKPN hydraulic-study validity. The
+  complete public dataset is now 391 tiles: Ljubljana 295, Kamnik/Savinja 75,
+  Koper 21; raw GKOT storage is 91.74 GB decimal.
+- Recalibrated Ljubljana and Kamnik/Savinja, then reprocessed all 391 tiles with
+  three workers in 1,296 seconds. All expected tile products, 500 candidates,
+  20 region-capped review points, and the manifest were regenerated.
+- Refreshed official validity (46 features) and Q100 (3,833 polygons), rebuilt
+  compact official web layers, and generated schema-v2 comparison display and
+  click-index images for every current tile directly from raw official geometry.
+- Expanded comparable area: Ljubljana 160.414 km2 at 99.71% D19 coverage of
+  validity; Kamnik/Savinja 29.790 km2 at 99.86%. Ljubljana shares are 31.79%
+  official-only, 11.59% D19-only, 7.53% both, 49.09% neither.
+- Preserved `validation/evaluation_contract.json`, its packed grids, and spatial
+  assignments unchanged. The post-expansion frozen baseline remains rejected:
+  D19 AUC/AP 0.5690/0.3791 versus HAND-only 0.7049/0.5123.
+- Added atomic concurrent tile downloads, exact batch tests, bounded official
+  ArcGIS query cells, and lazy registration of hidden tile rasters in the app.
+- Made the canonical pipeline write D19 display metadata directly. This avoids
+  running the legacy palette-recovery migration after a LAZ rerun; categorical
+  shares above use the direct unquantized regional display score before final
+  PNG palette compression.
+
+**Why:** The old map had isolated LiDAR blocks over a much larger official-study
+network. This expansion makes the categorical comparison available over material
+central-validity corridors without claiming those corridors flood. Public
+coverage may expand; the locked scientific benchmark must not silently move.
+
+**Known limitation:** The DRSV service repeatedly disconnected while paging the
+ancillary IKRPN low-risk class. Critical validity/Q100 data and their acquisition
+records are current, so this does not affect the user-facing comparison. Retry
+ancillary layers separately if they become product requirements.
+
+**Exact selection and regeneration record:** `VALIDITY_TILE_EXPANSION.md` and
+`validation/validity_expansion_2026_07.json`.
 
 ## D30 Real categorical Q100 comparison (2026-07-12)
 
@@ -183,7 +221,8 @@ Verified facts from this implementation:
   - `C:\Users\dhair\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe hydroclimate.py export`
 - Generated hydroclimate web assets total about 209 KB.
 - The fixture dynamic ranking puts Savinja tile `488_132` at rank #1 for `2023-08-04` with `event_score: 0.777`, `static_risk_score: 0.953`, and `hydro_index: 0.816`.
-- `web/data/manifest.json` still has `tile_count: 146`.
+- At the time of the historical D21 fixture implementation,
+  `web/data/manifest.json` had `tile_count: 146`; D31 supersedes this with 391.
 
 ## Method
 

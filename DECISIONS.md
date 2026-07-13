@@ -322,6 +322,48 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 **Reversible:** Restore the D24 source-layer stacking logic and remove the generated comparison PNGs, manifest block, script, and tests. The official and frozen D19 source products are unchanged.
 
+### D31 — Expand public LiDAR coverage along hydraulic-study validity without moving the evaluation target
+
+**Decision:** Add ten aligned 5 km by 5 km GKOT chunks selected by material
+intersection with the official IKPN hydraulic-study validity geometry. Download
+245 new tiles, increasing the public dataset from 146 to 391 tiles. Recalibrate
+the affected CDN regions and rerun the canonical D19 pipeline across the whole
+local inventory. Generate public Q100 comparison tiles independently from the
+current official geometry for every current web tile, while leaving the frozen
+evaluation grids, splits, ambiguity band, and locked-test assignments unchanged.
+
+**Why:** The prior LiDAR map covered only isolated blocks inside a much larger
+official-study network, limiting where the categorical comparison could be
+interpreted. Coverage expansion is a product/data decision, not permission to
+reshape the scientific benchmark or claim that selected tiles flood.
+
+**Implementation:** The exact chunks and overlap areas are recorded in
+`VALIDITY_TILE_EXPANSION.md` and
+`validation/validity_expansion_2026_07.json`. `download_tiles.py` now supports
+concurrent atomic `.part` downloads. `download_validation.py` can subdivide
+large regional envelopes into bounded spatial query cells to avoid fragile deep
+ArcGIS offsets. `prepare_q100_comparison.py` rasterizes raw validity/Q100
+geometry per current 1 km tile and records schema-v2 source hashes and regional
+area shares. Hidden per-tile browser rasters are registered lazily.
+
+**Result:** The dataset is 295 Ljubljana, 75 Kamnik/Savinja, and 21 Koper tiles
+(91.74 GB raw GKOT). The full pipeline completed in 1,296 seconds. Comparable
+area is 160.414 km2 in Ljubljana and 29.790 km2 in Kamnik/Savinja. Ljubljana's
+direct-score comparison shares are 31.79% official-only, 11.59% D19-only, 7.53%
+both, and 49.09% neither. The fixed evaluation still rejects D19: AUC/AP
+0.5690/0.3791 versus HAND-only 0.7049/0.5123. No production replacement was
+selected.
+
+**Caveat:** The official service repeatedly disconnected on the ancillary IKRPN
+low-risk layer even after smaller pages/cells. Critical validity and Q100 layers
+and their acquisition records are current; the low-risk class is not used in
+the public categorical comparison.
+
+**Reversible:** Remove the 245 new LAZ files and derived tile directories, purge
+their manifest/cache entries, restore the prior regional calibration, and rerun
+the old 146-tile dataset. Do not regenerate the frozen evaluation contract in
+either direction.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 
 import numpy as np
+from shapely.geometry import box
 
 import prepare_q100_comparison as comparison
 
@@ -11,6 +12,18 @@ ROOT = Path(__file__).resolve().parent
 
 
 class ComparisonClassificationTests(unittest.TestCase):
+    def test_official_masks_are_rasterized_per_tile_without_evaluation_grid(self):
+        validity, q100 = comparison.official_masks_for_tile(
+            "460_100",
+            box(460_000, 100_000, 460_500, 101_000),
+            box(460_250, 100_000, 460_750, 101_000),
+        )
+        self.assertEqual(validity.shape, (500, 500))
+        self.assertEqual(int(validity.sum()), 125_000)
+        # Pillow includes the polygon edge cell under the frozen center-anchor
+        # rasterization convention used throughout validation_grid.py.
+        self.assertEqual(int(q100.sum()), 63_000)
+
     def test_categories_distinguish_domain_neither_only_overlap_and_unavailable(self):
         validity = np.array([[False, True, True], [True, True, True]])
         q100 = np.array([[False, False, True], [False, True, True]])
@@ -42,7 +55,7 @@ class ComparisonClassificationTests(unittest.TestCase):
 class ComparisonWebAssetTests(unittest.TestCase):
     def test_all_tiles_register_visual_and_click_index_assets(self):
         manifest = json.loads((ROOT / "web/data/manifest.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["q100_comparison"]["schema_version"], 1)
+        self.assertEqual(manifest["q100_comparison"]["schema_version"], 2)
         self.assertEqual(set(manifest["q100_comparison"]["regions"]), {
             "01-koper", "05-ljubljana", "08-kamnik",
         })
@@ -60,6 +73,12 @@ class ComparisonWebAssetTests(unittest.TestCase):
         self.assertIn("Official Q100:", app)
         self.assertIn("Official study validity:", app)
         self.assertNotIn("visual overlap", html.lower())
+
+    def test_hidden_tile_rasters_are_registered_lazily(self):
+        app = (ROOT / "web/app.js").read_text(encoding="utf-8")
+        self.assertIn("function ensureTileLayer", app)
+        self.assertIn("function ensureCoastalLayer", app)
+        self.assertNotIn("manifest.tiles.forEach(tile => addTileLayers", app)
 
 
 if __name__ == "__main__":

@@ -34,6 +34,20 @@ class ValidationEnvelopeTests(unittest.TestCase):
         }
         self.assertEqual(len(merged), 1)
 
+    def test_large_envelope_is_split_into_bounded_query_cells(self):
+        envelope = {
+            "xmin": 0, "ymin": 0, "xmax": 12000, "ymax": 7000,
+            "spatialReference": {"wkid": 3794},
+        }
+        cells = list(download_validation.subdivide_envelope(envelope, 5000))
+        self.assertEqual(len(cells), 6)
+        self.assertEqual(cells[0]["xmax"], 5000)
+        self.assertEqual(cells[-1]["xmin"], 10000)
+        self.assertEqual(cells[-1]["xmax"], 12000)
+        self.assertEqual(cells[-1]["ymax"], 7000)
+        self.assertTrue(all(cell["xmax"] - cell["xmin"] <= 5000 for cell in cells))
+        self.assertTrue(all(cell["ymax"] - cell["ymin"] <= 5000 for cell in cells))
+
 
 if __name__ == "__main__":
     unittest.main()

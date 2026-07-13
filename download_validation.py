@@ -19,6 +19,7 @@ MANIFEST_PATH = ROOT / "web" / "data" / "manifest.json"
 REGION_CACHE_PATH = ROOT / ".tile_region_cache.json"
 OUTPUT_DIR = ROOT / "validation" / "data"
 PAGE_SIZE = 2000
+QUERY_GRID_M = 5000
 USER_AGENT = "slovenia-lidar-floodmap-validation/1.0"
 
 
@@ -112,14 +113,40 @@ def feature_identity(feature):
     return ("content", hashlib.sha256(canonical_bytes(feature)).hexdigest())
 
 
-def query_layer_envelopes(layer, envelopes, page_size=PAGE_SIZE):
+def subdivide_envelope(envelope, grid_m=QUERY_GRID_M):
+    """Yield bounded query cells so ArcGIS requests avoid fragile deep offsets."""
+    xmin = float(envelope["xmin"])
+    ymin = float(envelope["ymin"])
+    xmax = float(envelope["xmax"])
+    ymax = float(envelope["ymax"])
+    x = xmin
+    while x < xmax:
+        y = ymin
+        cell_xmax = min(x + grid_m, xmax)
+        while y < ymax:
+            yield {
+                "xmin": x,
+                "ymin": y,
+                "xmax": cell_xmax,
+                "ymax": min(y + grid_m, ymax),
+                "spatialReference": {"wkid": 3794},
+            }
+            y += grid_m
+        x += grid_m
+
+
+def query_layer_envelopes(layer, envelopes, page_size=PAGE_SIZE,
+                          query_grid_m=QUERY_GRID_M):
     merged = {}
     counts = {}
     for region, envelope in envelopes.items():
-        collection = query_layer(layer, envelope, page_size)
-        counts[region] = len(collection["features"])
-        for feature in collection["features"]:
-            merged[feature_identity(feature)] = feature
+        region_features = {}
+        for query_envelope in subdivide_envelope(envelope, query_grid_m):
+            collection = query_layer(layer, query_envelope, page_size)
+            for feature in collection["features"]:
+                region_features[feature_identity(feature)] = feature
+        counts[region] = len(region_features)
+        merged.update(region_features)
     return {
         "type": "FeatureCollection",
         "features": list(merged.values()),
@@ -156,7 +183,12 @@ def main():
     parser.add_argument("--layer", action="append", dest="layers",
                         help="Layer id from validation/sources.json; repeatable")
     parser.add_argument("--page-size", type=int, default=PAGE_SIZE)
+    parser.add_argument(
+        "--query-grid-m", type=int, default=QUERY_GRID_M,
+        help="Maximum EPSG:3794 query-cell width/height (default: 5000 m)")
     args = parser.parse_args()
+    if args.page_size <= 0 or args.query_grid_m <= 0:
+        parser.error("--page-size and --query-grid-m must be positive integers")
 
     sources = read_json(SOURCES_PATH)
     manifest = read_json(MANIFEST_PATH)
@@ -174,7 +206,7 @@ def main():
         print(f"Downloading {layer_id} ...", flush=True)
         metadata = layer_metadata(layer)
         collection, regional_counts = query_layer_envelopes(
-            layer, envelopes, args.page_size)
+            layer, envelopes, args.page_size, args.query_grid_m)
         record = write_layer(layer, metadata, collection, envelopes, regional_counts)
         records.append(record)
         print(f"  {record['feature_count']} feature(s) -> {record['output']}")

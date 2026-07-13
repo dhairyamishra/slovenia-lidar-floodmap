@@ -43,7 +43,6 @@ function initMap(manifest, riskPoints, validationManifest) {
     map.fitBounds([[ub.west, ub.south], [ub.east, ub.north]],
                   { padding: 60, duration: 0 });
 
-    manifest.tiles.forEach(tile => addTileLayers(map, tile));
     addRiskPoints(map, riskPoints);
     setRiskVisible(false);
 
@@ -76,40 +75,51 @@ const OFFICIAL_SCENARIOS = [
   { key: 'q500', label: 'Q500' },
 ];
 
-function addTileLayers(map, tile) {
-  LAYER_TYPES.forEach(({ key, defaultOpacity, defaultVisible, resampling = 'linear' }) => {
-    if (!tile.files[key]) return;
-    map.addSource(`src-${key}-${tile.name}`, {
-      type: 'image',
-      url:  `data/${tile.files[key]}`,
-      coordinates: tile.bounds.corners,
-    });
-    map.addLayer({
-      id:     `layer-${key}-${tile.name}`,
-      type:   'raster',
-      source: `src-${key}-${tile.name}`,
-      paint:  { 'raster-opacity': defaultOpacity, 'raster-resampling': resampling },
-      layout: { visibility: defaultVisible ? 'visible' : 'none' },
-    });
+function ensureTileLayer(map, tile, key) {
+  const layerId = `layer-${key}-${tile.name}`;
+  if (map.getLayer(layerId) || !tile.files[key]) return layerId;
+  const config = LAYER_TYPES.find(item => item.key === key);
+  if (!config) return null;
+  const sourceId = `src-${key}-${tile.name}`;
+  map.addSource(sourceId, {
+    type: 'image',
+    url: `data/${tile.files[key]}`,
+    coordinates: tile.bounds.corners,
   });
+  const beforeOfficial = map.getStyle().layers
+    .find(layer => layer.id.startsWith('layer-official-'))?.id;
+  map.addLayer({
+    id: layerId,
+    type: 'raster',
+    source: sourceId,
+    paint: {
+      'raster-opacity': config.defaultOpacity,
+      'raster-resampling': config.resampling || 'linear',
+    },
+    layout: { visibility: 'none' },
+  }, beforeOfficial);
+  return layerId;
+}
 
-  if (tile.files.coastal) {
-    COASTAL_SCENARIOS.forEach(({ key }) => {
-      if (!tile.files.coastal[key]) return;
-      map.addSource(`src-coastal-${key}-${tile.name}`, {
-        type: 'image',
-        url:  `data/${tile.files.coastal[key]}`,
-        coordinates: tile.bounds.corners,
-      });
-      map.addLayer({
-        id:     `layer-coastal-${key}-${tile.name}`,
-        type:   'raster',
-        source: `src-coastal-${key}-${tile.name}`,
-        paint:  { 'raster-opacity': 0.70, 'raster-resampling': 'linear' },
-        layout: { visibility: 'none' },
-      });
-    });
-  }
+function ensureCoastalLayer(map, tile, key) {
+  const layerId = `layer-coastal-${key}-${tile.name}`;
+  if (map.getLayer(layerId) || !tile.files.coastal?.[key]) return layerId;
+  const sourceId = `src-coastal-${key}-${tile.name}`;
+  map.addSource(sourceId, {
+    type: 'image',
+    url: `data/${tile.files.coastal[key]}`,
+    coordinates: tile.bounds.corners,
+  });
+  const beforeOfficial = map.getStyle().layers
+    .find(layer => layer.id.startsWith('layer-official-'))?.id;
+  map.addLayer({
+    id: layerId,
+    type: 'raster',
+    source: sourceId,
+    paint: { 'raster-opacity': 0.70, 'raster-resampling': 'linear' },
+    layout: { visibility: 'none' },
+  }, beforeOfficial);
+  return layerId;
 }
 
 const riskMarkers = [];
@@ -258,16 +268,21 @@ function wireControls(map, manifest, validationState) {
     const chk = document.getElementById(`toggle-${alias}`);
     chk.addEventListener('change', () => {
       const vis = chk.checked ? 'visible' : 'none';
-      tileNames.forEach(name =>
-        map.setLayoutProperty(`layer-${key}-${name}`, 'visibility', vis));
+      tiles.forEach(tile => {
+        if (chk.checked) ensureTileLayer(map, tile, key);
+        const layerId = `layer-${key}-${tile.name}`;
+        if (map.getLayer(layerId)) map.setLayoutProperty(layerId, 'visibility', vis);
+      });
     });
 
     const slider = document.getElementById(`opacity-${alias}`);
     const valEl  = document.getElementById(`val-${alias}`);
     slider.addEventListener('input', () => {
       const v = slider.value / 100;
-      tileNames.forEach(name =>
-        map.setPaintProperty(`layer-${key}-${name}`, 'raster-opacity', v));
+      tileNames.forEach(name => {
+        const layerId = `layer-${key}-${name}`;
+        if (map.getLayer(layerId)) map.setPaintProperty(layerId, 'raster-opacity', v);
+      });
       valEl.textContent = slider.value + '%';
     });
   });
@@ -289,11 +304,14 @@ function wireControls(map, manifest, validationState) {
     coastalTiles.forEach(tile => {
       COASTAL_SCENARIOS.forEach(({ key }) => {
         if (!tile.files.coastal[key]) return;
-        map.setLayoutProperty(
-          `layer-coastal-${key}-${tile.name}`,
-          'visibility',
-          visible && key === activeKey ? 'visible' : 'none'
-        );
+        if (visible && key === activeKey) ensureCoastalLayer(map, tile, key);
+        const layerId = `layer-coastal-${key}-${tile.name}`;
+        if (map.getLayer(layerId)) {
+          map.setLayoutProperty(
+            layerId, 'visibility',
+            visible && key === activeKey ? 'visible' : 'none'
+          );
+        }
       });
     });
   }
@@ -310,7 +328,8 @@ function wireControls(map, manifest, validationState) {
       coastalTiles.forEach(tile => {
         COASTAL_SCENARIOS.forEach(({ key }) => {
           if (!tile.files.coastal[key]) return;
-          map.setPaintProperty(`layer-coastal-${key}-${tile.name}`, 'raster-opacity', v);
+          const layerId = `layer-coastal-${key}-${tile.name}`;
+          if (map.getLayer(layerId)) map.setPaintProperty(layerId, 'raster-opacity', v);
         });
       });
       coastalVal.textContent = coastalOpacity.value + '%';
@@ -330,8 +349,9 @@ function wireD19Controls(map, tiles) {
 
   function updateVisibility() {
     keys.forEach(key => {
-      tileNames.forEach(name => {
-        const layerId = `layer-${key}-${name}`;
+      tiles.forEach(tile => {
+        if (toggle.checked && mode.value === key) ensureTileLayer(map, tile, key);
+        const layerId = `layer-${key}-${tile.name}`;
         if (!map.getLayer(layerId)) return;
         map.setLayoutProperty(
           layerId,
@@ -563,6 +583,7 @@ function wireOfficialValidationControls(map, validationState, manifest) {
       );
     });
     tiles.forEach(tile => {
+      if (comparing) ensureTileLayer(map, tile, 'q100_comparison');
       const layerId = `layer-q100_comparison-${tile.name}`;
       if (map.getLayer(layerId)) {
         map.setLayoutProperty(layerId, 'visibility', comparing ? 'visible' : 'none');

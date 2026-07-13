@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "batch_id": "central-validity-2026-07-13",
+  "selection_crs": "EPSG:3794",
+  "chunk_size_km": 5,
+  "semantics": "LiDAR coverage selection from official hydraulic-study validity; not flood extent",
+  "baseline_tile_count": 146,
+  "selected_tile_positions": 250,
+  "already_present_positions": 5,
+  "expected_new_tiles": 245,
+  "expected_final_tile_count": 391,
+  "actual_new_download_bytes": 50907852404,
+  "download_verified": true,
+  "partial_files_after_download": 0,
+  "official_validity_overlap_km2": 138.74,
+  "chunks": [
+    {"origin": "445_90", "e_min": 445, "n_min": 90, "e_max": 449, "n_max": 94, "validity_overlap_km2": 18.85, "region": "05-ljubljana", "new_tiles": 25},
+    {"origin": "450_90", "e_min": 450, "n_min": 90, "e_max": 454, "n_max": 94, "validity_overlap_km2": 20.10, "region": "05-ljubljana", "new_tiles": 25},
+    {"origin": "450_95", "e_min": 450, "n_min": 95, "e_max": 454, "n_max": 99, "validity_overlap_km2": 9.95, "region": "05-ljubljana", "new_tiles": 25},
+    {"origin": "460_105", "e_min": 460, "n_min": 105, "e_max": 464, "n_max": 109, "validity_overlap_km2": 8.81, "region": "05-ljubljana", "new_tiles": 20},
+    {"origin": "460_110", "e_min": 460, "n_min": 110, "e_max": 464, "n_max": 114, "validity_overlap_km2": 4.92, "region": "05-ljubljana", "new_tiles": 25},
+    {"origin": "460_115", "e_min": 460, "n_min": 115, "e_max": 464, "n_max": 119, "validity_overlap_km2": 12.57, "region": "08-kamnik", "new_tiles": 25},
+    {"origin": "460_120", "e_min": 460, "n_min": 120, "e_max": 464, "n_max": 124, "validity_overlap_km2": 14.10, "region": "08-kamnik", "new_tiles": 25},
+    {"origin": "465_105", "e_min": 465, "n_min": 105, "e_max": 469, "n_max": 109, "validity_overlap_km2": 19.16, "region": "05-ljubljana", "new_tiles": 25},
+    {"origin": "465_110", "e_min": 465, "n_min": 110, "e_max": 469, "n_max": 114, "validity_overlap_km2": 15.62, "region": "05-ljubljana", "new_tiles": 25},
+    {"origin": "470_110", "e_min": 470, "n_min": 110, "e_max": 474, "n_max": 114, "validity_overlap_km2": 14.66, "region": "05-ljubljana", "new_tiles": 25}
+  ],
+  "frozen_evaluation_contract_changed": false,
+  "expanded_mosaic_hydrology_in_scope": false
+}

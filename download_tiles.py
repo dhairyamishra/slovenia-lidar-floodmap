@@ -27,11 +27,15 @@ Usage
 
   # Download then immediately run the flood-risk pipeline
   python download_tiles.py --center 460 100 --radius 2 --pipeline
+
+  # Download a chunk with four concurrent, atomic transfers
+  python download_tiles.py --bbox 445 90 449 94 --workers 4
 """
 
 import sys
 import json
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from urllib.request import urlopen, Request
 from urllib.error import HTTPError, URLError
@@ -139,9 +143,10 @@ def find_region(e: int, n: int, cache: dict, prefer: str | None = None) -> str |
 # ---------------------------------------------------------------------------
 # Download
 # ---------------------------------------------------------------------------
-def download_tile(e: int, n: int, region: str) -> bool:
+def download_tile(e: int, n: int, region: str, show_progress: bool = True) -> bool:
     """Stream tile LAZ to data/. Returns True on success (or already present)."""
     dest = DATA_DIR / f"GKOT_{e}_{n}.laz"
+    partial = dest.with_suffix(dest.suffix + ".part")
     if dest.exists():
         print(f"  [skip] GKOT_{e}_{n}  (already in data/)")
         return True
@@ -153,7 +158,9 @@ def download_tile(e: int, n: int, region: str) -> bool:
         req = Request(url, headers=HEADERS)
         DATA_DIR.mkdir(exist_ok=True)
         chunk = 1 << 20                     # 1 MB chunks
-        with urlopen(req, timeout=600) as resp, open(dest, "wb") as fh:
+        if partial.exists():
+            partial.unlink()
+        with urlopen(req, timeout=600) as resp, open(partial, "wb") as fh:
             total    = int(resp.headers.get("Content-Length", 0))
             received = 0
             while True:
@@ -162,17 +169,23 @@ def download_tile(e: int, n: int, region: str) -> bool:
                     break
                 fh.write(buf)
                 received += len(buf)
-                if total:
+                if total and show_progress:
                     pct = received / total * 100
                     print(f"\r  [dl]   GKOT_{e}_{n}  "
                           f"{pct:5.1f}%  ({received/1e6:.1f}/{total/1e6:.1f} MB)   ",
                           end="", flush=True)
-        print(f"\r  [ok]   GKOT_{e}_{n}  {received/1e6:.1f} MB{' '*30}")
+        partial.replace(dest)
+        prefix = "\r" if show_progress else ""
+        print(f"{prefix}  [ok]   GKOT_{e}_{n}  {received/1e6:.1f} MB{' '*30}")
         return True
+    except KeyboardInterrupt:
+        if partial.exists():
+            partial.unlink()
+        raise
     except Exception as ex:
         print(f"\r  [err]  GKOT_{e}_{n}: {ex}{' '*40}")
-        if dest.exists():
-            dest.unlink()           # remove partial file
+        if partial.exists():
+            partial.unlink()
         return False
 
 
@@ -239,6 +252,10 @@ def main() -> None:
         "--dry-run", action="store_true",
         help="Show availability on CDN without downloading anything",
     )
+    ap.add_argument(
+        "--workers", type=int, default=1,
+        help="Concurrent tile downloads after region probing (default 1)",
+    )
 
     args = ap.parse_args()
     tiles = build_grid(args)
@@ -261,6 +278,7 @@ def main() -> None:
     skipped_ids     = []
     unavailable_ids = []
 
+    resolved = []
     for e, n in tiles:
         region = find_region(e, n, cache, prefer=last_region)
         if region is None:
@@ -273,16 +291,40 @@ def main() -> None:
             tag  = "local" if dest.exists() else "CDN"
             print(f"  [{tag:5s}] GKOT_{e}_{n}  ({region})")
             continue
+        resolved.append((e, n, region))
 
+    pending = []
+    for e, n, region in resolved:
         dest = DATA_DIR / f"GKOT_{e}_{n}.laz"
         if dest.exists():
             skipped_ids.append(f"{e}_{n}")
             print(f"  [skip] GKOT_{e}_{n}  (already in data/)")
         else:
-            if download_tile(e, n, region):
-                downloaded_ids.append(f"{e}_{n}")
-            else:
-                unavailable_ids.append(f"{e}_{n}")
+            pending.append((e, n, region))
+
+    workers = max(1, args.workers)
+    if workers == 1:
+        results = [
+            (e, n, download_tile(e, n, region, show_progress=True))
+            for e, n, region in pending
+        ]
+    else:
+        print(f"\nDownloading {len(pending)} tile(s) with {workers} workers...")
+        results = []
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            futures = {
+                executor.submit(download_tile, e, n, region, False): (e, n)
+                for e, n, region in pending
+            }
+            for future in as_completed(futures):
+                e, n = futures[future]
+                results.append((e, n, future.result()))
+
+    for e, n, succeeded in results:
+        if succeeded:
+            downloaded_ids.append(f"{e}_{n}")
+        else:
+            unavailable_ids.append(f"{e}_{n}")
 
     # Summary
     if not args.dry_run:
@@ -298,7 +340,7 @@ def main() -> None:
         print(f"\nRunning pipeline on {len(downloaded_ids)} new tile(s)...")
         import subprocess
         subprocess.run(
-            ["python", str(Path(__file__).parent / "pipeline.py")] + downloaded_ids
+            [sys.executable, str(Path(__file__).parent / "pipeline.py")] + downloaded_ids
         )
 
 

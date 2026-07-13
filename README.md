@@ -81,11 +81,11 @@ The source is a three-dimensional CLSS LiDAR point cloud: individual returns rec
 
 ## Dataset
 
-- **146 tiles across 3 CDN regions** — 100 over Ljubljana (`05-ljubljana`, basin), 25 over the Savinja valley (`08-kamnik`, alpine riverine), 21 over Koper (`01-koper`, coastal). Tile coords are EPSG:3794 kilometres (e.g. `460_100` = easting 460 km, northing 100 km).
+- **391 tiles across 3 CDN regions** — 295 in the expanded Ljubljana/central-validity coverage (`05-ljubljana`), 75 in Kamnik/Savinja (`08-kamnik`), and 21 over Koper (`01-koper`, coastal). Tile coords are EPSG:3794 kilometres (e.g. `460_100` = easting 460 km, northing 100 km). The bounded 2026-07 expansion and exact chunks are recorded in [`VALIDITY_TILE_EXPANSION.md`](VALIDITY_TILE_EXPANSION.md).
 - Each region is calibrated independently (see below) because their elevation regimes are disjoint.
 - Koper includes both the riverine baseline and a separate coastal sea-level-rise overlay. The coastal layer is a first-order screening product, not a hydraulic storm-surge model.
 - Source: Flycom CLSS S3 CDN — `https://assets.flycom.si/clss/raw/<region>/zls/gkot/GKOT_E_N.laz`.
-- Raw `.laz` tiles (~170–800 MB each — alpine/coastal tiles are denser — ~50 GB total) live in `data/` and are **gitignored**. The small derived overlays in `web/data/` are committed and deployed.
+- Raw GKOT `.laz` tiles (~170 MB–1.1 GB each — alpine/coastal tiles are denser — 91.74 GB total) live in `data/` and are **gitignored**. The derived overlays in `web/data/` are committed and deployed.
 
 ## Run locally
 
@@ -105,6 +105,8 @@ python -m venv .venv
 
 # 1. Download tiles from the CDN (square grid around a centre, a bbox, or a list)
 python download_tiles.py --center 460 100 --radius 4        # 9×9 Ljubljana block
+# Concurrent transfers use atomic .part files; completed files are renamed to .laz
+python download_tiles.py --bbox 445 90 449 94 --workers 4
 
 # 2. Calibrate the global normalisation constants — run ONCE per dataset
 python pipeline.py --calibrate
@@ -121,6 +123,9 @@ python analyze_model.py --strict
 
 # 5. Acquire official reference layers and evaluate the frozen baseline
 python download_validation.py
+# Retry selected large services with bounded spatial cells when ArcGIS deep
+# pagination is unstable:
+python download_validation.py --layer ikpn_validity --layer ikpn_q100 --query-grid-m 5000
 python prepare_validation_web.py
 python prepare_q100_comparison.py
 python evaluate_validation.py
@@ -239,7 +244,7 @@ The `web/` directory is published to GitHub Pages on every push to `main` via `.
 
 ## Verified Maintenance Notes
 
-Reviewed on 2026-07-09 (verified 146-tile / 3-region dataset, D19 HAND weight model, D20 Koper coastal overlays, and Numba kernels against the code).
+Reviewed on 2026-07-13 (verified 391-tile / 3-region dataset, expanded regional calibration, categorical Q100 comparison schema v2, D19/HAND validation status, coastal overlays, and Numba pipeline outputs against the code).
 
 This repository is the Git-backed version of the Slovenia LiDAR floodmap work.
 It has the canonical multi-tile pipeline (`pipeline.py`), downloader

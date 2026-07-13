@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated": "2026-07-12T05:46:28.040240+00:00",
+  "generated": "2026-07-13T07:59:51.020631+00:00",
   "source": "Direkcija Republike Slovenije za vode (DRSV), IKPN",
   "source_crs": "EPSG:3794",
   "web_crs": "EPSG:4326",
@@ -10,25 +10,25 @@
       "scenario": "q10",
       "label": "Q10",
       "file": "ikpn_q10.geojson",
-      "source_feature_count": 468,
+      "source_feature_count": 3891,
       "simplify_m": 2.0,
-      "sha256": "d34dddd2085610dc16e6483cc43454d50e2ca5099c385bb3f49e2b8278dfb893"
+      "sha256": "79bdd998683f52f14c61d9f9359a69e17913569e5b844dbcd39f0af67729d8a1"
     },
     {
       "scenario": "q100",
       "label": "Q100",
       "file": "ikpn_q100.geojson",
-      "source_feature_count": 472,
+      "source_feature_count": 3833,
       "simplify_m": 2.0,
-      "sha256": "e090c946f991b425ff6e87be33a57e4f60ef2f1d322173deb6e2058760364c03"
+      "sha256": "34e3d8833fe2becc475f68b27dad8ecd5b6bab3ff75b5661c1725411bb10f0f5"
     },
     {
       "scenario": "q500",
       "label": "Q500",
       "file": "ikpn_q500.geojson",
-      "source_feature_count": 368,
+      "source_feature_count": 3242,
       "simplify_m": 2.0,
-      "sha256": "615af8780cb21411133a8c5e1ca7e938f61e819701191b6b52adfa5da79dde85"
+      "sha256": "c102e256138f19e183b5462489ff0b177110f57c883534613afd485c1319ac0c"
     }
   ],
   "layers": {
@@ -36,33 +36,33 @@
       "kind": "official_hydraulic_study_validity",
       "label": "DRSV study validity",
       "file": "ikpn_validity.geojson",
-      "source_feature_count": 4,
+      "source_feature_count": 46,
       "simplify_m": 2.0,
-      "sha256": "e4b8202621c0b8fda72e261db69896adbbf397a09c7cff33f67c9206ea2da0fc"
+      "sha256": "881524dbfdc22665cbe871990eb7f447feea007018ab512f1216c762e7ec2a76"
     },
     "depth_lt_0_5m": {
       "kind": "official_q100_depth_class",
       "label": "Q100 depth < 0.5 m",
       "file": "ikg_q100_depth_lt_0_5m.geojson",
-      "source_feature_count": 712,
+      "source_feature_count": 12130,
       "simplify_m": 2.0,
-      "sha256": "b41feadb4bfbf628bcf362c608ab5326e5938caff860ff1e76e9eaf94de2cfc6"
+      "sha256": "dc615c7647ecd14e707848bdbf7dd37b774749be4d01573724d701a43fdb4dee"
     },
     "depth_0_5_to_1_5m": {
       "kind": "official_q100_depth_class",
       "label": "Q100 depth 0.5\u20131.5 m",
       "file": "ikg_q100_depth_0_5_to_1_5m.geojson",
-      "source_feature_count": 823,
+      "source_feature_count": 10460,
       "simplify_m": 2.0,
-      "sha256": "66ec9afd6de3b815c718b13915a93041eb5256aa96d67ffb0237bd7815ec5ea5"
+      "sha256": "6ed5e2a29a18d13e912d4904724608db4d35eaf9439fa6ca51f9baeb3b8e738c"
     },
     "depth_ge_1_5m": {
       "kind": "official_q100_depth_class",
       "label": "Q100 depth \u2265 1.5 m",
       "file": "ikg_q100_depth_ge_1_5m.geojson",
-      "source_feature_count": 331,
+      "source_feature_count": 2267,
       "simplify_m": 2.0,
-      "sha256": "5b39184e0225acb83113ab8592aab2d9aea79dc03c61b2d21f3852980f79dcbd"
+      "sha256": "3fd2a55bd4900558904bc5d8dd60c89817d1f1b7d1a00ac5373a86a23b9ed79e"
     }
   }
 }

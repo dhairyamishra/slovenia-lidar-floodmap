@@ -146,6 +146,19 @@ def model_definition() -> dict:
     return definition
 
 
+def d19_display_definition() -> dict:
+    """Public semantics for the frozen D19 diagnostic and sparse review view."""
+    return {
+        "model_version": MODEL_VERSION,
+        "default_mode": "review",
+        "review_threshold": D19_REVIEW_THRESHOLD,
+        "threshold_semantics": "upper-band-of-fixed-regional-display-scale-not-hazard",
+        "diagnostic_semantics": "frozen-full-experimental-score-surface-not-probability",
+        "source_asset": "susceptibility.png",
+        "generation": "direct-from-unquantized-fixed-regional-display-score",
+    }
+
+
 def file_digest(path: Path) -> str | None:
     """Short content digest for small provenance/configuration files."""
     if not path.exists():
@@ -958,6 +971,7 @@ def main(tile_ids: list[str] | None = None, workers: int | None = None):
         "model":        model_definition(),
         "calibration_digest": file_digest(CALIB_PATH),
         "dataset_digest": dataset_fingerprint()["digest"],
+        "d19_display": d19_display_definition(),
         "tile_count":   len(tile_metas),
         "union_bounds": union,
         "tiles":        tile_metas,

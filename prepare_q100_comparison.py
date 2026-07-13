@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Build categorical D19-vs-official-Q100 comparison tiles and summaries.
 
-Categories are derived on the committed 2 m official grid. D19 is the frozen
-0.925 review-display mask, not a fitted hazard threshold. Outside the official
-validity domain is explicitly unavailable rather than negative.
+Official geometries are rasterized independently for every current web tile at
+2 m. This deliberately does not reuse or expand the frozen model-evaluation
+rasters: public map coverage may grow while the locked evaluation contract stays
+unchanged. D19 is the frozen 0.925 review-display mask, not a fitted hazard
+threshold. Outside official validity is unavailable rather than negative.
 """
 
 from __future__ import annotations
@@ -14,14 +16,16 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image
+from shapely import from_geojson, union_all
 
-from validation_grid import file_sha256, unpack_mask
+from validation_grid import file_sha256, grid_definition, rasterize_geometry
 
 
 ROOT = Path(__file__).resolve().parent
 WEB_MANIFEST = ROOT / "web" / "data" / "manifest.json"
-EVALUATION_MANIFEST = ROOT / "validation" / "evaluation_manifest.json"
-RASTER_DIR = ROOT / "validation" / "rasters"
+REGION_CACHE = ROOT / ".tile_region_cache.json"
+OFFICIAL_VALIDITY = ROOT / "validation" / "data" / "ikpn_validity.geojson"
+OFFICIAL_Q100 = ROOT / "validation" / "data" / "ikpn_q100.geojson"
 CELL_SIZE_M = 2
 ANALYSIS_TILE_SIZE = 500
 WEB_TILE_SIZE = 1000
@@ -47,26 +51,29 @@ REGION_LABELS = {
 }
 
 
-def load_region_grid(region):
-    path = RASTER_DIR / f"{region}_2m.npz"
-    data = np.load(path)
-    metadata = json.loads(str(data["metadata"]))
-    shape = (metadata["height"], metadata["width"])
-    return {
-        "path": path,
-        "metadata": metadata,
-        "validity": unpack_mask(data["validity"], shape),
-        "q100": unpack_mask(data["q100"], shape),
-    }
+def load_union(path):
+    collection = json.loads(path.read_text(encoding="utf-8"))
+    geometries = [
+        from_geojson(json.dumps(feature["geometry"]))
+        for feature in collection.get("features", [])
+        if feature.get("geometry")
+    ]
+    if not geometries:
+        raise ValueError(f"No polygon geometry in {path}")
+    return union_all(geometries)
 
 
-def tile_window(tile_name, metadata):
+def official_masks_for_tile(tile_name, validity_geometry, q100_geometry):
     easting, northing = (int(value) for value in tile_name.split("_"))
-    x0 = easting * 1000.0
-    y1 = (northing + 1) * 1000.0
-    col0 = int(round((x0 - metadata["xmin"]) / CELL_SIZE_M))
-    row0 = int(round((metadata["ymax"] - y1) / CELL_SIZE_M))
-    return np.s_[row0:row0 + ANALYSIS_TILE_SIZE, col0:col0 + ANALYSIS_TILE_SIZE]
+    grid = grid_definition((
+        easting * 1000.0,
+        northing * 1000.0,
+        (easting + 1) * 1000.0,
+        (northing + 1) * 1000.0,
+    ), CELL_SIZE_M)
+    validity = rasterize_geometry(validity_geometry, grid)
+    q100 = rasterize_geometry(q100_geometry, grid) & validity
+    return validity, q100
 
 
 def load_d19_masks(tile):
@@ -141,23 +148,19 @@ def summary_block(region, counts):
 
 def main():
     manifest = json.loads(WEB_MANIFEST.read_text(encoding="utf-8"))
-    evaluation = json.loads(EVALUATION_MANIFEST.read_text(encoding="utf-8"))
-    assignments = evaluation["split_assignments"]
-    region_grids = {}
+    tile_regions = json.loads(REGION_CACHE.read_text(encoding="utf-8"))
+    validity_geometry = load_union(OFFICIAL_VALIDITY)
+    q100_geometry = load_union(OFFICIAL_Q100)
     region_counts = {}
 
     for number, tile in enumerate(manifest["tiles"], start=1):
         tile_name = tile["name"]
-        region = assignments[tile_name]["region"]
-        if region not in region_grids:
-            region_grids[region] = load_region_grid(region)
-            region_counts[region] = empty_counts()
-        grid = region_grids[region]
-        window = tile_window(tile_name, grid["metadata"])
-        validity = grid["validity"][window]
-        q100 = grid["q100"][window]
-        if validity.shape != (ANALYSIS_TILE_SIZE, ANALYSIS_TILE_SIZE):
-            raise RuntimeError(f"Invalid official window for {tile_name}: {validity.shape}")
+        region = tile_regions.get(tile_name)
+        if region is None:
+            raise RuntimeError(f"Missing CDN region cache entry for {tile_name}")
+        region_counts.setdefault(region, empty_counts())
+        validity, q100 = official_masks_for_tile(
+            tile_name, validity_geometry, q100_geometry)
         d19_signal, d19_data = load_d19_masks(tile)
         category = classify(validity, q100, d19_signal, d19_data)
         add_counts(region_counts[region], category)
@@ -181,7 +184,7 @@ def main():
         for region, counts in sorted(region_counts.items())
     }
     manifest["q100_comparison"] = {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated": datetime.now(timezone.utc).isoformat(),
         "semantics": "categorical-frozen-d19-review-mask-versus-official-static-q100",
         "resolution_m": CELL_SIZE_M,
@@ -200,12 +203,11 @@ def main():
         },
         "regions": region_summaries,
         "source_digests": {
-            "evaluation_manifest": file_sha256(EVALUATION_MANIFEST),
-            **{
-                f"{region}_2m": file_sha256(grid["path"])
-                for region, grid in sorted(region_grids.items())
-            },
+            "official_validity_geojson": file_sha256(OFFICIAL_VALIDITY),
+            "official_q100_geojson": file_sha256(OFFICIAL_Q100),
+            "tile_region_cache": file_sha256(REGION_CACHE),
         },
+        "evaluation_contract_unchanged": True,
         "limitations": [
             "D19-cutoff-is-display-rule-not-hazard-threshold",
             "official-Q100-is-static-planning-reference-not-observed-event",

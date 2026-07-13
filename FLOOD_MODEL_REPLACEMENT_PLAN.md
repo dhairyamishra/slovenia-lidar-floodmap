@@ -1,6 +1,6 @@
 # Flood Terrain Model Replacement Plan
 
-**Status:** Approved and in progress. Phases 1–4 complete (D24–D27); Phase 5 benchmark implemented but no candidate selected. D30 completes the real categorical Q100 comparison required by A3.
+**Status:** Approved and in progress. Phases 1–4 complete (D24–D27); Phase 5 benchmark implemented but no candidate selected. D30 completes the real categorical Q100 comparison required by A3. D31 expands that comparison to 391 public tiles without changing the frozen evaluation contract or model-selection result.
 
 **Prepared:** 2026-07-12
 

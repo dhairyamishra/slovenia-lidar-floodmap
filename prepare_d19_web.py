@@ -17,7 +17,7 @@ import numpy as np
 from PIL import Image
 from scipy.spatial import cKDTree
 
-from pipeline import D19_REVIEW_THRESHOLD
+from pipeline import D19_REVIEW_THRESHOLD, d19_display_definition
 
 
 ROOT = Path(__file__).resolve().parent
@@ -79,15 +79,8 @@ def main():
         files["d19_diagnostic"] = files["susceptibility"]
         print(f"[{index:3d}/{len(manifest['tiles'])}] {tile['name']}")
 
-    manifest["d19_display"] = {
-        "model_version": "D19-baseline-v1",
-        "default_mode": "review",
-        "review_threshold": D19_REVIEW_THRESHOLD,
-        "threshold_semantics": "upper-band-of-fixed-regional-display-scale-not-hazard",
-        "diagnostic_semantics": "frozen-full-experimental-score-surface-not-probability",
-        "source_asset": "susceptibility.png",
-        "migration": "nearest-RdYlBu_r-palette-index; future pipeline runs use raw display score",
-    }
+    manifest["d19_display"] = d19_display_definition()
+    manifest["d19_display"]["generation"] = "legacy-nearest-RdYlBu_r-palette-index"
     MANIFEST.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(f"Wrote {MANIFEST}")
 

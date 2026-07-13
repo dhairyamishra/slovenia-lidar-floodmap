@@ -24,7 +24,12 @@ class D19DisplayTests(unittest.TestCase):
     def test_original_raster_and_review_assets_are_both_registered(self):
         manifest = json.loads((ROOT / "web/data/manifest.json").read_text(encoding="utf-8"))
         self.assertEqual(manifest["d19_display"]["review_threshold"], D19_REVIEW_THRESHOLD)
-        self.assertEqual(len(manifest["tiles"]), 146)
+        self.assertEqual(
+            manifest["d19_display"]["generation"],
+            "direct-from-unquantized-fixed-regional-display-score",
+        )
+        self.assertEqual(manifest["tile_count"], 391)
+        self.assertEqual(len(manifest["tiles"]), manifest["tile_count"])
         for tile in manifest["tiles"]:
             files = tile["files"]
             self.assertEqual(files["d19_diagnostic"], files["susceptibility"])
