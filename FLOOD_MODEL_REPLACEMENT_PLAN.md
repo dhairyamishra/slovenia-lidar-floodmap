@@ -1,6 +1,6 @@
 # Flood Terrain Model Replacement Plan
 
-**Status:** Approved and in progress. Phases 1–4 complete (D24–D27); Phase 5 active.
+**Status:** Approved and in progress. Phases 1–4 complete (D24–D27); Phase 5 benchmark implemented but no candidate selected. D30 completes the real categorical Q100 comparison required by A3.
 
 **Prepared:** 2026-07-12
 
@@ -13,6 +13,8 @@
 - [ ] Phase 5+ — model benchmark, sparse production output, scenario evidence.
 
 **Phase-5 gate update (D28):** B0/B1/B2/M1/M2, spatial folds, TWI/slope additions, negative controls, and distance applicability were implemented. No candidate met all approved development thresholds, so the locked test remains closed and no replacement is selected or published.
+
+**Comparison update (D30):** A3 no longer relies on semitransparent source-layer stacking. A committed 2 m derived product now classifies official-only, D19-only, both, neither, missing D19 data, and outside-validity cells; the app adds exact regional area shares and click interpretation.
 
 **Problem:** The frozen `D19-baseline-v1` overlay renders most low, flat land as strongly red. It is visually alarming, strongly associated with elevation, and performs worse than HAND-only against the official DRSV Q100 reference. The replacement must reduce false positives through drainage connectivity and scenario evidence, not cosmetic weight or color changes.
 

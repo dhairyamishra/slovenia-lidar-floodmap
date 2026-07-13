@@ -73,6 +73,7 @@ The source is a three-dimensional CLSS LiDAR point cloud: individual returns rec
 |---|---|
 | Experimental D19 Terrain Baseline | Frozen unvalidated weighted composite; sparse purple review mask by default and original saturated raster for diagnostics only |
 | Official DRSV Hazard Reference | Blue Q10/Q100/Q500 IKPN extent plus hydraulic-study validity and official Q100 depth classes |
+| Categorical Q100 Comparison | Calculated 2 m official-only, D19-only, both, and neither classes inside official validity; includes click explanations and exact region area shares |
 | Connected Coastal Low-Land Exposure | Koper-only bathtub screen for +0.5 m / +1.0 m / +2.0 m scenarios; not surge or hydraulic inundation |
 | Forest NDVI | Per-cell NDVI from 16-bit NIR/R channels — red (stressed) → green (healthy) |
 | Land Classification | Ground, low/med/high vegetation, building returns |
@@ -121,6 +122,7 @@ python analyze_model.py --strict
 # 5. Acquire official reference layers and evaluate the frozen baseline
 python download_validation.py
 python prepare_validation_web.py
+python prepare_q100_comparison.py
 python evaluate_validation.py
 
 # 6. Build continuous regional hydrology (large outputs stay under ignored output/)
@@ -166,6 +168,8 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 |---|---|
 | `web/data/tiles/<name>/susceptibility.png` | Legacy D19 relative-susceptibility overlay (RdYlBu_r; unvalidated baseline) |
 | `web/data/tiles/<name>/susceptibility_d19_review.png` | Sparse purple D19 display mask; visual-review cutoff only |
+| `web/data/tiles/<name>/q100_d19_comparison.png` | Derived categorical Q100-versus-D19 display; not a transparent blend |
+| `web/data/tiles/<name>/q100_d19_comparison_index.png` | Compact class-index image loaded on demand for map-click explanations |
 | `web/data/tiles/<name>/coastal_slr_0_5m.png` etc. | Koper-only connected low-land exposure overlays for +0.5 m, +1.0 m, +2.0 m scenarios |
 | `web/data/tiles/<name>/ndvi.png` | Forest-health NDVI (RdYlGn, percentile-stretched) |
 | `web/data/tiles/<name>/classification.png` | Land-cover classes |
@@ -198,6 +202,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `model_diagnostics.py` | NumPy-only deterministic score-stratified sampling contract shared by pipeline and tests. |
 | `download_validation.py` | Downloads/paginates/deduplicates official DRSV layers for three study-region envelopes and records provenance. |
 | `prepare_validation_web.py` | Dissolves, simplifies, and transforms official Q10/Q100/Q500 references for MapLibre. |
+| `prepare_q100_comparison.py` | Builds the derived 2 m D19/Q100 categorical display, click indices, and region area-share summaries. |
 | `prepare_d19_web.py` | Migrates committed legacy D19 colors into compact sparse review PNGs without rerunning LAZ processing. |
 | `evaluate_validation.py` | Labels diagnostic samples inside official IKPN validity and reports D19/HAND/TWI baseline metrics. |
 | `prepare_validation_contract.py` | Generates packed multi-resolution label grids and expanded frozen split metadata. |

@@ -310,6 +310,18 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 **Reversible:** Restore the D21 frontend wiring and controls. No analytical regeneration is needed because the calculation code and assets remain intact.
 
+### D30 — Replace transparency-blended Q100 comparison with calculated categories
+
+**Decision:** Supersede D24's visual stacking of the frozen D19 review raster, official Q100 fill, and validity outline. Generate a derived 2 m comparison product with mutually exclusive classes: official Q100 only, D19 only, both, neither, D19 unavailable, and outside official validity. Render official-only cyan, D19-only orange, agreement white, neither transparent, missing D19 data with a sparse gray hatch, and comparison-unavailable space outside the dashed validity boundary. Keep the source-layer controls available for independent inspection, but disable them while categorical comparison mode is active.
+
+**Why:** Transparent cyan over purple produced accidental blend colors rather than analytical categories. D19 was not clipped to validity, black had several incompatible meanings, and the UI implied an overlap class that did not exist in the data. A categorical product makes agreement and disagreement explicit and prevents areas outside the official study from being counted as false positives.
+
+**Implementation:** `prepare_q100_comparison.py` combines the committed 2 m DRSV validity/Q100 masks with the frozen D19 0.925 review-display mask, writes a visible RGBA tile and compact class-index tile for every one of the 146 map tiles, and records exact region summaries and provenance in `web/data/manifest.json`. The app displays only the derived tiles in comparison mode, loads class indices on demand for click explanations, forces the validity boundary on, and reports official-only, D19-only, both, and neither area shares using cells inside validity with D19 data as the denominator.
+
+**Result:** The map now answers a precise comparison question rather than relying on color mixing. Ljubljana's comparable validity area is 35.44% official-only, 5.05% D19-only, 4.30% both, and 55.21% neither (50.544 km²; 99.54% validity coverage). These are comparison area shares, not flood probabilities, and neither is not proof of safety. Automated classification, asset, frontend-contract, JavaScript, and browser checks cover the implementation.
+
+**Reversible:** Restore the D24 source-layer stacking logic and remove the generated comparison PNGs, manifest block, script, and tests. The official and frozen D19 source products are unchanged.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

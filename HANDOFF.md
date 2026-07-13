@@ -1,12 +1,26 @@
 # Handoff - Slovenia CLSS LiDAR Flood, Coastal & Hydroclimate Demo
 
-**Status:** Phases 1–4 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D27). Phase 5 candidates are implemented, but the D28 development selection gate failed. D29 removes the synthetic hydroclimate grid and triggered-candidate visualizations from the public app while retaining their calculations. The locked test remains unopened and no replacement is approved.
+**Status:** Phases 1–4 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D27). Phase 5 candidates are implemented, but the D28 development selection gate failed. D29 removes the synthetic hydroclimate grid and triggered-candidate visualizations from the public app while retaining their calculations. D30 replaces the former Q100/D19 transparency blend with calculated, clickable comparison categories and exact area shares. The locked test remains unopened and no replacement is approved.
 
 **Goal:** A polished, honest screening tool for Aleks / sledilnik.org that shows where detailed flood/coastal investigation should start. It is not a hydraulic, coastal, or probabilistic forecast model.
 
 > Authoritative context: `AGENTS.md`, `CLAUDE.md`, `DECISIONS.md`, and `PLAN.md`. This handoff is the current snapshot plus the latest implementation notes.
 > The active review/implementation tracker is `ALEKS_REVIEW_AND_ALGORITHM_PLAN.md`.
 > The focused red-map/model-replacement tracker is `FLOOD_MODEL_REPLACEMENT_PLAN.md`.
+
+## D30 Real categorical Q100 comparison (2026-07-12)
+
+- Added `prepare_q100_comparison.py`, which combines committed 2 m DRSV validity/Q100 grids with the frozen D19 review-display mask for all 146 tiles.
+- Added map and click-index assets per tile: `q100_d19_comparison.png` and `q100_d19_comparison_index.png`.
+- Replaced source-layer transparency mixing with four visible analytical classes: cyan official-only, orange D19-only, white both, and transparent neither. Sparse gray hatching marks missing D19 data; outside the dashed validity boundary is comparison unavailable.
+- Comparison mode disables the independent D19 and official controls, displays only the derived class layer, and forces the official validity boundary on.
+- Clicking reports official Q100 yes/no, D19 review signal yes/no/no-data, validity inside/outside, tile, and a plain-language interpretation.
+- The sidebar reports exact region shares over the denominator “inside official validity with D19 data.” Ljubljana: 35.44% official-only, 5.05% D19-only, 4.30% both, 55.21% neither; comparable coverage is 99.54% (50.544 km²).
+- Added `test_q100_comparison.py` for classification, denominators, complete asset registration, and frontend semantics.
+
+**Why:** The D24 mode only stacked semitransparent layers, so mixed colors looked like categories without being calculated categories. Black also conflated neither, unavailable, and outside-validity space. D30 makes the comparison reproducible and explicit while retaining the honest limits: D19's 0.925 cutoff is a display rule, Q100 is a static planning reference, and neither is not proof of safety.
+
+**Regeneration:** Run `.venv\Scripts\python.exe prepare_q100_comparison.py` after changing D19 review assets, official 2 m validation rasters, or the web manifest. Commit both generated PNG types and the manifest update.
 
 ## D29 Remove synthetic hydroclimate visualizations (2026-07-12)
 

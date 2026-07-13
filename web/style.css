@@ -253,12 +253,18 @@ html, body {
   margin-bottom: 6px;
 }
 
-.depth-legend,
-.comparison-legend {
+.depth-legend {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 5px;
   margin: 2px 0 7px 44px;
+}
+
+.comparison-legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px 8px;
+  margin: 4px 0 8px 44px;
 }
 
 .depth-legend span,
@@ -283,10 +289,43 @@ html, body {
   margin-top: 10px;
 }
 
-.swatch-official { background: rgba(56, 189, 248, 0.9); }
-.swatch-d19 { background: rgba(126, 34, 206, 0.9); }
-.swatch-overlap {
-  background: linear-gradient(135deg, #38bdf8 0 48%, #7e22ce 52% 100%);
+.swatch-official { background: #38bdf8; }
+.swatch-d19 { background: #f97316; }
+.swatch-overlap { background: #f8fafc; border: 1px solid #94a3b8; }
+.swatch-neither { background: #0d1117; border: 1px solid #64748b; }
+
+.validity-line-sample {
+  display: inline-block;
+  width: 18px;
+  margin-right: 5px;
+  border-top: 2px dashed #cbd5e1;
+  vertical-align: middle;
+}
+
+.comparison-summary {
+  margin: 8px 0 4px 44px;
+  padding: 8px;
+  border: 1px solid rgba(148,163,184,0.2);
+  border-radius: 5px;
+  background: rgba(148,163,184,0.05);
+}
+
+.comparison-summary[hidden] { display: none; }
+
+.comparison-summary .select-row { margin: 0 0 7px; }
+.comparison-summary .scenario-select { max-width: 145px; }
+
+.comparison-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3px 10px;
+  color: #8b949e;
+  font-size: 10px;
+}
+
+.comparison-summary-grid strong {
+  color: #e6edf3;
+  font-variant-numeric: tabular-nums;
 }
 
 .cls-item {
@@ -469,6 +508,15 @@ html, body {
 }
 .popup-row:last-child { border-bottom: none; }
 .popup-key { color: #8b949e; }
+.popup-interpretation {
+  max-width: 250px;
+  margin: 8px 0 0;
+  padding-top: 7px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  color: #e6edf3;
+  font-size: 11px;
+  line-height: 1.4;
+}
 .popup-val { color: #f0f6fc; font-weight: 500; font-variant-numeric: tabular-nums; }
 
 /* ── MapLibre controls ───────────────────────────────────────────────────── */

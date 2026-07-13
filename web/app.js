@@ -48,7 +48,7 @@ function initMap(manifest, riskPoints, validationManifest) {
     setRiskVisible(false);
 
     initOfficialValidation(map, validationManifest).then(validationState => {
-      wireControls(map, manifest.tiles, validationState);
+      wireControls(map, manifest, validationState);
     });
   });
 }
@@ -59,6 +59,7 @@ const LAYER_TYPES = [
   // deliberately separate and never visible on initial load.
   { key: 'd19_review',     defaultOpacity: 0.70, defaultVisible: false },
   { key: 'd19_diagnostic', defaultOpacity: 0.55, defaultVisible: false },
+  { key: 'q100_comparison', defaultOpacity: 1.00, defaultVisible: false, resampling: 'nearest' },
   { key: 'ndvi',           defaultOpacity: 0.75, defaultVisible: false },
   { key: 'classification', defaultOpacity: 0.80, defaultVisible: false },
 ];
@@ -76,7 +77,8 @@ const OFFICIAL_SCENARIOS = [
 ];
 
 function addTileLayers(map, tile) {
-  LAYER_TYPES.forEach(({ key, defaultOpacity, defaultVisible }) => {
+  LAYER_TYPES.forEach(({ key, defaultOpacity, defaultVisible, resampling = 'linear' }) => {
+    if (!tile.files[key]) return;
     map.addSource(`src-${key}-${tile.name}`, {
       type: 'image',
       url:  `data/${tile.files[key]}`,
@@ -86,7 +88,7 @@ function addTileLayers(map, tile) {
       id:     `layer-${key}-${tile.name}`,
       type:   'raster',
       source: `src-${key}-${tile.name}`,
-      paint:  { 'raster-opacity': defaultOpacity, 'raster-resampling': 'linear' },
+      paint:  { 'raster-opacity': defaultOpacity, 'raster-resampling': resampling },
       layout: { visibility: defaultVisible ? 'visible' : 'none' },
     });
   });
@@ -248,7 +250,8 @@ async function initOfficialValidation(map, validationManifest) {
 
 const KEY_ALIAS = { ndvi: 'ndvi', cls: 'classification' };
 
-function wireControls(map, tiles, validationState) {
+function wireControls(map, manifest, validationState) {
+  const tiles = manifest.tiles;
   const tileNames = tiles.map(t => t.name);
 
   Object.entries(KEY_ALIAS).forEach(([alias, key]) => {
@@ -314,7 +317,7 @@ function wireControls(map, tiles, validationState) {
     });
   }
 
-  wireOfficialValidationControls(map, validationState);
+  wireOfficialValidationControls(map, validationState, manifest);
 }
 
 function wireD19Controls(map, tiles) {
@@ -351,7 +354,161 @@ function wireD19Controls(map, tiles) {
   });
 }
 
-function wireOfficialValidationControls(map, validationState) {
+const comparisonIndexCache = new Map();
+
+function inverseBilinear(lng, lat, corners) {
+  const [nw, ne, se, sw] = corners;
+  const ax = nw[0], ay = nw[1];
+  const bx = ne[0] - nw[0], by = ne[1] - nw[1];
+  const cx = sw[0] - nw[0], cy = sw[1] - nw[1];
+  const dx = nw[0] - ne[0] - sw[0] + se[0];
+  const dy = nw[1] - ne[1] - sw[1] + se[1];
+  let u = (lng - Math.min(nw[0], sw[0])) /
+    Math.max(Math.max(ne[0], se[0]) - Math.min(nw[0], sw[0]), 1e-12);
+  let v = (Math.max(nw[1], ne[1]) - lat) /
+    Math.max(Math.max(nw[1], ne[1]) - Math.min(sw[1], se[1]), 1e-12);
+  for (let iteration = 0; iteration < 6; iteration += 1) {
+    const fx = ax + bx * u + cx * v + dx * u * v - lng;
+    const fy = ay + by * u + cy * v + dy * u * v - lat;
+    const j00 = bx + dx * v;
+    const j01 = cx + dx * u;
+    const j10 = by + dy * v;
+    const j11 = cy + dy * u;
+    const determinant = j00 * j11 - j01 * j10;
+    if (Math.abs(determinant) < 1e-16) break;
+    const du = (fx * j11 - fy * j01) / determinant;
+    const dv = (fy * j00 - fx * j10) / determinant;
+    u -= du;
+    v -= dv;
+  }
+  return { u, v };
+}
+
+function loadComparisonIndex(tile) {
+  if (comparisonIndexCache.has(tile.name)) return comparisonIndexCache.get(tile.name);
+  const promise = new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+      context.drawImage(image, 0, 0);
+      resolve({ context, width: canvas.width, height: canvas.height });
+    };
+    image.onerror = reject;
+    image.src = `data/${tile.files.q100_comparison_index}`;
+  });
+  comparisonIndexCache.set(tile.name, promise);
+  return promise;
+}
+
+function comparisonCategoryCopy(code) {
+  return {
+    0: {
+      official: 'Unavailable', d19: 'Not compared', validity: 'Outside',
+      interpretation: 'Outside the official study domain — comparison unavailable.',
+    },
+    1: {
+      official: 'No', d19: 'No', validity: 'Inside',
+      interpretation: 'Neither layer marks this cell. This is not proof of safety.',
+    },
+    2: {
+      official: 'Yes', d19: 'No', validity: 'Inside',
+      interpretation: 'Official Q100-only reference area.',
+    },
+    3: {
+      official: 'No', d19: 'Yes', validity: 'Inside',
+      interpretation: 'D19-only experimental signal — potential overprediction for review.',
+    },
+    4: {
+      official: 'Yes', d19: 'Yes', validity: 'Inside',
+      interpretation: 'Both the official Q100 reference and D19 review mask mark this cell.',
+    },
+    5: {
+      official: 'No', d19: 'No data', validity: 'Inside',
+      interpretation: 'Outside official Q100, but D19 terrain data are unavailable for comparison.',
+    },
+    6: {
+      official: 'Yes', d19: 'No data', validity: 'Inside',
+      interpretation: 'Official Q100 marks this cell, but D19 terrain data are unavailable.',
+    },
+  }[code] || {
+    official: 'Unknown', d19: 'Unknown', validity: 'Unknown',
+    interpretation: 'Comparison class could not be read.',
+  };
+}
+
+function wireComparisonClick(map, tiles, comparisonToggle) {
+  const popup = new maplibregl.Popup({ offset: 12, closeButton: true });
+  map.on('click', async event => {
+    if (!comparisonToggle.checked) return;
+    const lng = event.lngLat.lng;
+    const lat = event.lngLat.lat;
+    let selected = null;
+    let position = null;
+    for (const tile of tiles) {
+      if (!tile.files.q100_comparison_index) continue;
+      const bounds = tile.bounds;
+      if (lng < bounds.west || lng > bounds.east || lat < bounds.south || lat > bounds.north) continue;
+      const candidate = inverseBilinear(lng, lat, bounds.corners);
+      if (candidate.u >= 0 && candidate.u <= 1 && candidate.v >= 0 && candidate.v <= 1) {
+        selected = tile;
+        position = candidate;
+        break;
+      }
+    }
+    if (!selected) return;
+    try {
+      const index = await loadComparisonIndex(selected);
+      const x = Math.min(index.width - 1, Math.max(0, Math.floor(position.u * index.width)));
+      const y = Math.min(index.height - 1, Math.max(0, Math.floor(position.v * index.height)));
+      const code = index.context.getImageData(x, y, 1, 1).data[0];
+      const copy = comparisonCategoryCopy(code);
+      popup.setLngLat(event.lngLat).setHTML(`
+        <div class="popup-rank">Categorical Q100 comparison</div>
+        <div class="popup-row"><span class="popup-key">Official Q100:</span><span class="popup-val">${copy.official}</span></div>
+        <div class="popup-row"><span class="popup-key">D19 review signal:</span><span class="popup-val">${copy.d19}</span></div>
+        <div class="popup-row"><span class="popup-key">Official study validity:</span><span class="popup-val">${copy.validity}</span></div>
+        <div class="popup-row"><span class="popup-key">Tile:</span><span class="popup-val">${selected.name}</span></div>
+        <p class="popup-interpretation"><strong>Interpretation:</strong> ${copy.interpretation}</p>
+      `).addTo(map);
+    } catch (error) {
+      console.warn('Comparison class lookup failed', error);
+    }
+  });
+}
+
+function wireComparisonSummary(comparison) {
+  const panel = document.getElementById('comparison-summary');
+  const select = document.getElementById('comparison-summary-region');
+  if (!comparison || !comparison.regions) {
+    panel.hidden = true;
+    return;
+  }
+  Object.entries(comparison.regions).forEach(([region, summary]) => {
+    const option = document.createElement('option');
+    option.value = region;
+    option.textContent = summary.label;
+    select.appendChild(option);
+  });
+  if (comparison.regions['05-ljubljana']) select.value = '05-ljubljana';
+  function update() {
+    const summary = comparison.regions[select.value];
+    if (!summary) return;
+    Object.entries(summary.shares_percent).forEach(([name, value]) => {
+      const element = document.getElementById(`comparison-share-${name.replaceAll('_', '-')}`);
+      if (element) element.textContent = value == null ? 'n/a' : `${value.toFixed(2)}%`;
+    });
+    document.getElementById('comparison-coverage').textContent =
+      `${summary.comparable_coverage_of_validity_percent.toFixed(2)}% of official-validity cells have D19 data (${summary.comparable_area_km2.toFixed(3)} km² compared).`;
+  }
+  select.addEventListener('change', update);
+  update();
+}
+
+function wireOfficialValidationControls(map, validationState, manifest) {
+  const tiles = manifest.tiles;
   const toggle = document.getElementById('toggle-official');
   const scenario = document.getElementById('official-scenario');
   const opacity = document.getElementById('opacity-official');
@@ -359,8 +516,13 @@ function wireOfficialValidationControls(map, validationState) {
   const validityToggle = document.getElementById('toggle-official-validity');
   const depthToggle = document.getElementById('toggle-official-depth');
   const comparisonToggle = document.getElementById('toggle-q100-comparison');
+  const comparisonSummary = document.getElementById('comparison-summary');
   const d19Toggle = document.getElementById('toggle-susc');
   const d19Mode = document.getElementById('d19-display-mode');
+  const d19Opacity = document.getElementById('opacity-susc');
+  const comparisonAvailable = Boolean(
+    manifest.q100_comparison && tiles.every(tile => tile.files.q100_comparison)
+  );
 
   if (!validationState || !validationState.available) {
     toggle.disabled = true;
@@ -374,14 +536,18 @@ function wireOfficialValidationControls(map, validationState) {
 
   validityToggle.disabled = !validationState.validity;
   depthToggle.disabled = validationState.depthKeys.length === 0;
+  comparisonToggle.disabled = !comparisonAvailable;
+  wireComparisonSummary(manifest.q100_comparison);
+  if (comparisonAvailable) wireComparisonClick(map, tiles, comparisonToggle);
 
   function updateVisibility() {
+    const comparing = comparisonToggle.checked;
     OFFICIAL_SCENARIOS.forEach(({ key }) => {
       if (!validationState.byScenario[key]) return;
       map.setLayoutProperty(
         `layer-official-${key}`,
         'visibility',
-        toggle.checked && scenario.value === key ? 'visible' : 'none'
+        !comparing && toggle.checked && scenario.value === key ? 'visible' : 'none'
       );
     });
     if (validationState.validity) {
@@ -393,9 +559,16 @@ function wireOfficialValidationControls(map, validationState) {
       map.setLayoutProperty(
         `layer-official-${key}`,
         'visibility',
-        toggle.checked && depthToggle.checked && scenario.value === 'q100' ? 'visible' : 'none'
+        !comparing && toggle.checked && depthToggle.checked && scenario.value === 'q100' ? 'visible' : 'none'
       );
     });
+    tiles.forEach(tile => {
+      const layerId = `layer-q100_comparison-${tile.name}`;
+      if (map.getLayer(layerId)) {
+        map.setLayoutProperty(layerId, 'visibility', comparing ? 'visible' : 'none');
+      }
+    });
+    comparisonSummary.hidden = !comparing;
   }
   toggle.addEventListener('change', updateVisibility);
   scenario.addEventListener('change', updateVisibility);
@@ -403,15 +576,22 @@ function wireOfficialValidationControls(map, validationState) {
   depthToggle.addEventListener('change', updateVisibility);
   comparisonToggle.addEventListener('change', () => {
     const enabled = comparisonToggle.checked;
-    toggle.checked = enabled;
-    validityToggle.checked = enabled;
-    d19Toggle.checked = enabled;
+    toggle.checked = false;
+    d19Toggle.checked = false;
     if (enabled) {
       scenario.value = 'q100';
       depthToggle.checked = false;
-      d19Mode.value = 'd19_review';
+      validityToggle.checked = true;
     }
     d19Toggle.dispatchEvent(new Event('change'));
+    toggle.disabled = enabled;
+    scenario.disabled = enabled;
+    opacity.disabled = enabled;
+    depthToggle.disabled = enabled || validationState.depthKeys.length === 0;
+    validityToggle.disabled = enabled || !validationState.validity;
+    d19Toggle.disabled = enabled;
+    d19Mode.disabled = enabled;
+    d19Opacity.disabled = enabled;
     updateVisibility();
   });
   opacity.addEventListener('input', () => {
