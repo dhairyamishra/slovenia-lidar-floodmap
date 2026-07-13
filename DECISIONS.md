@@ -298,6 +298,18 @@ Each entry includes the rationale and how to reverse/revisit if needed.
 
 **Reversible:** Remove the benchmark script/tests and scikit-learn dependency. No committed web output depends on D28, and the locked test has not been consumed.
 
+### D29 — Remove the synthetic hydroclimate grid from the public map; retain calculations
+
+**Decision:** Remove the Hydroclimate Trigger and Terrain Candidates Under Trigger controls and all associated frontend loading/rendering logic. Keep `hydroclimate.py`, the deterministic fixture, real-NetCDF derivation path, formulas, export commands, and generated assets in the repository. The public app must not request or register those assets.
+
+**Why:** The fixture paints a coarse rectangular grid across the study envelope. Although labeled synthetic, the colored cells visually imply meaningful local spatial variation and can be mistaken for flood conditions. It does not help users interpret official hazard, terrain susceptibility, or observed flooding, and it is not real ERA5-Land evidence. Retaining the analytical path avoids discarding useful data-contract work while removing an unjustified visualization.
+
+**Result:** The sidebar and About text now focus on the official reference, experimental terrain baseline, land cover/NDVI, Koper low-land exposure, and review points. The app no longer fetches `data/hydroclimate/manifest.json`, creates a hydro trigger source/layer, or builds hydro-primed markers. Calculation artifacts remain reproducible but dormant.
+
+**Re-entry gate:** Restore a public temporal layer only after real forcing data are correctly decoded, aggregated at an appropriate catchment scale, validated across flood and dry periods, and displayed without suggesting finer resolution than the source supports.
+
+**Reversible:** Restore the D21 frontend wiring and controls. No analytical regeneration is needed because the calculation code and assets remain intact.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

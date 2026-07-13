@@ -32,7 +32,7 @@
       <ol class="reading-steps">
         <li><span>1</span><p><strong>Start with the official reference.</strong> Choose Q100 for a familiar planning comparison.</p></li>
         <li><span>2</span><p><strong>Add the experimental terrain baseline.</strong> Use its sparse review mask to inspect agreement or disagreement.</p></li>
-        <li><span>3</span><p><strong>Add the context layer for the question.</strong> Land cover for local setting, coastal exposure for Koper, or hydroclimate for the Savinja demonstration.</p></li>
+        <li><span>3</span><p><strong>Add the context layer for the question.</strong> Use land cover for local setting or coastal exposure for Koper.</p></li>
       </ol>
       <p class="panel-tip"><strong>Opacity tip:</strong> 30&ndash;50% is best for comparing an overlay with roads and terrain beneath it.</p>
     </div>
@@ -212,40 +212,6 @@
 
       <div class="divider"></div>
 
-      <!-- ERA5-Land hydroclimate trigger -->
-      <div class="layer-row">
-        <label class="layer-toggle">
-          <input type="checkbox" id="toggle-hydro">
-          <span class="toggle-track"></span>
-        </label>
-        <span class="layer-name">Hydroclimate Trigger</span>
-      </div>
-      <div class="legend-bar" id="legend-hydro">
-        <div class="legend-gradient" style="background: linear-gradient(to right, #1d4ed8, #22c55e, #facc15, #f97316, #dc2626);"></div>
-        <div class="legend-labels"><span>Cool</span><span>Primed</span></div>
-      </div>
-      <div class="select-row">
-        <span class="slider-label">Date</span>
-        <select id="hydro-date" class="scenario-select"></select>
-      </div>
-      <div class="slider-row">
-        <span class="slider-label">Opacity</span>
-        <input type="range" id="opacity-hydro" min="0" max="100" value="55" class="slider">
-        <span class="slider-val" id="val-hydro">55%</span>
-      </div>
-      <p class="layer-description"><strong>Shows:</strong> a coarse indicator of catchment wetness and recent water input for the selected date. “Primed” means conditions conceptually favor runoff, not that flooding is occurring.</p>
-      <div class="layer-row layer-row--compact">
-        <label class="layer-toggle">
-          <input type="checkbox" id="toggle-hydro-risk">
-          <span class="toggle-track"></span>
-        </label>
-        <span class="layer-name">Terrain Candidates Under Trigger</span>
-      </div>
-      <p class="layer-use"><strong>Use with:</strong> turn on both Hydroclimate Trigger and Terrain Candidates to explore the project&rsquo;s &ldquo;when + where&rdquo; concept in Savinja.</p>
-      <p class="layer-hint layer-warning">Synthetic Aug-2023 Savinja fixture for UI testing. It is not ERA5 evidence, probability, or a forecast.</p>
-
-      <div class="divider"></div>
-
       <!-- Risk points -->
       <div class="layer-row">
         <label class="layer-toggle">
@@ -262,10 +228,9 @@
       <h3 class="panel-heading">About</h3>
       <p class="info-text">
         LiDAR-derived riverine terrain screening across Ljubljana, Savinja and Koper,
-        with a Koper connected-low-land screen and a synthetic hydroclimate fixture.
+        with a separate Koper connected-low-land screen.
         The riverine model combines HAND, TWI, elevation, slope, curvature, canopy
-        interception and NDVI. The hydroclimate layer indicates temporal priming,
-        not flood probability.
+        interception and NDVI.
       </p>
       <p class="info-text screening-notice">
         <strong>Screening only:</strong> not a forecast, evacuation map, insurance
@@ -283,6 +248,6 @@
   <div id="popup-content" style="display:none;"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=9"></script>
+  <script src="app.js?v=10"></script>
 </body>
 </html>

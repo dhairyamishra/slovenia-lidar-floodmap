@@ -1,12 +1,23 @@
 # Handoff - Slovenia CLSS LiDAR Flood, Coastal & Hydroclimate Demo
 
-**Status:** Phases 1–4 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D27). Phase 5 candidates are implemented, but the D28 development selection gate failed. The locked test remains unopened, no replacement is approved, and no replacement has been published to the web.
+**Status:** Phases 1–4 of `FLOOD_MODEL_REPLACEMENT_PLAN.md` are complete (D24–D27). Phase 5 candidates are implemented, but the D28 development selection gate failed. D29 removes the synthetic hydroclimate grid and triggered-candidate visualizations from the public app while retaining their calculations. The locked test remains unopened and no replacement is approved.
 
 **Goal:** A polished, honest screening tool for Aleks / sledilnik.org that shows where detailed flood/coastal investigation should start. It is not a hydraulic, coastal, or probabilistic forecast model.
 
 > Authoritative context: `AGENTS.md`, `CLAUDE.md`, `DECISIONS.md`, and `PLAN.md`. This handoff is the current snapshot plus the latest implementation notes.
 > The active review/implementation tracker is `ALEKS_REVIEW_AND_ALGORITHM_PLAN.md`.
 > The focused red-map/model-replacement tracker is `FLOOD_MODEL_REPLACEMENT_PLAN.md`.
+
+## D29 Remove synthetic hydroclimate visualizations (2026-07-12)
+
+- Removed **Hydroclimate Trigger** and **Terrain Candidates Under Trigger** from the sidebar.
+- Removed hydroclimate manifest/data fetching, MapLibre grid registration, popups, dynamic markers, date switching, and related CSS from the public frontend.
+- Retained `hydroclimate.py`, its fixture/real-data derivation paths, formulas, generated `web/data/hydroclimate/` artifacts, and README regeneration commands.
+- The static app no longer requests or displays the retained hydroclimate assets.
+
+**Why:** The current dataset is a deterministic coarse fixture, not ERA5 evidence. Rendering it as large colored squares implies spatial resolution and operational meaning that the calculation does not support. Keeping the calculations preserves future research work without presenting a low-value visualization to users.
+
+**Re-entry gate:** A hydroclimate visualization may return only after real ERA5-Land/ARSO ingestion, correct accumulation handling, meaningful catchment aggregation, multiple-date validation, and a display design whose resolution matches the evidence.
 
 ## D28 Phase-5 development benchmark — gate failed (2026-07-12)
 
@@ -122,11 +133,13 @@ Updated next entry point: obtain a vetted August 2023 Savinja observed footprint
 
 This repository builds an interactive web map from Slovenia's CLSS airborne LiDAR data. `pipeline.py` reads local `data/GKOT_*.laz` files, computes terrain/vegetation factors, exports PNG overlays under `web/data/tiles/<tile>/`, and writes `web/data/manifest.json`, `web/data/candidates.json`, and `web/data/risk_points.geojson` for the static web app.
 
-Aleks provided two validation/extension directions: the Savinja valley flood area from Aug 2023 and Koper for sea-level-rise exposure. D20 handled Koper coastal exposure. D21 now implements the Copernicus/BGC idea Aleks shared as a separate hydroclimate trigger: use soil moisture, wetting trend, and 90-day water input to answer "when is the landscape primed?" while LiDAR susceptibility still answers "where is terrain susceptible?"
+Aleks provided two validation/extension directions: the Savinja valley flood area from Aug 2023 and Koper for sea-level-rise exposure. D20 handled Koper coastal exposure. D21 implemented the Copernicus/BGC hydroclimate calculation contract; D29 keeps those calculations but removes their synthetic fixture from the public map.
 
 Live site: https://dhairyamishra.github.io/slovenia-lidar-floodmap/
 
-## Current State
+## Historical D21 snapshot (superseded by D29)
+
+The bullets in this subsection record the original D21 implementation session. They are not current working-tree status; D29 removes the frontend visualization while retaining the calculation assets.
 
 Recent implementation commits before this working tree:
 
@@ -192,7 +205,7 @@ Coastal D20 model:
 Hydroclimate D21 model:
 
 - Implemented in `hydroclimate.py`.
-- App reads `web/data/hydroclimate/manifest.json` opportunistically. Missing hydroclimate data disables controls without breaking the base map.
+- Since D29, the app does not read `web/data/hydroclimate/manifest.json`; the calculation manifest remains available for offline validation and future evidence-backed visualization.
 - Formula: `hydro_score = soil_moisture_norm + water90_norm + 0.5 * wetting_trend_norm`.
 - Normalized UI index: `hydro_index = hydro_score / 2.5`.
 - Hydro-primed risk points use `event_score = static_susceptibility * hydro_index`.
@@ -213,14 +226,14 @@ The current open work is validation and credibility.
    The D19 terrain model is literature-informed but not calibrated against observed flood footprints. This remains the biggest credibility step for sledilnik-style technical stakeholders.
 
 4. Savinja Aug-2023 validation is pending.
-   The model now highlights the valley floor, and D21 can show a temporal priming layer, but both need comparison against documented flood extent or hazard layers.
+   The model highlights the valley floor, while the retained D21 calculations still require comparison against documented event extent and forcing before any temporal layer returns.
 
 5. Per-tile HAND and coastal connectivity are still approximate.
    HAND computes inside each 1 km tile, so drainage paths terminate locally. Coastal connectivity is also per-tile. Whole-region / mosaic routing remains the real model-quality upgrade.
 
 Recommended entry point:
 
-First validate D21 with real ERA5-Land over the current app bbox for `2023-08-04`, then compare the hydro-primed Savinja ranking against ARSO or observed Aug-2023 flood evidence. If that comparison is credible, add CDS download automation; if not, fix the hydro indicators before polishing the UI further.
+Validate D21 offline with real ERA5-Land over the current app bbox for `2023-08-04`, then compare the derived Savinja signal against ARSO or observed Aug-2023 flood evidence. Only after that comparison is credible should a redesigned visualization be considered.
 
 ## Gotchas
 
@@ -232,7 +245,6 @@ First validate D21 with real ERA5-Land over the current app bbox for `2023-08-04
 - Pipeline subset runs update global candidates by removing stale entries for reprocessed tiles and merging fresh candidates.
 - Long pipeline/calibration runs have previously died when the machine slept. Keep the machine awake.
 - Browser preview may not fully verify MapLibre if external basemap/sprite requests fail. DOM/static checks are still useful.
-- `web/app.js` intentionally treats hydroclimate data as optional; do not change that unless the static site should hard-fail when hydro assets are absent.
 
 ## File Map
 

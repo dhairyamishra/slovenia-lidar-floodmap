@@ -450,7 +450,7 @@ The 2023 fixture must be visibly watermarked “synthetic demo” or removed fro
 - [ ] Add catchment aggregation and fixed-climatology anomalies.
 - [ ] Evaluate multiple antecedent/event windows.
 - [ ] Validate August 2023 and at least one dry/negative period.
-- [ ] Remove or watermark fixture in production.
+- [x] Remove fixture visualization from production while retaining calculation/data-contract assets (D29).
 
 **Exit gate:** trigger claims are based on real data, with hindcast metrics and provenance.
 
@@ -486,6 +486,7 @@ Append each experiment; never overwrite an unfavorable result.
 | E004 | 2026-07-12 | Savinja mosaic hydrology v1, input fingerprint `e7ebe35c…` | 25 CLSS tiles, 346,901,854 ground returns; DRSV flow lines; development-only Q100 samples | Savinja E486–488 development only; guard E489 and locked E490 excluded | Continuous priority-flood D8 routing, HAND, channel distance and Strahler; MFD and threshold sensitivities | Per-tile HAND AUC/AP 0.7387/0.1523; mosaic HAND 0.7894/0.1973; selected 50,000 m² D8 channel F1 0.7163 | Absolute elevation is not used in this feature gate; HAND is drainage-relative | Accept mosaic hydrology for Savinja; extend the same code path to Ljubljana before model fitting |
 | E005 | 2026-07-12 | Ljubljana mosaic hydrology v1, input fingerprint `96e7bfdd…` | 100 CLSS tiles, 1,321,210,775 ground returns; DRSV flow lines; 78,848 development-only samples | Ljubljana E455–461 development only; E462 guard and E463–464 locked test excluded | Compare unburned/burned priority-fill surfaces and 10k/50k/100k m² D8 HAND; export exact receiver/connectivity/outlet and local-relief features | Per-tile HAND 0.7111/0.4949; selected unburned 100k mosaic HAND 0.7358/0.5150. Burned 100k degraded to 0.6991/0.4654 | No absolute-elevation score used; valley-relative elevation and local relief exported for later controlled testing | Reject automatic network burn; accept continuous Ljubljana hydrology and proceed to spatial model benchmark |
 | E006 | 2026-07-12 | Replacement benchmark v1 | 84,358 eligible development samples (27,541 Q100-positive); Savinja + Ljubljana mosaic features | 10 leave-one-easting-column-out folds; adjacent same-region columns excluded; guard/locked omitted | B0/B1/B2, monotonic logistic, monotonic HGB; TWI/slope one-at-a-time; 250/500/1000/2000 m applicability | Best B0 0.7447/0.5049; best challenger M2 + TWI + slope at 500 m 0.7647/0.5819; low-flat flags 0.0753→0.0598 | Best challenger Pearson: Ljubljana −0.6002, Savinja −0.3800; no absolute-elevation input | Reject selection: +0.0200 AUC and 20.58% control reduction miss +0.03/30% gates; keep locked test closed |
+| E007 | 2026-07-12 | Public map D29 | Synthetic hydroclimate fixture and dynamic D19 re-ranking assets | Product/communication review | Remove coarse grid, hydro popups, and triggered-candidate markers from frontend; retain calculations/assets | No analytical metric changed; public app makes zero hydroclimate asset requests | Not applicable | Accept removal; require real validated forcing/catchment evidence before visualization returns |
 
 ## 12. Decision gates
 

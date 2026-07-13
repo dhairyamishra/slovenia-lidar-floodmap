@@ -1,6 +1,6 @@
 # Slovenia CLSS LiDAR — Flood Susceptibility & Terrain Screening
 
-An interactive web map overlaying riverine flood susceptibility, Koper coastal sea-level-rise exposure, ERA5-Land-style hydroclimate trigger state, and forest-NDVI analysis derived from Slovenia's national airborne LiDAR dataset (CLSS — *Ciklično lasersko skeniranje*) onto a dark basemap styled after the national viewer at [clss.si](https://clss.si).
+An interactive web map overlaying riverine flood susceptibility, official DRSV scenario references, Koper coastal sea-level-rise exposure, and forest-NDVI analysis derived from Slovenia's national airborne LiDAR dataset (CLSS — *Ciklično lasersko skeniranje*) onto a dark basemap styled after the national viewer at [clss.si](https://clss.si).
 
 **Live demo →** https://dhairyamishra.github.io/slovenia-lidar-floodmap/
 
@@ -74,8 +74,6 @@ The source is a three-dimensional CLSS LiDAR point cloud: individual returns rec
 | Experimental D19 Terrain Baseline | Frozen unvalidated weighted composite; sparse purple review mask by default and original saturated raster for diagnostics only |
 | Official DRSV Hazard Reference | Blue Q10/Q100/Q500 IKPN extent plus hydraulic-study validity and official Q100 depth classes |
 | Connected Coastal Low-Land Exposure | Koper-only bathtub screen for +0.5 m / +1.0 m / +2.0 m scenarios; not surge or hydraulic inundation |
-| Hydroclimate Trigger | Synthetic Aug-2023 Savinja fixture for UI testing. Real ERA5-Land ingestion remains experimental and must not be presented as evidence yet |
-| Terrain Candidates Under Trigger | Existing D19 candidates re-ranked by an uncalibrated synthetic combined index for interface testing |
 | Forest NDVI | Per-cell NDVI from 16-bit NIR/R channels — red (stressed) → green (healthy) |
 | Land Classification | Ground, low/med/high vegetation, building returns |
 | Review Points | Top-20 D19 susceptibility candidates, capped at 7 per CDN region for presentation balance; scores remain non-comparable across regions |
@@ -138,16 +136,16 @@ python benchmark_replacement.py develop
 
 Requires: `laspy`, `lazrs`, `numpy`, `scipy`, `pyproj`, `Pillow`, `numba` (the hot DTM/D8/HAND loops in `kernels.py` are Numba-JIT'd). Tiles fan out across processes — `--workers N` overrides the RAM-bound default.
 
-### Regenerate hydroclimate trigger assets
+### Retained hydroclimate calculations (not a map layer)
 
-The hydroclimate feature is separate from the LiDAR pipeline. V1 can be generated without external credentials:
+The synthetic hydroclimate visualization was removed from the public map because its coarse square grid implied spatial precision and decision value that the fixture does not have. The analytical pipeline and data contract are retained for future validation. V1 assets can still be generated without external credentials:
 
 ```bash
 python hydroclimate.py derive-fixture
 python hydroclimate.py export
 ```
 
-This writes `web/data/hydroclimate/manifest.json`, `hydro_2023-08-04.geojson`, and `dynamic_risk_2023-08-04.geojson`. The fixture is designed for UI validation and the Savinja Aug-2023 hindcast narrative; it is not real ERA5-Land evidence.
+This writes `web/data/hydroclimate/manifest.json`, `hydro_2023-08-04.geojson`, and `dynamic_risk_2023-08-04.geojson`. The static app does not load or display them. The fixture is retained for calculation/data-contract testing only; it is not real ERA5-Land evidence.
 
 For real ERA5-Land inputs, place NetCDF files under `data/era5/` (gitignored) with `swvl4`, `tp`, and `smlt` variables, install xarray/NetCDF support, then run:
 
@@ -174,7 +172,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `web/data/manifest.json` | Tile registry (bounds + file paths) consumed by the web app |
 | `web/data/candidates.json` | Top-500 D19 susceptibility review candidates; not global probabilities |
 | `web/data/risk_points.geojson` | Top-20 review points (de-duplicated at 50 m, presentation-capped at 7 per region) |
-| `web/data/hydroclimate/*.geojson` | Hydroclimate trigger grid and hydro-primed risk points for available dates |
+| `web/data/hydroclimate/*.geojson` | Retained hydroclimate calculation artifacts; intentionally not loaded or visualized by the public map |
 | `calibration.json` | Per-region normalisation constants + dataset fingerprint |
 | `output/diagnostics/samples/*.npz` | Ignored deterministic full-grid factor/score samples emitted by the pipeline |
 | `output/diagnostics/model_audit.*` | Ignored audit reports from `analyze_model.py` |
