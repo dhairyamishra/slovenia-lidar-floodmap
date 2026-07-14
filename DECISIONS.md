@@ -364,6 +364,68 @@ their manifest/cache entries, restore the prior regional calibration, and rerun
 the old 146-tile dataset. Do not regenerate the frozen evaluation contract in
 either direction.
 
+### D32 â€” Provenance-first Savinja observed-event evidence acquisition
+
+**Decision:** Begin the next flood-model improvement with a bounded
+Savinja/Kamnik August-2023 observed-event evidence workflow, rather than
+retuning D19 or promoting a static replacement. Record public event sources
+in `validation/sources.json`; use `prepare_event_evidence.py` to inventory
+availability and provenance before acquisition. Refuse multi-gigabyte imagery
+archives by default, acquire the sheet index first, and keep all acquired
+evidence ignored under `validation/data/event_evidence/`. Treat Copernicus
+EMSR680 observed-event polygons as unreviewed independent context until a
+human-reviewed imagery footprint is produced.
+
+**Why:** D28 showed that additional static terrain features improved ranking but
+did not reduce the low-flat/altitude shortcut enough to qualify. The missing
+information is actual event evidence and connectivity context, not another
+hand-chosen colour ramp or weight change. The 9.5 GB Savinja RGB archive is too
+large to download blindly; a sheet-index-first workflow is reproducible and
+limits acquisition to relevant review coverage.
+
+**Result:** The public CC-BY EMSR680 package was acquired and checksum-recorded
+at 91,222,927 bytes. It contains AOI03 flood-event/delineation GeoJSON
+`observedEvent` layers. Direct acquisition of the official Savinja orthophoto
+sheet index currently returns HTTP 403, and the official DRSV hydrography ZIP
+endpoint presents a TLS hostname mismatch in this environment. These access
+failures are explicitly recorded; no TLS bypass or undocumented scraping is
+allowed.
+
+**Caveat:** This does not create an observed-flood label or a replacement model.
+Post-event imagery is after the flood peak and EMS remote sensing can miss
+transient/obscured water. Uncertain cells must remain outside fitting/scoring
+until review.
+
+**Reversible:** Remove `prepare_event_evidence.py`, its tests, and the
+`event_sources` records. The acquired package is ignored, no public app asset
+or model output depends on it, and D19/current official comparison remain
+unchanged.
+
+### D33 — Correct new observed-event work to Kamnik/Kamniška Bistrica, preserve legacy mosaic IDs
+
+**Decision:** Treat the current E486–491 km / N132–137 km LiDAR mosaic as the
+Kamnik/Kamniška Bistrica study area in all new source records, evidence files,
+review IDs, plans, and user-facing descriptions. Preserve the existing
+`mosaic_hydrology.py --region savinja` selector and ignored
+`output/mosaic/savinja/` directory as legacy experiment identifiers until a
+separate migration can prove identical outputs.
+
+**Why:** Transforming the current EPSG:3794 bounds to WGS84 (approximately
+14.818–14.883 E / 46.328–46.373 N), together with the DRSV event-orthophoto
+portal, identifies the area as Kamniška Bistrica/Pšata with Sava—not the
+Savinja basin. A source-name mismatch risks collecting the wrong imagery or
+gauge evidence. Renaming historical cache paths would weaken D26/D28
+reproducibility without improving the model.
+
+**Result:** The provenance manifest records the exact DRSV Kamniška
+Bistrica/Pšata RGB, CIR, and sheet-index URLs. They remain publisher-blocked
+by HTTP 403 in this environment, so EMSR680 remains explicitly unreviewed
+context and no model fitting is authorized.
+
+**Reversible:** Revert the new-work names and source IDs together. Leave the
+legacy mosaic selector untouched unless an alias migration includes exact
+feature/output regression checks and updates all experiment manifests.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

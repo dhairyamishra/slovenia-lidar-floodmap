@@ -7,6 +7,81 @@
 > Authoritative context: `AGENTS.md`, `CLAUDE.md`, `DECISIONS.md`, and `PLAN.md`. This handoff is the current snapshot plus the latest implementation notes.
 > The active review/implementation tracker is `ALEKS_REVIEW_AND_ALGORITHM_PLAN.md`.
 > The focused red-map/model-replacement tracker is `FLOOD_MODEL_REPLACEMENT_PLAN.md`.
+> The active observed-event enhancement tracker is
+> `KAMNIK_OBSERVED_EVENT_ENHANCEMENT_PLAN.md`.
+
+## D33 Kamnik/Kamniška Bistrica area correction (2026-07-13, uncommitted)
+
+- Confirmed from the EPSG:3794 bounds (E486–491 km, N132–137 km; WGS84
+  approximately 14.818–14.883 E / 46.328–46.373 N) and the DRSV portal that
+  the current 5×5 mosaic is in the Kamnik/Kamniška Bistrica study area, not
+  the Savinja river basin.
+- Renamed all **new** observed-event workflow files, source IDs, generated
+  evidence names, review IDs, documentation, and public DRSV asset URLs to
+  Kamnik/Kamniška Bistrica. The now-correct DRSV RGB/CIR/sheet-index URLs are
+  recorded, though the publisher continues to return HTTP 403 for direct
+  retrieval.
+- The existing `mosaic_hydrology.py --region savinja` selector and ignored
+  `output/mosaic/savinja/` directory intentionally remain legacy identifiers:
+  they reproduce the already evaluated D26/D28 experiment. Do not silently
+  relabel or regenerate those historical assets. Any future migration needs a
+  manifest alias plus an exact-output regression check.
+
+**Why:** Using a Savinja source name for Kamniška Bistrica could lead to the
+wrong imagery, gauge, and review coverage. Preserving the legacy selector
+separately prevents breaking reproducibility while making future evidence work
+geographically correct.
+
+## D32 Kamnik/Kamniška Bistrica observed-event evidence inventory (2026-07-13, uncommitted)
+
+- Added `KAMNIK_OBSERVED_EVENT_ENHANCEMENT_PLAN.md`, which narrows the next
+  model work to a Kamnik/Kamniška Bistrica August-2023 hindcast. It prohibits cosmetic
+  D19 retuning, full-area red risk displays, and public promotion before
+  independent observed-event evaluation.
+- Added `prepare_event_evidence.py`, `test_prepare_event_evidence.py`, and
+  `validation/sources.json` event-source records. The inventory captures URL,
+  licence, capture date, intended use, explicit limitations, HTTP metadata,
+  final URL, and checksums before a source can enter model work. Large imagery
+  downloads are blocked above 500 MiB unless deliberately overridden; this
+  prevents a blind 9.5 GB RGB download before selecting image sheets.
+- Verified and downloaded the public CC-BY Copernicus EMSR680 archive:
+  `validation/data/event_evidence/emsr680_products.zip`, 91,222,927 bytes,
+  SHA-256 recorded in its ignored acquisition manifest. It contains AOI03
+  flood-event/delineation products with GeoJSON `observedEvent` layers.
+- Added `extract_emsr680_observed_events.py` and three tests. It extracts all
+  1,498 EMSR680 flood features and conservatively intersects them with the
+  current EPSG:3794 Savinja 5×5 LiDAR mosaic. The ignored catalogue reports
+  156 intersecting unreviewed features: 155 from AOI07 and one from AOI03;
+  155 are marked `Photo-interpretation`, 82 `Flooded area`, and 74 `Flood
+  trace`. This is useful independent context, not a final footprint or a
+  source of negative/dry labels.
+- Added `observed_event_labels.py`, three tests, and
+  `validation/review/` documentation/schema. Its deterministic review queue
+  has 156 candidates and its validator requires `flooded`, `not_flooded`, or
+  `uncertain` plus reviewer/time/evidence; pending and uncertain candidates
+  cannot enter later fitting. Current validation reports zero decisions and
+  156 pending because no approved imagery review has occurred.
+- The DRSV Kamniška Bistrica/Pšata orthophoto sheet-index endpoint returned HTTP 403 when
+  fetched directly, and the official hydrography ZIP endpoint presents a TLS
+  hostname mismatch to this runtime. These are source-access limitations, not
+  absence of data. Do not disable TLS checks or scrape around the publisher;
+  retain the official URLs/provenance and use the Copernicus package as
+  independent context while seeking a supported official access route.
+
+**Why:** D28 rejected all static replacement candidates because they still
+overflagged low, flat terrain. A real-event evidence package is new information
+that can test connectivity-first features rather than making D19 look better.
+EMSR680 is explicitly *not* final truth: its remote-sensing delineation can
+miss transient/obscured water and must be marked unreviewed until imagery/manual
+review validates it.
+
+**Verification:** `test_prepare_event_evidence.py` passes 4/4 under the bundled
+Python runtime; `prepare_event_evidence.py --help` and `git diff --check` pass.
+
+**Next entry point:** Build the conservative review-label package around the
+extracted EMSR680 context. It needs post-event imagery or an approved official
+review source before any human can affirm flooded/not-flooded/uncertain cells.
+Do not fit a model or inspect the existing locked static-Q100 test.
 
 ## D31 Hydraulic-validity coverage expansion (2026-07-13)
 

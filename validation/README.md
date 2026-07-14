@@ -57,9 +57,41 @@ selection. The locked test must not guide Phase-3/4 feature engineering.
 ## Still missing
 
 The static hazard layers do not prove what flooded on 4 August 2023. Phase 1
-still requires a vetted Savinja event footprint plus ARSO forcing/gauge data.
+still requires a vetted Kamnik/Kamniška Bistrica event footprint plus ARSO forcing/gauge data.
 Do not train or select model weights using only the static layers and call the
 result a 2023 hindcast.
+
+## Kamnik/Kamniška Bistrica August-2023 observed-event evidence
+
+`prepare_event_evidence.py` inventories the public sources needed for a
+conservative Kamnik/Kamniška Bistrica event-label workflow. It writes ignored source metadata
+and downloads only sources explicitly requested. Start with the small
+post-event imagery sheet index and the Copernicus event package; the RGB/CIR
+archives are multi-gigabyte and must not be downloaded wholesale before the
+sheet index identifies the review subset.
+
+```powershell
+python prepare_event_evidence.py --source kamnik_2023_sheet_index --source emsr680_products
+python prepare_event_evidence.py --source kamnik_2023_sheet_index --download
+```
+
+The evidence inventory is not a flood footprint. Phase B will create a
+versioned label package only after imagery alignment and human review of
+ambiguous candidate patches. `sources.json` records source dates, licences,
+use, and limitations for this work; it also records ARSO and deferred ERA5-Land
+context without treating either as acquired evidence.
+
+After the EMSR680 archive is acquired, extract its flood polygons as explicitly
+unreviewed context:
+
+```powershell
+python extract_emsr680_observed_events.py
+```
+
+This writes ignored all-Slovenia and current-Kamnik/Kamniška-Bistrica-intersection GeoJSON files,
+plus a product catalogue. The output is not an observed flood label, does not
+mark unobserved land as dry, and must not be used for model fitting until the
+Phase-B image review package exists.
 
 Official starting points:
 

@@ -79,7 +79,7 @@
   ],
   "pending_sources": [
     {
-      "id": "savinja_2023_observed_extent",
+      "id": "kamnik_2023_observed_extent",
       "kind": "observed_event_extent",
       "date": "2023-08-04",
       "status": "not_acquired",
@@ -91,6 +91,93 @@
       "date_range": "2023-08-03/2023-08-08",
       "status": "not_acquired",
       "requirement": "Gauge/station precipitation, stage, and discharge with station metadata"
+    }
+  ],
+  "event_sources": [
+    {
+      "id": "kamnik_2023_sheet_index",
+      "kind": "post_event_orthophoto_sheet_index",
+      "event": "2023-08-04 Slovenia floods",
+      "date_captured": "2023-08-07/2023-08-08",
+      "url": "https://drsv.b-cdn.net/Podatki/Pore%C4%8Dje%20Save/Mreza_listov/Mreza_listov_Kamniska_Bistrica_in_Psata_s_Savo.zip",
+      "estimated_size_bytes": 51200,
+      "download_priority": "required-first",
+      "license": "Verify source portal terms at acquisition time",
+      "use": "Find the small subset of post-event imagery sheets intersecting the Kamnik/Kamniška Bistrica review area.",
+      "limitation": "Sheet index is coverage metadata, not a flood-extent label."
+    },
+    {
+      "id": "kamnik_2023_ortho_rgb",
+      "kind": "post_event_orthophoto_rgb",
+      "event": "2023-08-04 Slovenia floods",
+      "date_captured": "2023-08-07/2023-08-08",
+      "url": "https://drsv.b-cdn.net/Podatki/Pore%C4%8Dje%20Save/ORTO_RGB/Orto_RGB_Kamniska_Bistrica_in_Psata_s_Savo.zip",
+      "estimated_size_bytes": 7516192768,
+      "download_priority": "subset-after-sheet-index",
+      "license": "Verify source portal terms at acquisition time",
+      "use": "Primary visual evidence for a conservative, human-reviewed observed footprint.",
+      "limitation": "Captured after the flood peak; shadows, sediment, vegetation, and receded water require review."
+    },
+    {
+      "id": "kamnik_2023_ortho_cir",
+      "kind": "post_event_orthophoto_cir",
+      "event": "2023-08-04 Slovenia floods",
+      "date_captured": "2023-08-07/2023-08-08",
+      "url": "https://drsv.b-cdn.net/Podatki/Pore%C4%8Dje%20Save/ORTO_CIR/Orto_CIR_Kamniska_Bistrica_in_Psata_s_Savo.zip",
+      "estimated_size_bytes": 6979321856,
+      "download_priority": "subset-after-sheet-index",
+      "license": "Verify source portal terms at acquisition time",
+      "use": "False-colour context to distinguish water and vegetation during review.",
+      "limitation": "Captured after the flood peak; do not use an automatic index as ground truth."
+    },
+    {
+      "id": "emsr680_products",
+      "kind": "copernicus_rapid_mapping_event_products",
+      "event": "2023-08-04 Slovenia floods",
+      "url": "https://rapidmapping.emergency.copernicus.eu/backend/EMSR680/EMSR680_products.zip",
+      "landing_page": "https://rapidmapping.emergency.copernicus.eu/EMSR680",
+      "license": "CC BY 4.0",
+      "download_priority": "required-first",
+      "use": "Independent event-map context and quality-control reference.",
+      "limitation": "Rapid remote-sensing maps may miss short-lived or obscured water; never the sole event label."
+    },
+    {
+      "id": "drsv_hydro_surface_lines",
+      "kind": "national_hydrography_surface_water_lines",
+      "url": "https://www.statika.evode.gov.si/fileadmin/vodkat/DRSV_HIDRO5_LIN_PV.zip",
+      "catalogue": "https://podatki.gov.si/dataset/hidrografija?resource_id=798e79bb-9262-4e97-bb0d-6763140211e8",
+      "license": "CC BY 4.0",
+      "download_priority": "required-first",
+      "use": "Mapped channels, canals, and ditches for connectivity features and alignment checks.",
+      "limitation": "Map geometry does not establish channel-bed elevation or culvert connectivity."
+    },
+    {
+      "id": "drsv_hydro_structures_lines",
+      "kind": "national_hydrography_structures_lines",
+      "url": "https://www.statika.evode.gov.si/fileadmin/vodkat/DRSV_HIDRO5_LIN_OBJ.zip",
+      "catalogue": "https://podatki.gov.si/dataset/hidrografija?resource_id=798e79bb-9262-4e97-bb0d-6763140211e8",
+      "license": "CC BY 4.0",
+      "download_priority": "required-first",
+      "use": "Mapped water-related structures/embankments as review context.",
+      "limitation": "Completeness and hydraulic behaviour must be verified before model use."
+    },
+    {
+      "id": "arso_hydrological_data",
+      "kind": "gauge_stage_discharge_event_context",
+      "date_range": "2023-08-03/2023-08-08",
+      "url": "https://www.arso.gov.si/en/water/data/",
+      "catalogue": "https://podatki.gov.si/dataset/hidroloske-meritve-na-povrsinskih-vodah",
+      "download_priority": "manual-archive-discovery",
+      "use": "Gauge/stage/discharge timing and event context for relevant Kamniška Bistrica catchments.",
+      "limitation": "The public XML page is current-state oriented; historical series must retain station, units, timezone, and provenance."
+    },
+    {
+      "id": "era5_land_deferred",
+      "kind": "catchment_scale_reanalysis_forcing",
+      "url": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land?tab=overview",
+      "download_priority": "deferred-cds-registration",
+      "use": "Optional antecedent soil moisture, rainfall, snowmelt, and runoff context after CDS access succeeds.",
+      "limitation": "Not a 2 m inundation product; not required for the first observed-event terrain benchmark."
     }
   ]
 }
