@@ -10,10 +10,10 @@ that mosaic HAND clears the frozen per-tile HAND engineering baseline.
 from __future__ import annotations
 
 import argparse
+from functools import lru_cache
 import hashlib
 import json
 import time
-from datetime import datetime, timezone
 from pathlib import Path
 
 import laspy
@@ -25,20 +25,18 @@ from scipy.ndimage import (
     maximum_filter,
     minimum_filter,
 )
-from shapely import contains_xy
-
 import analyze_model
+import connectivity_flood
 import evaluate_validation
 import kernels
-from validation_grid import assign_split, file_sha256
+from validation_grid import assign_split, file_sha256, unpack_mask
 
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 FLOW_LINES = ROOT / "validation" / "data" / "official_flow_lines.geojson"
-VALIDITY = ROOT / "validation" / "data" / "ikpn_validity.geojson"
-Q100 = ROOT / "validation" / "data" / "ikpn_q100.geojson"
 SAMPLES = ROOT / "output" / "diagnostics" / "samples"
+INPUT_DIGESTS = ROOT / "output" / "connectivity" / "input_digests.json"
 
 GRID_RES_M = 2.0
 TILE_CELLS = 500
@@ -60,6 +58,8 @@ OFFICIAL_TOLERANCE_M = 20.0
 GENTLE_BURN_DEPTH_M = 0.5
 GENTLE_BURN_HALF_WIDTH_M = 10.0
 FILL_EPSILON_M = 1e-5
+LOCAL_GAP_FILL_CELLS = 8
+CONNECTIVITY_EDGE_BAND_M = 20.0
 
 
 def configure_region(name):
@@ -101,7 +101,26 @@ def tile_paths():
 def input_fingerprint(paths):
     items = {path.name: path.stat().st_size for path in paths}
     payload = json.dumps(items, sort_keys=True, separators=(",", ":")).encode()
-    return {"files": items, "sha256": hashlib.sha256(payload).hexdigest()}
+    result = {"files": items, "contract_sha256": hashlib.sha256(payload).hexdigest()}
+    if INPUT_DIGESTS.exists():
+        cache = json.loads(INPUT_DIGESTS.read_text(encoding="utf-8"))
+        selected = {
+            path.name: cache.get("files", {}).get(path.name)
+            for path in paths
+        }
+        if all(
+            value
+            and value.get("size") == path.stat().st_size
+            and value.get("mtime_ns") == path.stat().st_mtime_ns
+            for path, value in zip(paths, selected.values())
+        ):
+            result["content_sha256"] = hashlib.sha256(json.dumps(
+                selected, sort_keys=True, separators=(",", ":")
+            ).encode()).hexdigest()
+            result["content_digest_algorithm"] = "sha256-of-per-file-sha256-inventory"
+    result["sha256"] = result.get("content_sha256", result["contract_sha256"])
+    result["digest_strength"] = "content" if "content_sha256" in result else "name-and-size-only"
+    return result
 
 
 def assemble_ground_dtm(paths, chunk_size=4_000_000):
@@ -151,7 +170,7 @@ def load_or_build_dtm(paths, fingerprint, rebuild=False):
     cache_path = OUTPUT / "dtm_cache.json"
     if not rebuild and dtm_path.exists() and coverage_path.exists() and cache_path.exists():
         cache = json.loads(cache_path.read_text(encoding="utf-8"))
-        if cache.get("input_sha256") == fingerprint["sha256"]:
+        if cache.get("input_sha256") == fingerprint["contract_sha256"]:
             print(f"Using cached {REGION_NAME} mosaic DTM", flush=True)
             return np.load(dtm_path, mmap_mode="r"), np.load(coverage_path, mmap_mode="r"), cache["assembly"]
 
@@ -159,7 +178,7 @@ def load_or_build_dtm(paths, fingerprint, rebuild=False):
     np.save(dtm_path, dtm.astype(np.float32))
     np.save(coverage_path, coverage)
     cache_path.write_text(json.dumps({
-        "input_sha256": fingerprint["sha256"],
+        "input_sha256": fingerprint["contract_sha256"],
         "assembly": assembly,
         "bounds_epsg3794": BOUNDS,
         "shape": SHAPE,
@@ -335,16 +354,16 @@ def development_hand_benchmark(hand):
         for tile, sample_region in zip(arrays["_tile"], arrays["_region"])
     ])
     development = region & (splits == "development")
-    validity, _ = evaluate_validation.load_geometry_union(VALIDITY)
-    q100, _ = evaluate_validation.load_geometry_union(Q100)
     x = arrays["easting_3794"].astype(np.float64)
     y = arrays["northing_3794"].astype(np.float64)
+    inside, validity, boundary, q100 = lookup_validation_masks(REGION, x, y)
     eligible = (
         development
-        & contains_xy(validity, x, y)
-        & ~contains_xy(q100.boundary.buffer(10.0), x, y)
+        & inside
+        & validity
+        & ~boundary
     )
-    labels = contains_xy(q100, x[eligible], y[eligible])
+    labels = q100[eligible]
     cols = np.clip(((x[eligible] - BOUNDS[0]) / GRID_RES_M).astype(int), 0, SHAPE[1] - 1)
     rows = np.clip(((y[eligible] - BOUNDS[1]) / GRID_RES_M).astype(int), 0, SHAPE[0] - 1)
     mosaic_score = -hand[rows, cols]
@@ -364,6 +383,42 @@ def development_hand_benchmark(hand):
         },
         "locked_test_accessed": False,
     }
+
+
+@lru_cache(maxsize=None)
+def load_validation_masks(region):
+    """Load the frozen 2 m label grid without rebuilding large geometry unions."""
+    path = ROOT / "validation" / "rasters" / f"{region}_2m.npz"
+    if not path.exists():
+        raise FileNotFoundError(f"Missing frozen validation raster {path}")
+    with np.load(path, allow_pickle=False) as packed:
+        grid = json.loads(str(packed["metadata"]))
+        shape = (int(grid["height"]), int(grid["width"]))
+        masks = {
+            key: unpack_mask(packed[key], shape)
+            for key in ("validity", "q100", "q100_boundary_10m")
+        }
+    return grid, masks
+
+
+def lookup_validation_masks(region, x, y):
+    """Return frozen label masks sampled at EPSG:3794 point coordinates."""
+    grid, masks = load_validation_masks(region)
+    x = np.asarray(x, dtype=np.float64)
+    y = np.asarray(y, dtype=np.float64)
+    cols = np.floor((x - grid["xmin"]) / grid["resolution_m"]).astype(np.int64)
+    rows = np.floor((grid["ymax"] - y) / grid["resolution_m"]).astype(np.int64)
+    inside = (
+        (rows >= 0) & (rows < grid["height"])
+        & (cols >= 0) & (cols < grid["width"])
+    )
+    validity = np.zeros(x.shape, dtype=bool)
+    boundary = np.zeros(x.shape, dtype=bool)
+    q100 = np.zeros(x.shape, dtype=bool)
+    validity[inside] = masks["validity"][rows[inside], cols[inside]]
+    boundary[inside] = masks["q100_boundary_10m"][rows[inside], cols[inside]]
+    q100[inside] = masks["q100"][rows[inside], cols[inside]]
+    return inside, validity, boundary, q100
 
 
 def configuration_sensitivity(variants):
@@ -512,14 +567,15 @@ def render_qa_overview(conditioned, accumulation, hand, stream, official_mask):
     }
 
 
-def main(region="savinja", rebuild_dtm=False):
+def main(region="savinja", rebuild_dtm=False, scenario_path=None, write_zarr=False):
     configure_region(region)
     started = time.time()
     paths = tile_paths()
     missing = [path for path in paths if not path.exists()]
     if missing:
         raise SystemExit(f"Missing {len(missing)} {REGION_NAME} LAZ tiles, first: {missing[0]}")
-    for required in (FLOW_LINES, VALIDITY, Q100):
+    validation_raster = ROOT / "validation" / "rasters" / f"{REGION}_2m.npz"
+    for required in (FLOW_LINES, validation_raster):
         if not required.exists():
             raise SystemExit(f"Missing {required}")
 
@@ -584,12 +640,39 @@ def main(region="savinja", rebuild_dtm=False):
     hand = kernels.hand_from_receivers(conditioned, recv, stream)
     channel_distance = distance_transform_edt(~stream) * GRID_RES_M
     stream_order = kernels.strahler_order(conditioned, recv, stream)
+    stream_reach_id = kernels.stream_reach_ids(conditioned, recv, stream, stream_order)
     outlet_id, downstream_stream_id = kernels.flow_labels(conditioned, recv, stream)
     neighborhood_cells = max(3, int(round(250.0 / GRID_RES_M)))
     local_minimum = minimum_filter(conditioned, size=neighborhood_cells, mode="nearest")
     local_maximum = maximum_filter(conditioned, size=neighborhood_cells, mode="nearest")
     valley_relative_elevation = conditioned - local_minimum
     local_relief = local_maximum - local_minimum
+
+    # D34 connectivity-first physical products.  The original smoothed terrain
+    # supplies access elevations and later depth; the priority-filled surface
+    # remains routing-only.  Direct ground holes may be bridged only inside the
+    # same bounded 16 m policy as the canonical tile pipeline.
+    local_fill_distance = distance_transform_edt(~np.asarray(ground_coverage))
+    hydrology_coverage = local_fill_distance <= LOCAL_GAP_FILL_CELLS
+    edge_cells = max(1, int(round(CONNECTIVITY_EDGE_BAND_M / GRID_RES_M)))
+    edge_mask = connectivity_flood.boundary_mask(SHAPE, edge_cells)
+    access = connectivity_flood.compute_access_stage(
+        dtm,
+        stream,
+        stream_reach_id=stream_reach_id,
+        valid_mask=hydrology_coverage,
+        basin_id=outlet_id,
+        channel_distance_m=channel_distance,
+        edge_mask=edge_mask,
+    )
+    scenario = (
+        connectivity_flood.load_scenario(scenario_path)
+        if scenario_path is not None else None
+    )
+    inundation = (
+        connectivity_flood.scenario_inundation(dtm, access, scenario)
+        if scenario is not None else None
+    )
 
     seam_metrics = receiver_seam_metrics(recv, stream, official_mask)
     seam_metrics["conditioned_dtm"] = seam_jump_metrics(conditioned)
@@ -609,9 +692,39 @@ def main(region="savinja", rebuild_dtm=False):
         "valley_relative_elevation_250m": valley_relative_elevation.astype(np.float32),
         "local_relief_250m": local_relief.astype(np.float32),
         "ground_coverage": ground_coverage,
+        "hydrology_coverage": hydrology_coverage,
+        "access_elevation_m": access["access_elevation_m"].astype(np.float32),
+        "required_stage_m": access["required_stage_m"].astype(np.float32),
+        "access_source_index": access["source_index"].astype(np.int32),
+        "access_source_channel_elevation_m": access["source_channel_elevation_m"].astype(np.float32),
+        "reach_id": access["reach_id"].astype(np.int32),
+        "riverine_applicability": access["applicability"],
+        "edge_contamination": access["edge_contamination"],
+        "barrier_uncertainty": access["barrier_uncertainty"],
     }
+    if inundation is not None:
+        feature_arrays.update({
+            "scenario_water_surface_elevation_m": inundation["water_surface_elevation_m"],
+            "scenario_depth_m": inundation["depth_m"],
+            "scenario_class": inundation["scenario_class"],
+        })
     OUTPUT.mkdir(parents=True, exist_ok=True)
     outputs = {name: save_feature(name, value) for name, value in feature_arrays.items()}
+    zarr_output = None
+    if write_zarr:
+        zarr_path = OUTPUT / "analysis.zarr"
+        connectivity_flood.write_zarr_store(
+            zarr_path,
+            feature_arrays,
+            {
+                "model_version": connectivity_flood.MODEL_VERSION,
+                "region_name": REGION_NAME,
+                "resolution_m": GRID_RES_M,
+                "input_sha256": fingerprint["sha256"],
+            },
+            chunk_shape=(TILE_CELLS, TILE_CELLS),
+        )
+        zarr_output = str(zarr_path.relative_to(ROOT)).replace("\\", "/")
     tile_entries = cut_tiles(feature_arrays)
     tile_verification = verify_tile_exports(feature_arrays, tile_entries)
     if not tile_verification["all_exact"]:
@@ -621,7 +734,7 @@ def main(region="savinja", rebuild_dtm=False):
 
     manifest = {
         "schema_version": 1,
-        "generated": datetime.now(timezone.utc).isoformat(),
+        "generation_id": fingerprint["sha256"],
         "region_name": REGION_NAME,
         "region": REGION,
         "semantics": "continuous-mosaic-hydrology-features-not-flood-probability",
@@ -658,10 +771,25 @@ def main(region="savinja", rebuild_dtm=False):
         "seams": seam_metrics,
         "development_only_hand_benchmark": benchmark,
         "outputs": outputs,
+        "connectivity_model": {
+            **connectivity_flood.model_definition(),
+            "publication_status": (
+                scenario.get("publication_status", "research-only")
+                if scenario is not None else "research-only-no-scenario"
+            ),
+            "minimum_stage_available": True,
+            "scenario": scenario,
+            "scenario_digest": (
+                inundation["scenario_digest"] if inundation is not None else None
+            ),
+            "barrier_data": "no-vetted-barrier-or-culvert-layer-supplied",
+            "edge_band_m": CONNECTIVITY_EDGE_BAND_M,
+            "local_gap_fill_limit_m": LOCAL_GAP_FILL_CELLS * GRID_RES_M,
+            "analysis_store": zarr_output,
+        },
         "tiles": tile_entries,
         "tile_export_verification": tile_verification,
         "qa": qa,
-        "runtime_seconds": round(time.time() - started, 2),
         "limitations": [
             "open-outer-mosaic-boundaries",
             "priority-fill-and-gentle-network-burn-not-engineering-breach-model",
@@ -672,13 +800,18 @@ def main(region="savinja", rebuild_dtm=False):
     }
     path = OUTPUT / "manifest.json"
     path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    runtime_seconds = round(time.time() - started, 2)
+    (OUTPUT / "run_report.json").write_text(json.dumps({
+        "generation_id": fingerprint["sha256"],
+        "runtime_seconds": runtime_seconds,
+    }, indent=2), encoding="utf-8")
     print(f"Wrote {path}")
     print(json.dumps({
         "selected_stream_area_m2": selected_threshold,
         "internal_sinks": seam_metrics["internal_sink_count"],
         "seam_crossings": seam_metrics["receiver_edges_crossing_tile_seams"],
         "development_benchmark": benchmark,
-        "runtime_seconds": manifest["runtime_seconds"],
+        "runtime_seconds": runtime_seconds,
     }, indent=2))
 
 
@@ -686,5 +819,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--region", choices=sorted(REGION_SPECS), default="savinja")
     parser.add_argument("--rebuild-dtm", action="store_true", help="Decode every region LAZ tile even if the DTM cache matches")
+    parser.add_argument("--scenario", type=Path, help="Versioned reach-stage scenario JSON; omitted means no flood classification")
+    parser.add_argument("--zarr", action="store_true", help="Also write chunked analysis.zarr (requires zarr)")
     args = parser.parse_args()
-    main(region=args.region, rebuild_dtm=args.rebuild_dtm)
+    main(
+        region=args.region,
+        rebuild_dtm=args.rebuild_dtm,
+        scenario_path=args.scenario,
+        write_zarr=args.zarr,
+    )

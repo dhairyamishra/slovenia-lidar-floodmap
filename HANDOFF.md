@@ -10,6 +10,42 @@
 > The active observed-event enhancement tracker is
 > `KAMNIK_OBSERVED_EVENT_ENHANCEMENT_PLAN.md`.
 
+## D34 Connectivity-first physical stage model (2026-07-15, uncommitted)
+
+- Added a separate `connectivity-stage-v1` calculation; D19 remains frozen.
+  It reports minimum channel-stage rise through a basin-constrained minimax
+  path and emits depth/classes only for an explicit versioned stage scenario.
+- Flatness, absolute elevation, inverted slope, NDVI, and canopy cannot flag a
+  cell directly. A definitive scenario result requires a drainage source, an
+  applicable connected path, and water above original terrain.
+- Added 391-tile component inventory (345 central / 25 Kamnik / 21 Koper), a
+  16 m bounded local-gap contract, explicit missing-tile and edge states,
+  optional chunked Zarr storage, exact physical-value web indices, and a frozen
+  observed-event scientific gate.
+- Web controls are present but disabled with the current manifest. Scenario
+  export refuses research-only forcing by default, so no unreviewed August 2023
+  product is visible.
+- Zarr/Dask are installed in `.venv` and the chunked writer is round-trip
+  tested. GRASS is not installed; complete central contextual terrain and the
+  zero-decision observed-event review queue remain genuine external gates.
+- The real 25-tile Kamnik run is verified: about 38 seconds from cached DTM,
+  zero internal sinks, 14,340 seam-crossing receivers, exact 25-tile/22-array
+  cut-back, and a roughly 145 MB Zarr store. Deterministic reach IDs drive
+  reach-specific stage/discharge forcing and exact popup lookup.
+- `input_digests.py` hashed all 391 LAZ files with restartable checkpoints;
+  dataset SHA-256 is `16f587afa00b0201f983512bbfe3601863ef0c0bf945eebf8592a607c1101d2b`.
+  Repeated unchanged Kamnik runs produced identical analytical manifest digest
+  `21388fed7903e469b809c2f745127e864e996cef4e1a24f7cb95d0c3fff56615`;
+  volatile timing is isolated in `run_report.json`.
+- `build_analysis_store.py` is the restartable whole-domain LAZ-to-Zarr
+  ingestion boundary at 2 m or 10 m. It writes direct DTM/DSM/canopy,
+  point/ground density, coverage, and provenance and never fills absent tiles;
+  a real 10 m Kamnik tile smoke test passed.
+
+**Recommended next entry point:** acquire/review supported event evidence and
+gauge forcing, then run
+the frozen gate. Do not publish a scenario or weaken the gate to create one.
+
 ## D33 Kamnik/Kamniška Bistrica area correction (2026-07-13, uncommitted)
 
 - Confirmed from the EPSG:3794 bounds (E486–491 km, N132–137 km; WGS84

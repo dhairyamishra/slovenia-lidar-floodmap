@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sledilnik.org/slovenia-lidar-floodmap/connectivity-scenario.schema.json",
+  "title": "Connectivity-first river-stage scenario",
+  "type": "object",
+  "required": ["schema_version", "id", "source", "forcing", "publication_status"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "minLength": 1},
+    "source": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Gauge, model, date/time, vertical datum, licence and transformation provenance."
+    },
+    "forcing": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["type", "value_m"],
+          "properties": {
+            "type": {"const": "uniform_stage_above_channel"},
+            "value_m": {"type": "number", "minimum": 0}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "values"],
+          "properties": {
+            "type": {"enum": ["reach_stage_above_channel", "reach_water_surface_elevation"]},
+            "values": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "number"}}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "values_m3s", "rating_curves"],
+          "properties": {
+            "type": {"const": "reach_discharge"},
+            "values_m3s": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "number", "minimum": 0}},
+            "rating_curves": {"type": "object", "minProperties": 1}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "publication_status": {"enum": ["research-only", "approved-observed-hindcast"]},
+    "scientific_gate": {
+      "type": "object",
+      "description": "Required and revalidated by code for approved-observed-hindcast publication."
+    }
+  },
+  "additionalProperties": true
+}

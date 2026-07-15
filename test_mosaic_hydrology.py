@@ -54,6 +54,16 @@ class ConditioningTests(unittest.TestCase):
         np.testing.assert_array_equal(outlet, [[3, 3, 3, 3]])
         np.testing.assert_array_equal(downstream, [[2, 2, 2, -1]])
 
+    def test_stream_reaches_split_at_a_confluence(self):
+        dem = np.array([[9, 1, 8], [7, 6, 5]], dtype=float)
+        receivers = np.array([3, -1, 5, 4, 5, -1], dtype=np.int64)
+        streams = np.array([[True, False, True], [True, True, True]])
+        order = np.array([[1, 0, 1], [1, 1, 2]], dtype=np.int16)
+        reaches = kernels.stream_reach_ids(dem, receivers, streams, order)
+        self.assertEqual(reaches[0, 0], reaches[1, 0])
+        self.assertNotEqual(reaches[0, 0], reaches[1, 2])
+        self.assertNotEqual(reaches[0, 2], reaches[1, 2])
+
 
 class MosaicContractTests(unittest.TestCase):
     def tearDown(self):
@@ -75,6 +85,29 @@ class MosaicContractTests(unittest.TestCase):
              "benchmark": {"available": True, "mosaic_hand": {"roc_auc": 0.71, "average_precision": 0.5}}},
         ]
         self.assertEqual(mosaic.select_configuration(rows)["conditioning_variant"], "b")
+
+    def test_validation_lookup_honors_north_to_south_row_order(self):
+        grid = {
+            "xmin": 0.0, "ymin": 0.0, "xmax": 4.0, "ymax": 4.0,
+            "resolution_m": 2.0, "width": 2, "height": 2,
+        }
+        masks = {
+            "validity": np.array([[True, False], [False, True]]),
+            "q100": np.array([[True, False], [False, False]]),
+            "q100_boundary_10m": np.array([[False, False], [False, True]]),
+        }
+        original = mosaic.load_validation_masks
+        mosaic.load_validation_masks = lambda _region: (grid, masks)
+        try:
+            inside, validity, boundary, q100 = mosaic.lookup_validation_masks(
+                "test", np.array([1.0, 3.0, 5.0]), np.array([3.0, 1.0, 1.0])
+            )
+        finally:
+            mosaic.load_validation_masks = original
+        np.testing.assert_array_equal(inside, [True, True, False])
+        np.testing.assert_array_equal(validity, [True, True, False])
+        np.testing.assert_array_equal(boundary, [False, True, False])
+        np.testing.assert_array_equal(q100, [True, False, False])
 
     def test_smooth_plane_has_no_artificial_seam_amplification(self):
         rows, cols = mosaic.SHAPE

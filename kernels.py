@@ -399,6 +399,148 @@ def flow_labels(dem, recv, stream_mask):
 
 
 @njit(cache=True)
+def _stream_reach_ids_core(recv, stream, stream_order, elevation_order):
+    """Segment a D8 stream graph into deterministic junction-to-junction reaches."""
+    n = recv.size
+    upstream_count = np.zeros(n, dtype=np.int32)
+    reach = np.full(n, -1, dtype=np.int64)
+    for idx in range(n):
+        receiver = recv[idx]
+        if stream[idx] and receiver >= 0 and stream[receiver]:
+            upstream_count[receiver] += 1
+
+    for position in range(elevation_order.size):
+        idx = elevation_order[position]
+        if not stream[idx]:
+            continue
+        if reach[idx] < 0:
+            reach[idx] = idx
+        receiver = recv[idx]
+        if receiver < 0 or not stream[receiver]:
+            continue
+        if upstream_count[receiver] == 1 and stream_order[receiver] == stream_order[idx]:
+            reach[receiver] = reach[idx]
+        elif reach[receiver] < 0:
+            reach[receiver] = receiver
+    return reach
+
+
+def stream_reach_ids(dem, recv, stream_mask, stream_order):
+    """Return a stable global-cell reach ID for each stream cell, else -1."""
+    dem = np.ascontiguousarray(dem, dtype=np.float64)
+    recv = np.ascontiguousarray(recv, dtype=np.int64).ravel()
+    stream = np.ascontiguousarray(stream_mask, dtype=np.bool_).ravel()
+    order = np.ascontiguousarray(stream_order, dtype=np.int16).ravel()
+    if recv.size != dem.size or stream.size != dem.size or order.size != dem.size:
+        raise ValueError("reach inputs must share the terrain shape")
+    elevation_order = np.argsort(-dem.ravel())
+    return _stream_reach_ids_core(recv, stream, order, elevation_order).reshape(dem.shape)
+
+
+@njit(cache=True)
+def _minimax_access_core(surface, sources, valid, basin, uncertain, edge):
+    """Multi-source minimax traversal used by the connectivity flood model.
+
+    Each valid cell is claimed exactly once by the lowest access-elevation
+    frontier that can reach it inside the same drainage basin.  The access
+    elevation is the maximum surface/barrier elevation encountered along that
+    path.  Marking cells when they enter the heap is valid for this minimax
+    metric because frontiers are popped in non-decreasing access elevation.
+    """
+    rows, cols = surface.shape
+    n = rows * cols
+    access = np.full(n, np.inf, dtype=np.float64)
+    source = np.full(n, -1, dtype=np.int64)
+    path_uncertain = np.zeros(n, dtype=np.uint8)
+    path_edge = np.zeros(n, dtype=np.uint8)
+    claimed = np.zeros(n, dtype=np.uint8)
+    heap_idx = np.empty(n, dtype=np.int64)
+    heap_z = np.empty(n, dtype=np.float64)
+    size = 0
+
+    surface_flat = surface.ravel()
+    sources_flat = sources.ravel()
+    valid_flat = valid.ravel()
+    basin_flat = basin.ravel()
+    uncertain_flat = uncertain.ravel()
+    edge_flat = edge.ravel()
+
+    for idx in range(n):
+        if sources_flat[idx] and valid_flat[idx]:
+            claimed[idx] = 1
+            access[idx] = surface_flat[idx]
+            source[idx] = idx
+            path_uncertain[idx] = uncertain_flat[idx]
+            path_edge[idx] = edge_flat[idx]
+            size = _heap_push(heap_idx, heap_z, size, idx, access[idx])
+
+    drs = np.array([-1, -1, -1, 0, 0, 1, 1, 1], dtype=np.int64)
+    dcs = np.array([-1, 0, 1, -1, 1, -1, 0, 1], dtype=np.int64)
+    while size > 0:
+        idx, z, size = _heap_pop(heap_idx, heap_z, size)
+        row = idx // cols
+        col = idx % cols
+        for direction in range(8):
+            nr = row + drs[direction]
+            nc = col + dcs[direction]
+            if nr < 0 or nr >= rows or nc < 0 or nc >= cols:
+                continue
+            nidx = nr * cols + nc
+            if claimed[nidx] != 0 or not valid_flat[nidx]:
+                continue
+            if basin_flat[nidx] != basin_flat[idx]:
+                continue
+            claimed[nidx] = 1
+            next_z = surface_flat[nidx]
+            if next_z < z:
+                next_z = z
+            access[nidx] = next_z
+            source[nidx] = source[idx]
+            path_uncertain[nidx] = (
+                path_uncertain[idx] | uncertain_flat[nidx]
+            )
+            path_edge[nidx] = path_edge[idx] | edge_flat[nidx]
+            size = _heap_push(heap_idx, heap_z, size, nidx, next_z)
+
+    return (
+        access.reshape((rows, cols)),
+        source.reshape((rows, cols)),
+        path_uncertain.reshape((rows, cols)),
+        path_edge.reshape((rows, cols)),
+    )
+
+
+def minimax_access(surface, source_mask, valid_mask=None, basin_id=None,
+                   uncertainty_mask=None, edge_mask=None):
+    """Return minimum access elevation, source cell, and path-quality masks.
+
+    ``surface`` is the original DTM raised only where a vetted barrier crest is
+    known.  It must not be the depression-filled routing surface: reported
+    access elevations and later depths stay tied to measured terrain.
+    """
+    surface = np.ascontiguousarray(surface, dtype=np.float64)
+    shape = surface.shape
+    source_mask = np.ascontiguousarray(source_mask, dtype=np.bool_)
+    valid_mask = np.ones(shape, dtype=np.bool_) if valid_mask is None else np.ascontiguousarray(valid_mask, dtype=np.bool_)
+    basin_id = np.zeros(shape, dtype=np.int64) if basin_id is None else np.ascontiguousarray(basin_id, dtype=np.int64)
+    uncertainty_mask = np.zeros(shape, dtype=np.uint8) if uncertainty_mask is None else np.ascontiguousarray(uncertainty_mask, dtype=np.uint8)
+    edge_mask = np.zeros(shape, dtype=np.uint8) if edge_mask is None else np.ascontiguousarray(edge_mask, dtype=np.uint8)
+    for name, value in (
+        ("source_mask", source_mask), ("valid_mask", valid_mask),
+        ("basin_id", basin_id), ("uncertainty_mask", uncertainty_mask),
+        ("edge_mask", edge_mask),
+    ):
+        if value.shape != shape:
+            raise ValueError(f"{name} shape {value.shape} does not match surface {shape}")
+    if not np.isfinite(surface[valid_mask]).all():
+        raise ValueError("minimax_access requires finite surface values on valid cells")
+    return _minimax_access_core(
+        surface, source_mask, valid_mask, basin_id,
+        uncertainty_mask, edge_mask,
+    )
+
+
+@njit(cache=True)
 def _mfd_accumulation_core(dem, res, order, exponent):
     rows, cols = dem.shape
     accum = np.ones(rows * cols, dtype=np.float64)

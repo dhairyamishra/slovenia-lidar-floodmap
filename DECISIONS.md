@@ -426,6 +426,68 @@ context and no model fitting is authorized.
 legacy mosaic selector untouched unless an alias migration includes exact
 feature/output regression checks and updates all experiment manifests.
 
+### D34 — Add a connectivity-first physical stage model without replacing D19
+
+**Decision:** Add `connectivity-stage-v1` beside the frozen D19 baseline. Its
+primary static output is the minimum channel-stage rise required to reach a
+cell through a basin-constrained minimax terrain/barrier path. Scenario depth
+exists only when a versioned forcing file supplies stage or water-surface
+elevation. A cell is not definitively inundated unless it has a drainage
+source, an applicable connected path, and water above original terrain.
+Absolute elevation, flatness, inverted slope, NDVI, and canopy are prohibited
+as direct causes. D19 files, scores, calibration, and evaluation remain
+unchanged.
+
+**Implementation:** `kernels.minimax_access` provides the Numba multi-source
+traversal. `connectivity_flood.py` handles barriers/culverts, physical units,
+scenario classes, uncertainty, Zarr output, and the publication contract.
+`mosaic_hydrology.py` exports access stage/source, applicability, bounded 16 m
+local gap coverage, edge contamination, and optional scenario products;
+original terrain controls depth while priority-filled terrain remains routing
+only. `domain_inventory.py` records the 345/25/21 tile components and forbids
+nearest-neighbour synthesis across absent tiles. `connectivity_gate.py` freezes
+the observed-event gates. `prepare_connectivity_web.py` writes physical visual
+and exact-value index tiles, but refuses a research-only scenario unless an
+explicit local-review flag is used. Public controls are capability-driven and
+disabled with the current manifest.
+
+**Why:** D28 showed that terrain-only learning still overflagged low, flat
+ground and retained an altitude shortcut. A physical access threshold answers
+an interpretable question in metres and makes connectivity necessary. It also
+keeps missing forcing, missing terrain, uncertain culverts, and domain edges
+as unavailable/uncertain instead of converting them to apparent dry or hazard.
+
+**Current gate:** Zarr/Dask are installed in the project environment and the
+chunked writer has a real round-trip test. GRASS is not installed, the irregular
+central component lacks complete contextual terrain, and the August-2023 queue
+has zero human-reviewed labels. Therefore no scenario is approved or added to
+the current web manifest, and no claim of full out-of-core or scientific
+replacement verification is made.
+
+**Verified implementation result:** The complete 25-tile Kamnik mosaic now
+finishes in about 38 seconds from the cached DTM, has zero unintended internal
+sinks, 14,340 receivers crossing former 1 km seams, and exact cut-back for all
+25 tiles and 22 arrays. The 2 m Zarr store is about 145 MB. Stream graphs are
+segmented into deterministic junction-to-junction `reach_id` values used by
+reach-stage/discharge forcing and exact web popups. All 391 LAZ files have
+restartable SHA-256 provenance (dataset digest
+`16f587afa00b0201f983512bbfe3601863ef0c0bf945eebf8592a607c1101d2b`).
+Volatile timing is isolated in `run_report.json`; two unchanged Kamnik runs
+produced identical manifest digest
+`21388fed7903e469b809c2f745127e864e996cef4e1a24f7cb95d0c3fff56615`.
+The frozen benchmark reads the packed 2 m validation raster instead of
+rebuilding a union from the 147 MB Q100 GeoJSON, without accessing locked-test
+samples.
+
+`build_analysis_store.py` implements the restartable LAZ-to-Zarr boundary for
+the 345/25/21 domains at 2 m or 10 m. It stores direct DTM, DSM, vegetation
+height, point/ground density, coverage, and provenance; absent tiles and cells
+remain no-data. A real 10 m Kamnik tile smoke test completed successfully.
+
+**Reversible:** Remove the D34 modules/tests and optional connectivity fields,
+then restore the prior mosaic CLI and web shell. Frozen D19 and official Q100
+assets are independent and require no regeneration.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

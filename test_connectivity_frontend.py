@@ -1,0 +1,29 @@
+import unittest
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parent
+
+
+class ConnectivityFrontendTests(unittest.TestCase):
+    def test_controls_are_present_but_initially_disabled_without_assets(self):
+        html = (ROOT / "web/index.html").read_text(encoding="utf-8")
+        for control in (
+            "toggle-required-stage", "opacity-required-stage",
+            "toggle-scenario-depth", "connectivity-scenario",
+        ):
+            self.assertIn(f'id="{control}"', html)
+        self.assertIn('id="toggle-required-stage" aria-label="Minimum River Stage to Reach" disabled', html)
+        self.assertIn("not probability", html.lower())
+
+    def test_app_registers_only_manifest_backed_connectivity_assets(self):
+        app = (ROOT / "web/app.js").read_text(encoding="utf-8")
+        self.assertIn("manifest.connectivity_model", app)
+        self.assertIn("tile.files.connectivity?.required_stage", app)
+        self.assertIn("function decodePhysicalIndex", app)
+        self.assertIn("Minimum stage rise:", app)
+        self.assertIn("not proof of safety", app)
+
+
+if __name__ == "__main__":
+    unittest.main()

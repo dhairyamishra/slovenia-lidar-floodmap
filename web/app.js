@@ -288,6 +288,7 @@ function wireControls(map, manifest, validationState) {
   });
 
   wireD19Controls(map, tiles);
+  wireConnectivityControls(map, manifest);
 
   document.getElementById('toggle-risk')
     .addEventListener('change', e => setRiskVisible(e.target.checked));
@@ -337,6 +338,217 @@ function wireControls(map, manifest, validationState) {
   }
 
   wireOfficialValidationControls(map, validationState, manifest);
+}
+
+function ensureConnectivityLayer(map, tile, key, path, opacity, resampling = 'linear') {
+  const layerId = `layer-connectivity-${key}-${tile.name}`;
+  if (map.getLayer(layerId) || !path) return layerId;
+  const sourceId = `src-connectivity-${key}-${tile.name}`;
+  map.addSource(sourceId, {
+    type: 'image',
+    url: `data/${path}`,
+    coordinates: tile.bounds.corners,
+  });
+  const beforeOfficial = map.getStyle().layers
+    .find(layer => layer.id.startsWith('layer-official-'))?.id;
+  map.addLayer({
+    id: layerId,
+    type: 'raster',
+    source: sourceId,
+    paint: { 'raster-opacity': opacity, 'raster-resampling': resampling },
+    layout: { visibility: 'none' },
+  }, beforeOfficial);
+  return layerId;
+}
+
+const connectivityIndexCache = new Map();
+
+function loadConnectivityIndex(path) {
+  if (connectivityIndexCache.has(path)) return connectivityIndexCache.get(path);
+  const promise = new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+      context.drawImage(image, 0, 0);
+      resolve({ context, width: canvas.width, height: canvas.height });
+    };
+    image.onerror = reject;
+    image.src = `data/${path}`;
+  });
+  connectivityIndexCache.set(path, promise);
+  return promise;
+}
+
+function decodePhysicalIndex(pixel) {
+  const centimetres = pixel[0] * 256 + pixel[1];
+  return {
+    valueM: centimetres === 65535 ? null : centimetres / 100,
+    classCode: pixel[2],
+  };
+}
+
+function decodeReachIndex(pixel) {
+  const value = pixel[0] * 65536 + pixel[1] * 256 + pixel[2];
+  return value === 0xffffff ? null : value;
+}
+
+function connectivityClassLabel(code) {
+  return ({
+    0: 'Unavailable',
+    1: 'Assessed',
+    2: 'Inundated under scenario',
+    3: 'Barrier/culvert uncertainty',
+    4: 'Edge-contaminated',
+  })[code] || 'Unknown';
+}
+
+function wireConnectivityClick(map, tiles, requiredToggle, scenarioToggle, scenarioSelect, manifest) {
+  const popup = new maplibregl.Popup({ offset: 12, closeButton: true });
+  map.on('click', async event => {
+    if (!requiredToggle.checked && !scenarioToggle.checked) return;
+    const lng = event.lngLat.lng;
+    const lat = event.lngLat.lat;
+    let selected = null;
+    let position = null;
+    for (const tile of tiles) {
+      const connectivity = tile.files.connectivity;
+      if (!connectivity?.required_stage_index) continue;
+      const bounds = tile.bounds;
+      if (lng < bounds.west || lng > bounds.east || lat < bounds.south || lat > bounds.north) continue;
+      const candidate = inverseBilinear(lng, lat, bounds.corners);
+      if (candidate.u >= 0 && candidate.u <= 1 && candidate.v >= 0 && candidate.v <= 1) {
+        selected = tile;
+        position = candidate;
+        break;
+      }
+    }
+    if (!selected) return;
+    try {
+      const files = selected.files.connectivity;
+      const requiredIndex = await loadConnectivityIndex(files.required_stage_index);
+      const x = Math.min(requiredIndex.width - 1, Math.max(0, Math.floor(position.u * requiredIndex.width)));
+      const y = Math.min(requiredIndex.height - 1, Math.max(0, Math.floor(position.v * requiredIndex.height)));
+      const required = decodePhysicalIndex(requiredIndex.context.getImageData(x, y, 1, 1).data);
+      let reachId = null;
+      if (files.reach_index) {
+        const reachIndex = await loadConnectivityIndex(files.reach_index);
+        reachId = decodeReachIndex(reachIndex.context.getImageData(x, y, 1, 1).data);
+      }
+      const domain = manifest.connectivity_model?.domains?.[files.domain] || {};
+      let scenarioCopy = '<div class="popup-row"><span class="popup-key">Scenario depth:</span><span class="popup-val">Not displayed</span></div>';
+      if (scenarioToggle.checked) {
+        const scenarioFiles = files.scenarios?.[scenarioSelect.value];
+        if (scenarioFiles?.depth_index) {
+          const depthIndex = await loadConnectivityIndex(scenarioFiles.depth_index);
+          const depth = decodePhysicalIndex(depthIndex.context.getImageData(x, y, 1, 1).data);
+          scenarioCopy = `
+            <div class="popup-row"><span class="popup-key">Scenario depth:</span><span class="popup-val">${depth.valueM == null ? 'Unavailable' : `${depth.valueM.toFixed(2)} m`}</span></div>
+            <div class="popup-row"><span class="popup-key">Scenario class:</span><span class="popup-val">${connectivityClassLabel(depth.classCode)}</span></div>`;
+        }
+      }
+      popup.setLngLat(event.lngLat).setHTML(`
+        <div class="popup-rank">Connectivity-first riverine model</div>
+        <div class="popup-row"><span class="popup-key">Minimum stage rise:</span><span class="popup-val">${required.valueM == null ? 'Unavailable' : `${required.valueM.toFixed(2)} m`}</span></div>
+        <div class="popup-row"><span class="popup-key">Applicability:</span><span class="popup-val">${connectivityClassLabel(required.classCode)}</span></div>
+        <div class="popup-row"><span class="popup-key">Reach:</span><span class="popup-val">${reachId == null ? 'Unresolved' : `${files.domain}:${reachId}`}</span></div>
+        <div class="popup-row"><span class="popup-key">Scenario source:</span><span class="popup-val">${domain.scenario?.source?.kind || domain.scenario?.source || 'No scenario supplied'}</span></div>
+        <div class="popup-row"><span class="popup-key">Model version:</span><span class="popup-val">${manifest.connectivity_model.model_version}</span></div>
+        ${scenarioCopy}
+        <div class="popup-row"><span class="popup-key">Tile:</span><span class="popup-val">${selected.name}</span></div>
+        <p class="popup-interpretation">A dry scenario class is not proof of safety outside this scenario and applicability domain.</p>
+      `).addTo(map);
+    } catch (error) {
+      console.warn('Connectivity value lookup failed', error);
+    }
+  });
+}
+
+function wireConnectivityControls(map, manifest) {
+  const tiles = manifest.tiles;
+  const model = manifest.connectivity_model;
+  const requiredToggle = document.getElementById('toggle-required-stage');
+  const requiredOpacity = document.getElementById('opacity-required-stage');
+  const requiredValue = document.getElementById('val-required-stage');
+  const scenarioToggle = document.getElementById('toggle-scenario-depth');
+  const scenarioSelect = document.getElementById('connectivity-scenario');
+  const scenarioOpacity = document.getElementById('opacity-scenario-depth');
+  const scenarioValue = document.getElementById('val-scenario-depth');
+  const availableTiles = tiles.filter(tile => tile.files.connectivity?.required_stage);
+  if (!model || availableTiles.length === 0) return;
+
+  requiredToggle.disabled = false;
+  requiredOpacity.disabled = false;
+  const scenarios = [];
+  Object.values(model.domains || {}).forEach(domain => {
+    if (domain.scenario && !scenarios.some(item => item.id === domain.scenario.id)) {
+      scenarios.push(domain.scenario);
+    }
+  });
+  if (scenarios.length) {
+    scenarioSelect.innerHTML = '';
+    scenarios.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.id;
+      option.textContent = item.label;
+      scenarioSelect.appendChild(option);
+    });
+    scenarioToggle.disabled = false;
+    scenarioSelect.disabled = false;
+    scenarioOpacity.disabled = false;
+  }
+
+  function update() {
+    const scenarioId = scenarioSelect.value;
+    availableTiles.forEach(tile => {
+      const files = tile.files.connectivity;
+      if (requiredToggle.checked) {
+        ensureConnectivityLayer(map, tile, 'required-stage', files.required_stage, requiredOpacity.value / 100);
+      }
+      const requiredLayer = `layer-connectivity-required-stage-${tile.name}`;
+      if (map.getLayer(requiredLayer)) {
+        map.setLayoutProperty(requiredLayer, 'visibility', requiredToggle.checked ? 'visible' : 'none');
+      }
+      const scenarioFiles = files.scenarios?.[scenarioId];
+      if (scenarioToggle.checked && scenarioFiles) {
+        ensureConnectivityLayer(map, tile, `scenario-${scenarioId}`, scenarioFiles.depth, scenarioOpacity.value / 100);
+      }
+      Object.keys(files.scenarios || {}).forEach(id => {
+        const layer = `layer-connectivity-scenario-${id}-${tile.name}`;
+        if (map.getLayer(layer)) {
+          map.setLayoutProperty(layer, 'visibility', scenarioToggle.checked && id === scenarioId ? 'visible' : 'none');
+        }
+      });
+      if (requiredToggle.checked || scenarioToggle.checked) {
+        ensureConnectivityLayer(map, tile, 'applicability', files.applicability, 1.0, 'nearest');
+      }
+      const applicabilityLayer = `layer-connectivity-applicability-${tile.name}`;
+      if (map.getLayer(applicabilityLayer)) {
+        map.setLayoutProperty(applicabilityLayer, 'visibility', requiredToggle.checked || scenarioToggle.checked ? 'visible' : 'none');
+      }
+    });
+  }
+  requiredToggle.addEventListener('change', update);
+  scenarioToggle.addEventListener('change', update);
+  scenarioSelect.addEventListener('change', update);
+  requiredOpacity.addEventListener('input', () => {
+    availableTiles.forEach(tile => {
+      const layer = `layer-connectivity-required-stage-${tile.name}`;
+      if (map.getLayer(layer)) map.setPaintProperty(layer, 'raster-opacity', requiredOpacity.value / 100);
+    });
+    requiredValue.textContent = `${requiredOpacity.value}%`;
+  });
+  scenarioOpacity.addEventListener('input', () => {
+    const id = scenarioSelect.value;
+    availableTiles.forEach(tile => {
+      const layer = `layer-connectivity-scenario-${id}-${tile.name}`;
+      if (map.getLayer(layer)) map.setPaintProperty(layer, 'raster-opacity', scenarioOpacity.value / 100);
+    });
+    scenarioValue.textContent = `${scenarioOpacity.value}%`;
+  });
+  wireConnectivityClick(map, availableTiles, requiredToggle, scenarioToggle, scenarioSelect, manifest);
 }
 
 function wireD19Controls(map, tiles) {

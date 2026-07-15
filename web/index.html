@@ -70,6 +70,56 @@
 
       <div class="divider"></div>
 
+      <!-- Connectivity-first physical river stage -->
+      <div class="layer-row">
+        <label class="layer-toggle">
+          <input type="checkbox" id="toggle-required-stage" aria-label="Minimum River Stage to Reach" disabled>
+          <span class="toggle-track"></span>
+        </label>
+        <span class="layer-name">Minimum River Stage to Reach</span>
+      </div>
+      <div class="depth-legend">
+        <span><i style="background:#bae6fd"></i>&le;0.5 m</span>
+        <span><i style="background:#38bdf8"></i>0.5&ndash;1 m</span>
+        <span><i style="background:#2563eb"></i>1&ndash;2 m</span>
+        <span><i style="background:#581c87"></i>&gt;3 m</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Opacity</span>
+        <input type="range" id="opacity-required-stage" min="0" max="100" value="70" class="slider" disabled>
+        <span class="slider-val" id="val-required-stage">70%</span>
+      </div>
+      <p class="layer-description"><strong>Shows:</strong> the physical rise above the associated channel needed for water to reach each cell through the lowest connected terrain path.</p>
+      <p class="layer-use"><strong>Interpretation:</strong> low or flat terrain is not marked unless it connects to a drainage source. Gray hatching means unavailable or edge-contaminated; amber means barrier or culvert uncertainty.</p>
+      <p class="layer-hint">This is a minimum-stage diagnostic, not probability, a live forecast, or proof that the stated river stage will occur.</p>
+
+      <div class="layer-row layer-row--compact">
+        <label class="layer-toggle">
+          <input type="checkbox" id="toggle-scenario-depth" aria-label="Scenario Inundation Depth" disabled>
+          <span class="toggle-track"></span>
+        </label>
+        <span class="layer-name layer-name--secondary">Scenario inundation depth</span>
+      </div>
+      <div class="select-row">
+        <span class="slider-label">Scenario</span>
+        <select id="connectivity-scenario" class="scenario-select" disabled>
+          <option value="">No qualified scenario available</option>
+        </select>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Opacity</span>
+        <input type="range" id="opacity-scenario-depth" min="0" max="100" value="75" class="slider" disabled>
+        <span class="slider-val" id="val-scenario-depth">75%</span>
+      </div>
+      <div class="depth-legend">
+        <span><i style="background:#bae6fd"></i>&lt;0.5 m</span>
+        <span><i style="background:#38bdf8"></i>0.5&ndash;1.5 m</span>
+        <span><i style="background:#075985"></i>&ge;1.5 m</span>
+      </div>
+      <p class="layer-hint">Scenario controls remain disabled until a versioned stage/flow input and its scientific publication gate are present in the generated manifest.</p>
+
+      <div class="divider"></div>
+
       <!-- Official DRSV hazard reference -->
       <div class="layer-row">
         <label class="layer-toggle">
@@ -244,14 +294,15 @@
     <div class="panel-section panel-section--info">
       <h3 class="panel-heading">About</h3>
       <p class="info-text">
-        LiDAR-derived riverine terrain screening across Ljubljana, Savinja and Koper,
-        with a separate Koper connected-low-land screen.
-        The riverine model combines HAND, TWI, elevation, slope, curvature, canopy
-        interception and NDVI.
+        The optional connectivity-first model reports physical minimum river-stage
+        rise and explicit scenario depth where generated and qualified. Frozen D19
+        remains a separate weighted terrain baseline for audit, while Koper retains
+        its separate connected-low-land screen.
       </p>
       <p class="info-text screening-notice">
         <strong>Screening only:</strong> not a forecast, evacuation map, insurance
-        map, official hazard map, or hydraulic depth estimate.
+        map, or official hazard map. A dated scenario depth is conditional on its
+        stated forcing, applicability and uncertainty.
       </p>
       <p class="info-text">
         <strong>Data:</strong> Geodetska uprava RS &mdash; CLSS programme<br>
@@ -265,6 +316,6 @@
   <div id="popup-content" style="display:none;"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=12"></script>
+  <script src="app.js?v=13"></script>
 </body>
 </html>

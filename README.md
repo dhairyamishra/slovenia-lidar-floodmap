@@ -71,6 +71,8 @@ The source is a three-dimensional CLSS LiDAR point cloud: individual returns rec
 
 | Layer | Description |
 |---|---|
+| Minimum River Stage to Reach | Optional connectivity-first physical rise in metres; a cell must connect to a drainage source, so low/flat terrain is not sufficient |
+| Scenario Inundation Depth | Optional dated stage/flow-conditioned connected depth; disabled until generated scenario assets pass the publication contract |
 | Experimental D19 Terrain Baseline | Frozen unvalidated weighted composite; sparse purple review mask by default and original saturated raster for diagnostics only |
 | Official DRSV Hazard Reference | Blue Q10/Q100/Q500 IKPN extent plus hydraulic-study validity and official Q100 depth classes |
 | Categorical Q100 Comparison | Calculated 2 m official-only, D19-only, both, and neither classes inside official validity; includes click explanations and exact region area shares |
@@ -130,18 +132,32 @@ python prepare_validation_web.py
 python prepare_q100_comparison.py
 python evaluate_validation.py
 
-# 6. Build continuous regional hydrology (large outputs stay under ignored output/)
+# 6. Build continuous regional hydrology and physical access-stage products
+# (large outputs stay under ignored output/)
 python mosaic_hydrology.py --region savinja --rebuild-dtm
 python mosaic_hydrology.py --region ljubljana --rebuild-dtm
 # Later runs reuse the cached mosaic DTM:
-python mosaic_hydrology.py --region ljubljana
+python mosaic_hydrology.py --region ljubljana --zarr
+
+# Hash inputs once (restartable), then inventory the three analytical components:
+python input_digests.py
+python domain_inventory.py
+# Restartable whole-domain direct-observation bands (no missing-tile fill):
+python build_analysis_store.py --domain central-validity --resolution 10
+
+# Scenario depth is never inferred. Supply a schema-v1 scenario with forcing
+# and provenance; research-only scenarios remain blocked from public export.
+python mosaic_hydrology.py --region savinja --scenario scenario.json --zarr
+python prepare_connectivity_web.py --region savinja
+# Local technical review of an unapproved scenario requires an explicit flag:
+python prepare_connectivity_web.py --region savinja --allow-research
 
 # 7. Run the development-only spatial replacement benchmark
 python benchmark_replacement.py develop
 # finalize remains locked until the report names a passing candidate
 ```
 
-Requires: `laspy`, `lazrs`, `numpy`, `scipy`, `pyproj`, `Pillow`, `numba` (the hot DTM/D8/HAND loops in `kernels.py` are Numba-JIT'd). Tiles fan out across processes — `--workers N` overrides the RAM-bound default.
+Requires: `laspy`, `lazrs`, `numpy`, `scipy`, `pyproj`, `Pillow`, `numba`, `zarr`, and `dask[array]`. The hot DTM/D8/HAND/minimax-access loops in `kernels.py` are Numba-JIT'd. Tiles fan out across processes — `--workers N` overrides the RAM-bound default. GRASS remains an external out-of-core cross-check and is never silently substituted.
 
 ### Retained hydroclimate calculations (not a map layer)
 
@@ -193,7 +209,11 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `web/data/validation/*` | Compact WGS84 Q10/Q100/Q500, validity, and Q100 depth layers used by the app |
 | `output/diagnostics/validation_q100.*` | Gitignored D19/baseline evaluation against official Q100 inside its validity domain |
 | `output/mosaic/<region>/manifest.json` | Gitignored reproducibility manifest, digests, seam checks, conditioning/threshold sensitivities, and development-only benchmark |
-| `output/mosaic/<region>/tiles/*.npz` | Thirteen continuous mosaic-derived feature grids cut back to web-tile bounds after routing (25 Savinja; 100 Ljubljana) |
+| `output/mosaic/<region>/tiles/*.npz` | Continuous mosaic hydrology plus physical access-stage/applicability grids cut back exactly to web-tile bounds (25 legacy Kamnik-selector tiles; 100 Ljubljana) |
+| `output/mosaic/<region>/analysis.zarr` | Optional chunked physical/hydrology analysis store written by `--zarr` |
+| `output/connectivity/domain_inventory.json` | Three-component 391-tile inventory with explicit envelope gaps and no-data policy |
+| `output/connectivity/input_digests.json` | Restartable per-LAZ SHA-256 inventory and deterministic whole-dataset digest |
+| `output/connectivity/terrain.zarr` | Restartable domain-wide direct DTM/DSM/canopy, coverage, density, and provenance bands at 2 m or 10 m |
 | `output/mosaic/<region>/qa_overview.png` | Conditioned terrain, accumulation, HAND, and official/derived-channel QA overview |
 | `output/replacement_model/development_report.json` | Gitignored spatial-CV candidate metrics, controls, shortcut audit, gates, and locked-test status |
 | `output/replacement_model/MODEL_CARD.md` | Gitignored development model card; currently records that no candidate passed |
@@ -213,6 +233,12 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `prepare_validation_contract.py` | Generates packed multi-resolution label grids and expanded frozen split metadata. |
 | `validation_grid.py` | Deterministic rasterization, mask packing, split assignment, and digest helpers. |
 | `mosaic_hydrology.py` | Builds continuous Savinja or Ljubljana DTMs, compares conditioning/D8/MFD/threshold sensitivities without locked-test access, exports exact receiver/connectivity/terrain features and tile windows, and records QA/provenance. |
+| `connectivity_flood.py` | Computes minimax access elevation, required channel-stage rise, applicability/uncertainty, and explicit scenario depth/classes in physical units. |
+| `domain_inventory.py` | Identifies the central, Kamnik-event, and Koper components without treating envelope gaps as terrain. |
+| `input_digests.py` | Builds/reuses content hashes for all LAZ inputs and checkpoints after every file. |
+| `build_analysis_store.py` | Converts each LAZ once into chunked domain bands; preserves missing cells/tiles as explicit no-data and resumes by tile digest. |
+| `connectivity_gate.py` | Applies the frozen observed-event scientific selection thresholds before scenario publication. |
+| `prepare_connectivity_web.py` | Exports physical display/index tiles and refuses unapproved scenario publication by default. |
 | `benchmark_replacement.py` | Development-only B0/B1/B2/M1/M2 spatial benchmark with monotonic models, applicability masks, negative controls, shortcut audits, and a locked finalization guard. |
 | `hydroclimate.py` | ERA5-Land-style hydroclimate trigger pipeline. Builds fixture assets for V1 and can derive from local ERA5-Land NetCDF files with xarray. |
 | `download_tiles.py` | Downloads CLSS GKOT tiles from the CDN with region auto-discovery and a probe cache. `--center/--radius`, `--bbox`, `--tiles`, `--dry-run`, `--pipeline`. |
