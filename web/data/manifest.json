@@ -17790,7 +17790,15 @@
         "ndvi": "tiles/486_132/ndvi.png",
         "classification": "tiles/486_132/classification.png",
         "q100_comparison": "tiles/486_132/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/486_132/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/486_132/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/486_132/required_stage.png",
+          "required_stage_index": "tiles/486_132/required_stage_index.png",
+          "reach_index": "tiles/486_132/reach_index.png",
+          "applicability": "tiles/486_132/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -17838,7 +17846,15 @@
         "ndvi": "tiles/486_133/ndvi.png",
         "classification": "tiles/486_133/classification.png",
         "q100_comparison": "tiles/486_133/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/486_133/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/486_133/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/486_133/required_stage.png",
+          "required_stage_index": "tiles/486_133/required_stage_index.png",
+          "reach_index": "tiles/486_133/reach_index.png",
+          "applicability": "tiles/486_133/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -17886,7 +17902,15 @@
         "ndvi": "tiles/486_134/ndvi.png",
         "classification": "tiles/486_134/classification.png",
         "q100_comparison": "tiles/486_134/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/486_134/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/486_134/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/486_134/required_stage.png",
+          "required_stage_index": "tiles/486_134/required_stage_index.png",
+          "reach_index": "tiles/486_134/reach_index.png",
+          "applicability": "tiles/486_134/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -17934,7 +17958,15 @@
         "ndvi": "tiles/486_135/ndvi.png",
         "classification": "tiles/486_135/classification.png",
         "q100_comparison": "tiles/486_135/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/486_135/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/486_135/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/486_135/required_stage.png",
+          "required_stage_index": "tiles/486_135/required_stage_index.png",
+          "reach_index": "tiles/486_135/reach_index.png",
+          "applicability": "tiles/486_135/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -17982,7 +18014,15 @@
         "ndvi": "tiles/486_136/ndvi.png",
         "classification": "tiles/486_136/classification.png",
         "q100_comparison": "tiles/486_136/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/486_136/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/486_136/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/486_136/required_stage.png",
+          "required_stage_index": "tiles/486_136/required_stage_index.png",
+          "reach_index": "tiles/486_136/reach_index.png",
+          "applicability": "tiles/486_136/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18030,7 +18070,15 @@
         "ndvi": "tiles/487_132/ndvi.png",
         "classification": "tiles/487_132/classification.png",
         "q100_comparison": "tiles/487_132/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/487_132/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/487_132/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/487_132/required_stage.png",
+          "required_stage_index": "tiles/487_132/required_stage_index.png",
+          "reach_index": "tiles/487_132/reach_index.png",
+          "applicability": "tiles/487_132/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18078,7 +18126,15 @@
         "ndvi": "tiles/487_133/ndvi.png",
         "classification": "tiles/487_133/classification.png",
         "q100_comparison": "tiles/487_133/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/487_133/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/487_133/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/487_133/required_stage.png",
+          "required_stage_index": "tiles/487_133/required_stage_index.png",
+          "reach_index": "tiles/487_133/reach_index.png",
+          "applicability": "tiles/487_133/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18126,7 +18182,15 @@
         "ndvi": "tiles/487_134/ndvi.png",
         "classification": "tiles/487_134/classification.png",
         "q100_comparison": "tiles/487_134/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/487_134/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/487_134/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/487_134/required_stage.png",
+          "required_stage_index": "tiles/487_134/required_stage_index.png",
+          "reach_index": "tiles/487_134/reach_index.png",
+          "applicability": "tiles/487_134/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18174,7 +18238,15 @@
         "ndvi": "tiles/487_135/ndvi.png",
         "classification": "tiles/487_135/classification.png",
         "q100_comparison": "tiles/487_135/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/487_135/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/487_135/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/487_135/required_stage.png",
+          "required_stage_index": "tiles/487_135/required_stage_index.png",
+          "reach_index": "tiles/487_135/reach_index.png",
+          "applicability": "tiles/487_135/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18222,7 +18294,15 @@
         "ndvi": "tiles/487_136/ndvi.png",
         "classification": "tiles/487_136/classification.png",
         "q100_comparison": "tiles/487_136/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/487_136/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/487_136/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/487_136/required_stage.png",
+          "required_stage_index": "tiles/487_136/required_stage_index.png",
+          "reach_index": "tiles/487_136/reach_index.png",
+          "applicability": "tiles/487_136/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18270,7 +18350,15 @@
         "ndvi": "tiles/488_132/ndvi.png",
         "classification": "tiles/488_132/classification.png",
         "q100_comparison": "tiles/488_132/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/488_132/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/488_132/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/488_132/required_stage.png",
+          "required_stage_index": "tiles/488_132/required_stage_index.png",
+          "reach_index": "tiles/488_132/reach_index.png",
+          "applicability": "tiles/488_132/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18318,7 +18406,15 @@
         "ndvi": "tiles/488_133/ndvi.png",
         "classification": "tiles/488_133/classification.png",
         "q100_comparison": "tiles/488_133/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/488_133/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/488_133/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/488_133/required_stage.png",
+          "required_stage_index": "tiles/488_133/required_stage_index.png",
+          "reach_index": "tiles/488_133/reach_index.png",
+          "applicability": "tiles/488_133/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18366,7 +18462,15 @@
         "ndvi": "tiles/488_134/ndvi.png",
         "classification": "tiles/488_134/classification.png",
         "q100_comparison": "tiles/488_134/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/488_134/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/488_134/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/488_134/required_stage.png",
+          "required_stage_index": "tiles/488_134/required_stage_index.png",
+          "reach_index": "tiles/488_134/reach_index.png",
+          "applicability": "tiles/488_134/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18414,7 +18518,15 @@
         "ndvi": "tiles/488_135/ndvi.png",
         "classification": "tiles/488_135/classification.png",
         "q100_comparison": "tiles/488_135/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/488_135/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/488_135/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/488_135/required_stage.png",
+          "required_stage_index": "tiles/488_135/required_stage_index.png",
+          "reach_index": "tiles/488_135/reach_index.png",
+          "applicability": "tiles/488_135/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18462,7 +18574,15 @@
         "ndvi": "tiles/488_136/ndvi.png",
         "classification": "tiles/488_136/classification.png",
         "q100_comparison": "tiles/488_136/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/488_136/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/488_136/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/488_136/required_stage.png",
+          "required_stage_index": "tiles/488_136/required_stage_index.png",
+          "reach_index": "tiles/488_136/reach_index.png",
+          "applicability": "tiles/488_136/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18510,7 +18630,15 @@
         "ndvi": "tiles/489_132/ndvi.png",
         "classification": "tiles/489_132/classification.png",
         "q100_comparison": "tiles/489_132/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/489_132/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/489_132/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/489_132/required_stage.png",
+          "required_stage_index": "tiles/489_132/required_stage_index.png",
+          "reach_index": "tiles/489_132/reach_index.png",
+          "applicability": "tiles/489_132/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18558,7 +18686,15 @@
         "ndvi": "tiles/489_133/ndvi.png",
         "classification": "tiles/489_133/classification.png",
         "q100_comparison": "tiles/489_133/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/489_133/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/489_133/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/489_133/required_stage.png",
+          "required_stage_index": "tiles/489_133/required_stage_index.png",
+          "reach_index": "tiles/489_133/reach_index.png",
+          "applicability": "tiles/489_133/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18606,7 +18742,15 @@
         "ndvi": "tiles/489_134/ndvi.png",
         "classification": "tiles/489_134/classification.png",
         "q100_comparison": "tiles/489_134/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/489_134/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/489_134/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/489_134/required_stage.png",
+          "required_stage_index": "tiles/489_134/required_stage_index.png",
+          "reach_index": "tiles/489_134/reach_index.png",
+          "applicability": "tiles/489_134/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18654,7 +18798,15 @@
         "ndvi": "tiles/489_135/ndvi.png",
         "classification": "tiles/489_135/classification.png",
         "q100_comparison": "tiles/489_135/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/489_135/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/489_135/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/489_135/required_stage.png",
+          "required_stage_index": "tiles/489_135/required_stage_index.png",
+          "reach_index": "tiles/489_135/reach_index.png",
+          "applicability": "tiles/489_135/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18702,7 +18854,15 @@
         "ndvi": "tiles/489_136/ndvi.png",
         "classification": "tiles/489_136/classification.png",
         "q100_comparison": "tiles/489_136/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/489_136/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/489_136/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/489_136/required_stage.png",
+          "required_stage_index": "tiles/489_136/required_stage_index.png",
+          "reach_index": "tiles/489_136/reach_index.png",
+          "applicability": "tiles/489_136/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18750,7 +18910,15 @@
         "ndvi": "tiles/490_132/ndvi.png",
         "classification": "tiles/490_132/classification.png",
         "q100_comparison": "tiles/490_132/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/490_132/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/490_132/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/490_132/required_stage.png",
+          "required_stage_index": "tiles/490_132/required_stage_index.png",
+          "reach_index": "tiles/490_132/reach_index.png",
+          "applicability": "tiles/490_132/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18798,7 +18966,15 @@
         "ndvi": "tiles/490_133/ndvi.png",
         "classification": "tiles/490_133/classification.png",
         "q100_comparison": "tiles/490_133/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/490_133/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/490_133/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/490_133/required_stage.png",
+          "required_stage_index": "tiles/490_133/required_stage_index.png",
+          "reach_index": "tiles/490_133/reach_index.png",
+          "applicability": "tiles/490_133/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18846,7 +19022,15 @@
         "ndvi": "tiles/490_134/ndvi.png",
         "classification": "tiles/490_134/classification.png",
         "q100_comparison": "tiles/490_134/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/490_134/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/490_134/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/490_134/required_stage.png",
+          "required_stage_index": "tiles/490_134/required_stage_index.png",
+          "reach_index": "tiles/490_134/reach_index.png",
+          "applicability": "tiles/490_134/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18894,7 +19078,15 @@
         "ndvi": "tiles/490_135/ndvi.png",
         "classification": "tiles/490_135/classification.png",
         "q100_comparison": "tiles/490_135/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/490_135/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/490_135/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/490_135/required_stage.png",
+          "required_stage_index": "tiles/490_135/required_stage_index.png",
+          "reach_index": "tiles/490_135/reach_index.png",
+          "applicability": "tiles/490_135/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     },
@@ -18942,7 +19134,15 @@
         "ndvi": "tiles/490_136/ndvi.png",
         "classification": "tiles/490_136/classification.png",
         "q100_comparison": "tiles/490_136/q100_d19_comparison.png",
-        "q100_comparison_index": "tiles/490_136/q100_d19_comparison_index.png"
+        "q100_comparison_index": "tiles/490_136/q100_d19_comparison_index.png",
+        "connectivity": {
+          "required_stage": "tiles/490_136/required_stage.png",
+          "required_stage_index": "tiles/490_136/required_stage_index.png",
+          "reach_index": "tiles/490_136/reach_index.png",
+          "applicability": "tiles/490_136/riverine_applicability.png",
+          "domain": "savinja",
+          "scenarios": {}
+        }
       },
       "model_version": "D19-baseline-v1"
     }
@@ -19056,5 +19256,19 @@
       "neither-is-not-proof-of-safety",
       "outside-validity-is-comparison-unavailable"
     ]
+  },
+  "connectivity_model": {
+    "domains": {
+      "savinja": {
+        "tile_count": 25,
+        "minimum_stage_available": true,
+        "publication_status": "research-only-no-scenario",
+        "scenario": null
+      }
+    },
+    "schema_version": 1,
+    "model_version": "connectivity-stage-v1",
+    "semantics": "minimum-access-stage-and-explicit-scenario-depth-not-probability",
+    "definition_digest": "7124705b740303a27f1acd48070904ff70b3b1957174e28cf5c436b56a1c5535"
   }
 }

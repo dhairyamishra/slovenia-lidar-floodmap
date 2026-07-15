@@ -10,7 +10,7 @@
 > The active observed-event enhancement tracker is
 > `KAMNIK_OBSERVED_EVENT_ENHANCEMENT_PLAN.md`.
 
-## D34 Connectivity-first physical stage model (2026-07-15, uncommitted)
+## D34-D35 Connectivity-first physical stage model (2026-07-15)
 
 - Added a separate `connectivity-stage-v1` calculation; D19 remains frozen.
   It reports minimum channel-stage rise through a basin-constrained minimax
@@ -22,9 +22,14 @@
   16 m bounded local-gap contract, explicit missing-tile and edge states,
   optional chunked Zarr storage, exact physical-value web indices, and a frozen
   observed-event scientific gate.
-- Web controls are present but disabled with the current manifest. Scenario
-  export refuses research-only forcing by default, so no unreviewed August 2023
-  product is visible.
+- The 25-tile Kamnik minimum-stage diagnostic is now exported into the public
+  manifest and web tiles. Its control is enabled only for those tiles. Lower
+  required rise is dark blue; values above 3 m are deliberately faint slate so
+  inaccessible uplands do not dominate the map. It remains research-only and
+  is not a probability, hazard, forecast, or approved model replacement.
+- Scenario export still refuses research-only forcing by default. The scenario
+  control remains disabled, so no unreviewed August 2023 depth or dry/wet
+  classification is visible.
 - Zarr/Dask are installed in `.venv` and the chunked writer is round-trip
   tested. GRASS is not installed; complete central contextual terrain and the
   zero-decision observed-event review queue remain genuine external gates.

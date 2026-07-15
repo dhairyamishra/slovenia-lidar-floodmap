@@ -35,11 +35,11 @@ def required_stage_rgba(required_stage, applicability, uncertainty, edge):
     rgba = _rgba(stage.shape)
     assessed = np.asarray(applicability, dtype=bool) & np.isfinite(stage)
     bands = [
-        (stage <= 0.5, (186, 230, 253, 205)),
-        ((stage > 0.5) & (stage <= 1.0), (56, 189, 248, 210)),
-        ((stage > 1.0) & (stage <= 2.0), (37, 99, 235, 215)),
-        ((stage > 2.0) & (stage <= 3.0), (79, 70, 229, 220)),
-        (stage > 3.0, (88, 28, 135, 225)),
+        (stage <= 0.5, (7, 89, 133, 235)),
+        ((stage > 0.5) & (stage <= 1.0), (2, 132, 199, 225)),
+        ((stage > 1.0) & (stage <= 2.0), (56, 189, 248, 205)),
+        ((stage > 2.0) & (stage <= 3.0), (186, 230, 253, 150)),
+        (stage > 3.0, (148, 163, 184, 45)),
     ]
     for mask, colour in bands:
         rgba[assessed & mask] = colour

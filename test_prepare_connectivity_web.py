@@ -11,6 +11,15 @@ import prepare_connectivity_web as web
 
 
 class ConnectivityWebEncodingTests(unittest.TestCase):
+    def test_required_stage_display_emphasizes_low_access_and_fades_upland(self):
+        stage = np.array([[0.25, 0.75, 1.5, 2.5, 4.0]])
+        applicable = np.ones(stage.shape, dtype=bool)
+        clear = np.zeros(stage.shape, dtype=bool)
+        rgba = web.required_stage_rgba(stage, applicable, clear, clear)
+        self.assertEqual(tuple(rgba[0, 0]), (7, 89, 133, 235))
+        self.assertEqual(tuple(rgba[0, 4]), (148, 163, 184, 45))
+        self.assertGreater(rgba[0, 0, 3], rgba[0, 4, 3])
+
     def test_physical_value_index_round_trips_centimetres_and_class(self):
         values = np.array([[0.0, 1.23, np.nan]])
         classes = np.array([[1, 2, 0]], dtype=np.uint8)

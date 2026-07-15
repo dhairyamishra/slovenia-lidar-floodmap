@@ -79,17 +79,17 @@
         <span class="layer-name">Minimum River Stage to Reach</span>
       </div>
       <div class="depth-legend">
-        <span><i style="background:#bae6fd"></i>&le;0.5 m</span>
-        <span><i style="background:#38bdf8"></i>0.5&ndash;1 m</span>
-        <span><i style="background:#2563eb"></i>1&ndash;2 m</span>
-        <span><i style="background:#581c87"></i>&gt;3 m</span>
+        <span><i style="background:#075985"></i>&le;0.5 m</span>
+        <span><i style="background:#0284c7"></i>0.5&ndash;1 m</span>
+        <span><i style="background:#38bdf8"></i>1&ndash;2 m</span>
+        <span><i style="background:#94a3b8;opacity:.4"></i>&gt;3 m</span>
       </div>
       <div class="slider-row">
         <span class="slider-label">Opacity</span>
         <input type="range" id="opacity-required-stage" min="0" max="100" value="70" class="slider" disabled>
         <span class="slider-val" id="val-required-stage">70%</span>
       </div>
-      <p class="layer-description"><strong>Shows:</strong> the physical rise above the associated channel needed for water to reach each cell through the lowest connected terrain path.</p>
+      <p class="layer-description"><strong>Shows:</strong> the physical rise above the associated channel needed for water to reach each cell through the lowest connected terrain path. Darker blue means less rise is required; faint slate means more than 3 m.</p>
       <p class="layer-use"><strong>Interpretation:</strong> low or flat terrain is not marked unless it connects to a drainage source. Gray hatching means unavailable or edge-contaminated; amber means barrier or culvert uncertainty.</p>
       <p class="layer-hint">This is a minimum-stage diagnostic, not probability, a live forecast, or proof that the stated river stage will occur.</p>
 
@@ -316,6 +316,6 @@
   <div id="popup-content" style="display:none;"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=13"></script>
+  <script src="app.js?v=14"></script>
 </body>
 </html>

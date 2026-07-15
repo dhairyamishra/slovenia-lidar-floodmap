@@ -71,7 +71,7 @@ The source is a three-dimensional CLSS LiDAR point cloud: individual returns rec
 
 | Layer | Description |
 |---|---|
-| Minimum River Stage to Reach | Optional connectivity-first physical rise in metres; a cell must connect to a drainage source, so low/flat terrain is not sufficient |
+| Minimum River Stage to Reach | Research-only connectivity-first physical rise in metres, published for the 25-tile Kamnik pilot; a cell must connect to a drainage source, so low/flat terrain is not sufficient |
 | Scenario Inundation Depth | Optional dated stage/flow-conditioned connected depth; disabled until generated scenario assets pass the publication contract |
 | Experimental D19 Terrain Baseline | Frozen unvalidated weighted composite; sparse purple review mask by default and original saturated raster for diagnostics only |
 | Official DRSV Hazard Reference | Blue Q10/Q100/Q500 IKPN extent plus hydraulic-study validity and official Q100 depth classes |

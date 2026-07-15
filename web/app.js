@@ -7,7 +7,7 @@ function optionalJson(url) {
 }
 
 Promise.all([
-  fetch('data/manifest.json').then(r => r.json()),
+  fetch('data/manifest.json?v=14').then(r => r.json()),
   fetch('data/risk_points.geojson').then(r => r.json()),
   optionalJson('data/validation/manifest.json'),
 ])

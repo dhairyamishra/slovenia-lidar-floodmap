@@ -488,6 +488,35 @@ remain no-data. A real 10 m Kamnik tile smoke test completed successfully.
 then restore the prior mosaic CLI and web shell. Frozen D19 and official Q100
 assets are independent and require no regeneration.
 
+### D35 — Publish the Kamnik minimum-stage diagnostic without a scenario
+
+**Decision:** Publish the static `required_stage_m` output for the complete
+25-tile Kamnik pilot as a research-only web layer. Add exact physical-value,
+reach-ID, and applicability index tiles to the public manifest. Enable the
+"Minimum River Stage to Reach" control only where these assets exist, while
+leaving scenario inundation disabled until forcing and observed-event review
+pass the frozen gate. Encode low required rise in dark blue and progressively
+de-emphasize higher values; values above 3 m are faint slate rather than a
+saturated hazard colour.
+
+**Why:** D34 was technically implemented but imperceptible in the application
+because its outputs were not in the public manifest. Publishing the static
+minimum-stage quantity makes the connectivity-first calculation inspectable
+without implying that a particular flood will happen. De-emphasizing high
+required-stage terrain keeps the visualization focused on easier channel
+access and avoids recreating D19's alarming saturated-map failure.
+
+**Limits:** This publication does not validate the model, provide a return
+period, estimate probability, or classify cells as safe/dangerous. It contains
+no August 2023 scenario depth. Barrier/culvert uncertainty, edge contamination,
+and unavailable cells remain explicit. Frozen D19 and its evaluation history
+remain unchanged.
+
+**Reversible:** Remove the four connectivity PNGs from each of the 25 Kamnik
+web-tile directories and regenerate `web/data/manifest.json` without the
+connectivity block. The analytical D34 outputs and frozen D19 assets are
+independent.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*
