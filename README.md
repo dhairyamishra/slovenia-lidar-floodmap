@@ -71,6 +71,7 @@ The source is a three-dimensional CLSS LiDAR point cloud: individual returns rec
 
 | Layer | Description |
 |---|---|
+| Aerial Imagery | Optional Slovenia-wide GURS DOF025 orthophoto base map; fetched only for the visible viewport and kept below every analytical overlay |
 | Minimum River Stage to Reach | Research-only connectivity-first physical rise in metres, published for the 25-tile Upper Savinja pilot around Ljubno ob Savinji; a cell must connect to a drainage source, so low/flat terrain is not sufficient |
 | Scenario Inundation Depth | Optional dated stage/flow-conditioned connected depth; disabled until generated scenario assets pass the publication contract |
 | Experimental D19 Terrain Baseline | Frozen unvalidated weighted composite; sparse purple review mask by default and original saturated raster for diagnostics only |
@@ -262,7 +263,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 
 ## Deployment
 
-On every push to `main`, `.github/workflows/deploy-pages.yml` runs the Python and JavaScript checks, builds `_site/` with `prepare_pages_site.py`, enforces the Pages-size ceiling, and publishes that bounded artifact. The public build omits per-tile NDVI and full saturated D19 diagnostic rasters; both remain available when serving `web/` locally. No backend is required.
+On every push to `main`, `.github/workflows/deploy-pages.yml` runs the Python and JavaScript checks, builds `_site/` with `prepare_pages_site.py`, enforces the Pages-size ceiling, and publishes that bounded artifact. The public build omits per-tile NDVI and full saturated D19 diagnostic rasters; both remain available when serving `web/` locally. Optional GURS aerial imagery is requested directly from the public WMS only when selected, so it adds no imagery files to the Pages artifact. No backend is required.
 
 ## Project context
 

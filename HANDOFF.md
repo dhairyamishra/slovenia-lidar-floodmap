@@ -10,6 +10,18 @@
 > The active observed-event enhancement tracker is
 > `UPPER_SAVINJA_OBSERVED_EVENT_ENHANCEMENT_PLAN.md`.
 
+## D38 Optional Slovenia aerial basemap (2026-07-21)
+
+- Added an off-by-default Dark map / Aerial imagery selector using the official
+  GURS DOF025 orthophoto WMS. The source is bounded to Slovenia, requires no API
+  key, and carries the required GURS CC BY 4.0 attribution.
+- The WMS raster layer is inserted below map labels and all analytical layers.
+  MapLibre requests only visible 256 px tiles after the user selects aerial
+  imagery; the default dark view makes no orthophoto requests.
+- The app does not copy or publish orthophoto files, so the bounded GitHub Pages
+  artifact size is unchanged. GURS service availability remains an external
+  dependency; consider a policy-compliant cache only if real traffic warrants it.
+
 ## D36-D37 Geography correction and delivery improvements (2026-07-21)
 
 - Corrected a material D33 geography error. The E486–491 km / N132–137 km

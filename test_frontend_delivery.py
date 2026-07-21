@@ -17,6 +17,15 @@ class FrontendDeliveryTests(unittest.TestCase):
         self.assertIn("function ensureDepth(key)", self.app)
         self.assertIn("if (active) validationState.ensureScenario(key)", self.app)
 
+    def test_aerial_basemap_is_off_by_default_and_slovenia_bounded(self):
+        self.assertIn("SI.GURS.ZPDZ%3ADOF025", self.app)
+        self.assertIn("BBOX={bbox-epsg-3857}", self.app)
+        self.assertIn("FORMAT=image%2Fpng8&TRANSPARENT=true", self.app)
+        self.assertIn("layout: { visibility: 'none' }", self.app)
+        self.assertIn("bounds: [13.3400608, 44.9641309, 17.2035352, 46.8958681]", self.app)
+        self.assertIn('name="basemap" value="aerial"', self.html)
+        self.assertIn("Ortofoto Â© GURS (CC BY 4.0)", self.app)
+
     def test_large_rasters_have_explicit_viewport_caps(self):
         for contract in (
             "d19_diagnostic: 16",

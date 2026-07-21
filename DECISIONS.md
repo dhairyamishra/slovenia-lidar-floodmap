@@ -576,6 +576,28 @@ builder, or narrow/expand `EXCLUDED_RASTER_NAMES` and
 `EXCLUDED_MANIFEST_KEYS` together. Remove viewport synchronization only if a
 measured alternative preserves bounded source and request counts.
 
+### D38 — Use the official GURS orthophoto as an optional aerial basemap
+
+**Decision:** Add a Dark map / Aerial imagery selector backed by the public
+GURS `SI.GURS.ZPDZ:DOF025` WMS layer. Request transparent 256 px PNG8 tiles through
+MapLibre's `{bbox-epsg-3857}` WMS template, bound the source to Slovenia, keep
+it hidden initially, and render it below labels and every analytical overlay.
+Attribute the imagery to GURS under CC BY 4.0.
+
+**Why:** Google satellite imagery would introduce billing, API-key management,
+and stricter caching/content rules. GURS publishes the national 0.25 m RGB
+orthophoto as reusable public data and its WMS supports EPSG:3857 with CORS.
+Direct viewport requests add no files or transfer cost to GitHub Pages. Keeping
+the layer off by default preserves current startup performance.
+
+**Result:** Users can switch to recognizable aerial context anywhere in
+Slovenia while retaining roads/labels and placing flood, terrain, coastal, and
+classification findings above it. MapLibre loads and cancels viewport tiles in
+the same bounded way as an ordinary raster base layer.
+
+**Reversible:** Remove `initAerialBasemap`, the GURS URL constant, and the base
+map selector. No pipeline output or manifest migration is involved.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

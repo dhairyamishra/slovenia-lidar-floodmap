@@ -99,6 +99,63 @@ html, body {
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
+.panel-section--basemap {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.basemap-picker {
+  border: 0;
+  min-width: 0;
+}
+
+.basemap-picker .panel-heading {
+  width: 100%;
+}
+
+.basemap-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 9px;
+}
+
+.basemap-options label {
+  position: relative;
+  cursor: pointer;
+}
+
+.basemap-options input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.basemap-options span {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  border: 1px solid rgba(148,163,184,0.22);
+  border-radius: 7px;
+  background: rgba(15,23,42,0.55);
+  color: #a8b2bd;
+  font-size: 11px;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.basemap-options input:checked + span {
+  border-color: rgba(96,165,250,0.65);
+  background: rgba(37,99,235,0.22);
+  color: #dbeafe;
+}
+
+.basemap-options input:focus-visible + span {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
 .panel-heading {
   font-size: 10px;
   font-weight: 600;

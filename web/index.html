@@ -6,7 +6,7 @@
   <title>CLSS Slovenia — Flood Susceptibility &amp; Terrain Screening</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 
@@ -42,6 +42,23 @@
         <button type="button" data-region-preset="koper">Coastal exposure · Koper</button>
       </div>
       <p class="panel-tip"><strong>Opacity tip:</strong> 30&ndash;50% is best for comparing an overlay with roads and terrain beneath it.</p>
+    </div>
+
+    <div class="panel-section panel-section--basemap">
+      <fieldset class="basemap-picker">
+        <legend class="panel-heading">Base map</legend>
+        <div class="basemap-options">
+          <label>
+            <input type="radio" name="basemap" value="dark" checked>
+            <span>Dark map</span>
+          </label>
+          <label>
+            <input type="radio" name="basemap" value="aerial">
+            <span>Aerial imagery</span>
+          </label>
+        </div>
+      </fieldset>
+      <p class="layer-hint">Official Slovenia-wide DOF025 orthophoto from GURS. Imagery loads only for the visible map when selected; findings remain above it.</p>
     </div>
 
     <div class="panel-section">
@@ -325,6 +342,6 @@
   <div id="popup-content" style="display:none;"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=17"></script>
+  <script src="app.js?v=18"></script>
 </body>
 </html>

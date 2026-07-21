@@ -1,6 +1,12 @@
 'use strict';
 
 const BASEMAP_STYLE = 'https://tiles.openfreemap.org/styles/dark';
+const GURS_ORTHOPHOTO_URL =
+  'https://ipi.eprostor.gov.si/wms-si-gurs-dts/wms?' +
+  'SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&' +
+  'LAYERS=SI.GURS.ZPDZ%3ADOF025&STYLES=&SRS=EPSG%3A3857&' +
+  'BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256&' +
+  'FORMAT=image%2Fpng8&TRANSPARENT=true';
 
 function optionalJson(url) {
   return fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
@@ -52,6 +58,7 @@ function initMap(manifest, riskPoints, validationManifest) {
   map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-left');
 
   map.on('load', () => {
+    initAerialBasemap(map);
     map.fitBounds([[ub.west, ub.south], [ub.east, ub.north]],
                   { padding: 60, duration: 0 });
 
@@ -62,6 +69,42 @@ function initMap(manifest, riskPoints, validationManifest) {
       wireControls(map, manifest, validationState);
     });
   });
+}
+
+function initAerialBasemap(map) {
+  map.addSource('gurs-orthophoto', {
+    type: 'raster',
+    tiles: [GURS_ORTHOPHOTO_URL],
+    tileSize: 256,
+    minzoom: 7,
+    maxzoom: 20,
+    bounds: [13.3400608, 44.9641309, 17.2035352, 46.8958681],
+    attribution: '<a href="https://www.e-prostor.gov.si/" target="_blank">Ortofoto Â© GURS (CC BY 4.0)</a>',
+  });
+
+  const firstLabel = map.getStyle().layers.find(layer => layer.type === 'symbol')?.id;
+  map.addLayer({
+    id: 'gurs-orthophoto-layer',
+    type: 'raster',
+    source: 'gurs-orthophoto',
+    minzoom: 7,
+    layout: { visibility: 'none' },
+    paint: {
+      'raster-opacity': 1,
+      'raster-fade-duration': 0,
+      'raster-resampling': 'linear',
+    },
+  }, firstLabel);
+
+  document.querySelectorAll('input[name="basemap"]')
+    .forEach(control => control.addEventListener('change', () => {
+      if (!control.checked) return;
+      map.setLayoutProperty(
+        'gurs-orthophoto-layer',
+        'visibility',
+        control.value === 'aerial' ? 'visible' : 'none',
+      );
+    }));
 }
 
 const LAYER_TYPES = [
