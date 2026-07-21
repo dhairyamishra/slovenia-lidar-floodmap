@@ -43,7 +43,7 @@ def component_name(component, regions):
     if all(regions.get(f"{x}_{y}") == "01-koper" for x, y in component):
         return "koper-coastal"
     if min(x for x, _ in component) >= 480:
-        return "kamnik-event"
+        return "upper-savinja-event"
     return "central-validity"
 
 

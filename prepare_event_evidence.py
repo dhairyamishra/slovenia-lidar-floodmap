@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inventory and safely acquire public evidence for the Kamnik 2023 hindcast.
+"""Inventory and safely acquire public evidence for the Upper Savinja 2023 hindcast.
 
 This script is deliberately provenance-first.  It records availability, final
 URL, content metadata and checksums before any source is treated as model
@@ -34,7 +34,11 @@ def read_json(path: Path):
 
 def event_sources():
     sources = read_json(SOURCES_PATH)
-    return {source["id"]: source for source in sources.get("event_sources", [])}
+    return {
+        source["id"]: source
+        for source in sources.get("event_sources", [])
+        if source.get("status") != "excluded_wrong_geography"
+    }
 
 
 def sha256_file(path: Path):
@@ -166,7 +170,7 @@ def main(argv=None):
     manifest = {
         "schema_version": 1,
         "generated": datetime.now(timezone.utc).isoformat(),
-        "purpose": "Kamnik/Kamniška Bistrica August-2023 observed-event evidence inventory; not a flood-label dataset",
+        "purpose": "Upper Savinja / Ljubno ob Savinji August-2023 observed-event evidence inventory; not a flood-label dataset",
         "sources": merge_records(previous, records),
     }
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

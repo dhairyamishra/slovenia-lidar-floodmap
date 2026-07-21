@@ -23,7 +23,7 @@ from shapely.geometry import box, shape
 ROOT = Path(__file__).resolve().parent
 ARCHIVE = ROOT / "validation" / "data" / "event_evidence" / "emsr680_products.zip"
 OUTPUT_DIR = ROOT / "validation" / "data" / "event_evidence"
-KAMNIK_BOUNDS_3794 = (486000.0, 132000.0, 491000.0, 137000.0)
+UPPER_SAVINJA_BOUNDS_3794 = (486000.0, 132000.0, 491000.0, 137000.0)
 
 
 def sha256_file(path: Path):
@@ -34,9 +34,9 @@ def sha256_file(path: Path):
     return digest.hexdigest()
 
 
-def kamnik_bounds_wgs84():
+def upper_savinja_bounds_wgs84():
     transformer = Transformer.from_crs("EPSG:3794", "EPSG:4326", always_xy=True)
-    west, south, east, north = transformer.transform_bounds(*KAMNIK_BOUNDS_3794)
+    west, south, east, north = transformer.transform_bounds(*UPPER_SAVINJA_BOUNDS_3794)
     return box(west, south, east, north)
 
 
@@ -115,16 +115,16 @@ def main():
         raise SystemExit(f"Missing {ARCHIVE}; run prepare_event_evidence.py --source emsr680_products --download first")
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     all_features, products = catalogue_features(ARCHIVE)
-    bounds = kamnik_bounds_wgs84()
-    kamnik_features = intersecting_features(all_features, bounds)
+    bounds = upper_savinja_bounds_wgs84()
+    upper_savinja_features = intersecting_features(all_features, bounds)
     all_output = OUTPUT_DIR / "emsr680_unreviewed_observed_events.geojson"
-    kamnik_output = OUTPUT_DIR / "emsr680_kamnik_unreviewed_context.geojson"
+    upper_savinja_output = OUTPUT_DIR / "emsr680_upper_savinja_unreviewed_context.geojson"
     outputs = {
         "all_observed_event_features": write_json(all_output, {
             "type": "FeatureCollection", "features": all_features,
         }),
-        "kamnik_intersecting_context": write_json(kamnik_output, {
-            "type": "FeatureCollection", "features": kamnik_features,
+        "upper_savinja_intersecting_context": write_json(upper_savinja_output, {
+            "type": "FeatureCollection", "features": upper_savinja_features,
         }),
     }
     catalogue = {
@@ -137,14 +137,14 @@ def main():
         },
         "source_crs": "OGC:CRS84 / longitude-latitude",
         "review_bounds": {
-            "name": "current-5x5-kamnik-kamniska-bistrica-lidar-mosaic",
-            "epsg3794": KAMNIK_BOUNDS_3794,
+            "name": "current-5x5-upper-savinja-ljubno-lidar-mosaic",
+            "epsg3794": UPPER_SAVINJA_BOUNDS_3794,
             "wgs84_bounds": list(bounds.bounds),
         },
         "product_count": len(products),
         "products": products,
         "all_flood_feature_count": len(all_features),
-        "kamnik_intersecting_feature_count": len(kamnik_features),
+        "upper_savinja_intersecting_feature_count": len(upper_savinja_features),
         "outputs": outputs,
         "limitations": [
             "rapid-mapping-may-miss-transient-or-obscured-water",
@@ -158,7 +158,7 @@ def main():
     print(json.dumps({
         "products": len(products),
         "all_flood_features": len(all_features),
-        "kamnik_intersecting_features": len(kamnik_features),
+        "upper_savinja_intersecting_features": len(upper_savinja_features),
         "catalogue": str(catalogue_path.relative_to(ROOT)).replace("\\", "/"),
     }, indent=2))
 

@@ -47,7 +47,7 @@ VISUAL_COLORS = {
 REGION_LABELS = {
     "01-koper": "Koper",
     "05-ljubljana": "Ljubljana",
-    "08-kamnik": "Savinja / Kamnik",
+    "08-kamnik": "Upper Savinja / Ljubno ob Savinji",
 }
 
 

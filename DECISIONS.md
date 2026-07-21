@@ -517,6 +517,65 @@ web-tile directories and regenerate `web/data/manifest.json` without the
 connectivity block. The analytical D34 outputs and frozen D19 assets are
 independent.
 
+## 2026-07-21
+
+### D36 — Reverse D33: the 25-tile pilot is Upper Savinja, not Kamnik
+
+**Decision:** Reverse D33's geographic conclusion. The E486–491 km / N132–137
+km study block is the Upper Savinja Valley around Ljubno ob Savinji. The
+`08-kamnik` value remains unchanged only because it is Flycom's CDN region
+slug. Current UI labels, event-workflow identifiers, review schema, and domain
+name use Upper Savinja. The three DRSV Kamniška Bistrica/Pšata orthophoto
+records are retained for provenance but marked `excluded_wrong_geography`, and
+the acquisition script filters them out.
+
+**Why:** The EPSG:3794 block transforms to approximately 14.818–14.883 E and
+46.328–46.373 N. Direct inspection against the basemap places its centre at
+Ljubno ob Savinji; the municipality describes Ljubno as lying in the Upper
+Savinja Valley at the confluence of the Ljubnica and Savinja. D33 incorrectly
+treated a CDN region slug and unrelated DRSV archive names as geographic
+evidence. Continuing with those sources could create invalid event labels.
+
+**Result:** Guided navigation now says Upper Savinja, comparison metadata says
+Upper Savinja / Ljubno ob Savinji, and event extraction emits geographically
+named files and fields. A legacy ignored
+`emsr680_kamnik_unreviewed_context.geojson` remains accepted as a read-only
+migration fallback; it does not authorize the excluded imagery sources.
+
+**Reversible:** Only reverse this decision after an authoritative coordinate
+check proves the study bounds differ. Restore UI, evidence, and schema names
+together, and remove the acquisition exclusion only after verifying actual
+source coverage against the EPSG:3794 polygon.
+
+### D37 — Bound public delivery and load map assets on demand
+
+**Decision:** Build GitHub Pages from `_site/` with
+`prepare_pages_site.py`. Omit the optional per-tile NDVI and full saturated D19
+diagnostic rasters from that public artifact and remove their manifest
+capabilities, while keeping both in `web/` for local research. Load official
+GeoJSON only when selected. For raster families, register only intersecting
+viewport tiles up to explicit per-layer caps and remove distant sources after
+map movement. Add guided regional views, a collapsible mobile drawer,
+accessible labels/focus states, and pre-deploy tests.
+
+**Why:** The complete `web/` tree is about 1.26 GiB and the optional NDVI plus
+full D19 diagnostic families account for most of it. The browser also
+previously fetched roughly 51 MB of hidden official GeoJSON at startup and
+could register all 391 raster sources after one toggle. These costs made the
+public app slow and fragile without improving the default official-reference
+experience.
+
+**Result:** The bounded artifact is about 144 MB in the verified build. Hidden
+official layers create no startup data request, heavy rasters stay within
+viewport caps, and the UI automatically hides capabilities omitted by the
+deployment profile. CI runs the Python suite and JavaScript syntax check before
+deployment.
+
+**Reversible:** Point the Pages upload back at `web/` and remove the artifact
+builder, or narrow/expand `EXCLUDED_RASTER_NAMES` and
+`EXCLUDED_MANIFEST_KEYS` together. Remove viewport synchronization only if a
+measured alternative preserves bounded source and request counts.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

@@ -4,6 +4,7 @@
 
 # Regenerable analysis outputs
 output/
+_site/
 
 # Pipeline / calibration run logs (throwaway)
 *_run.log

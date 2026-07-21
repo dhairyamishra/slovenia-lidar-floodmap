@@ -8,7 +8,34 @@
 > The active review/implementation tracker is `ALEKS_REVIEW_AND_ALGORITHM_PLAN.md`.
 > The focused red-map/model-replacement tracker is `FLOOD_MODEL_REPLACEMENT_PLAN.md`.
 > The active observed-event enhancement tracker is
-> `KAMNIK_OBSERVED_EVENT_ENHANCEMENT_PLAN.md`.
+> `UPPER_SAVINJA_OBSERVED_EVENT_ENHANCEMENT_PLAN.md`.
+
+## D36-D37 Geography correction and delivery improvements (2026-07-21)
+
+- Corrected a material D33 geography error. The E486–491 km / N132–137 km
+  block transforms to about 14.818–14.883 E / 46.328–46.373 N and is centred
+  around Ljubno ob Savinji in the Upper Savinja Valley. `08-kamnik` is the
+  Flycom CDN region slug, not the study-area name.
+- The Kamniška Bistrica/Pšata post-event archives in `validation/sources.json`
+  are now `excluded_wrong_geography`; `prepare_event_evidence.py` will not
+  inventory or download them. The EMSR680 intersection workflow, queue IDs,
+  schema, plan, and current app labels now use Upper Savinja naming. Existing
+  ignored legacy context files remain readable only to ease migration.
+- The app now loads official GeoJSON only when its control is selected and
+  keeps raster overlays to bounded viewport sets, removing distant sources on
+  movement. Guided Ljubljana, Upper Savinja, and Koper views make the primary
+  comparisons discoverable.
+- Mobile controls are a collapsible bottom drawer; form controls have explicit
+  labels, visible keyboard focus, and a generated favicon. Layer controls are
+  capability-driven when an asset family is absent.
+- GitHub Pages now publishes a bounded `_site/` artifact rather than the full
+  1.26 GiB research directory. The build omits local-only NDVI and saturated
+  D19 diagnostic rasters, rewrites the manifest accordingly, and is currently
+  about 144 MB. CI runs all Python tests and `node --check` before deploy.
+
+**Next entry point:** acquire geographically matching Upper Savinja imagery
+and gauge forcing before reviewing event labels. Keep the excluded
+Kamniška Bistrica/Pšata sources out of this study.
 
 ## D34-D35 Connectivity-first physical stage model (2026-07-15)
 
@@ -18,11 +45,11 @@
 - Flatness, absolute elevation, inverted slope, NDVI, and canopy cannot flag a
   cell directly. A definitive scenario result requires a drainage source, an
   applicable connected path, and water above original terrain.
-- Added 391-tile component inventory (345 central / 25 Kamnik / 21 Koper), a
+- Added 391-tile component inventory (345 central / 25 Upper Savinja / 21 Koper), a
   16 m bounded local-gap contract, explicit missing-tile and edge states,
   optional chunked Zarr storage, exact physical-value web indices, and a frozen
   observed-event scientific gate.
-- The 25-tile Kamnik minimum-stage diagnostic is now exported into the public
+- The 25-tile Upper Savinja minimum-stage diagnostic is now exported into the public
   manifest and web tiles. Its control is enabled only for those tiles. Lower
   required rise is dark blue; values above 3 m are deliberately faint slate so
   inaccessible uplands do not dominate the map. It remains research-only and
@@ -33,30 +60,29 @@
 - Zarr/Dask are installed in `.venv` and the chunked writer is round-trip
   tested. GRASS is not installed; complete central contextual terrain and the
   zero-decision observed-event review queue remain genuine external gates.
-- The real 25-tile Kamnik run is verified: about 38 seconds from cached DTM,
+- The real 25-tile Upper Savinja run is verified: about 38 seconds from cached DTM,
   zero internal sinks, 14,340 seam-crossing receivers, exact 25-tile/22-array
   cut-back, and a roughly 145 MB Zarr store. Deterministic reach IDs drive
   reach-specific stage/discharge forcing and exact popup lookup.
 - `input_digests.py` hashed all 391 LAZ files with restartable checkpoints;
   dataset SHA-256 is `16f587afa00b0201f983512bbfe3601863ef0c0bf945eebf8592a607c1101d2b`.
-  Repeated unchanged Kamnik runs produced identical analytical manifest digest
+  Repeated unchanged Upper Savinja runs produced identical analytical manifest digest
   `21388fed7903e469b809c2f745127e864e996cef4e1a24f7cb95d0c3fff56615`;
   volatile timing is isolated in `run_report.json`.
 - `build_analysis_store.py` is the restartable whole-domain LAZ-to-Zarr
   ingestion boundary at 2 m or 10 m. It writes direct DTM/DSM/canopy,
   point/ground density, coverage, and provenance and never fills absent tiles;
-  a real 10 m Kamnik tile smoke test passed.
+  a real 10 m Upper Savinja tile smoke test passed.
 
 **Recommended next entry point:** acquire/review supported event evidence and
 gauge forcing, then run
 the frozen gate. Do not publish a scenario or weaken the gate to create one.
 
-## D33 Kamnik/Kamniška Bistrica area correction (2026-07-13, uncommitted)
+## D33 Kamnik/Kamniška Bistrica area correction (2026-07-13; superseded by D36)
 
-- Confirmed from the EPSG:3794 bounds (E486–491 km, N132–137 km; WGS84
-  approximately 14.818–14.883 E / 46.328–46.373 N) and the DRSV portal that
-  the current 5×5 mosaic is in the Kamnik/Kamniška Bistrica study area, not
-  the Savinja river basin.
+- This entry recorded an incorrect inference from the transformed coordinates.
+  D36 reverses it: those coordinates are around Ljubno ob Savinji in the Upper
+  Savinja Valley, and the DRSV Kamniška Bistrica/Pšata archives are unrelated.
 - Renamed all **new** observed-event workflow files, source IDs, generated
   evidence names, review IDs, documentation, and public DRSV asset URLs to
   Kamnik/Kamniška Bistrica. The now-correct DRSV RGB/CIR/sheet-index URLs are

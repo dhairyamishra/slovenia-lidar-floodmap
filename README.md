@@ -71,7 +71,7 @@ The source is a three-dimensional CLSS LiDAR point cloud: individual returns rec
 
 | Layer | Description |
 |---|---|
-| Minimum River Stage to Reach | Research-only connectivity-first physical rise in metres, published for the 25-tile Kamnik pilot; a cell must connect to a drainage source, so low/flat terrain is not sufficient |
+| Minimum River Stage to Reach | Research-only connectivity-first physical rise in metres, published for the 25-tile Upper Savinja pilot around Ljubno ob Savinji; a cell must connect to a drainage source, so low/flat terrain is not sufficient |
 | Scenario Inundation Depth | Optional dated stage/flow-conditioned connected depth; disabled until generated scenario assets pass the publication contract |
 | Experimental D19 Terrain Baseline | Frozen unvalidated weighted composite; sparse purple review mask by default and original saturated raster for diagnostics only |
 | Official DRSV Hazard Reference | Blue Q10/Q100/Q500 IKPN extent plus hydraulic-study validity and official Q100 depth classes |
@@ -87,7 +87,7 @@ The source is a three-dimensional CLSS LiDAR point cloud: individual returns rec
 - Each region is calibrated independently (see below) because their elevation regimes are disjoint.
 - Koper includes both the riverine baseline and a separate coastal sea-level-rise overlay. The coastal layer is a first-order screening product, not a hydraulic storm-surge model.
 - Source: Flycom CLSS S3 CDN — `https://assets.flycom.si/clss/raw/<region>/zls/gkot/GKOT_E_N.laz`.
-- Raw GKOT `.laz` tiles (~170 MB–1.1 GB each — alpine/coastal tiles are denser — 91.74 GB total) live in `data/` and are **gitignored**. The derived overlays in `web/data/` are committed and deployed.
+- Raw GKOT `.laz` tiles (~170 MB–1.1 GB each — alpine/coastal tiles are denser — 91.74 GB total) live in `data/` and are **gitignored**. Derived overlays live in `web/data/`; the bounded Pages build omits the two heaviest optional raster families while preserving them for local analysis.
 
 ## Run locally
 
@@ -209,7 +209,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `web/data/validation/*` | Compact WGS84 Q10/Q100/Q500, validity, and Q100 depth layers used by the app |
 | `output/diagnostics/validation_q100.*` | Gitignored D19/baseline evaluation against official Q100 inside its validity domain |
 | `output/mosaic/<region>/manifest.json` | Gitignored reproducibility manifest, digests, seam checks, conditioning/threshold sensitivities, and development-only benchmark |
-| `output/mosaic/<region>/tiles/*.npz` | Continuous mosaic hydrology plus physical access-stage/applicability grids cut back exactly to web-tile bounds (25 legacy Kamnik-selector tiles; 100 Ljubljana) |
+| `output/mosaic/<region>/tiles/*.npz` | Continuous mosaic hydrology plus physical access-stage/applicability grids cut back exactly to web-tile bounds (25 Upper Savinja tiles; 100 Ljubljana) |
 | `output/mosaic/<region>/analysis.zarr` | Optional chunked physical/hydrology analysis store written by `--zarr` |
 | `output/connectivity/domain_inventory.json` | Three-component 391-tile inventory with explicit envelope gaps and no-data policy |
 | `output/connectivity/input_digests.json` | Restartable per-LAZ SHA-256 inventory and deterministic whole-dataset digest |
@@ -234,11 +234,12 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `validation_grid.py` | Deterministic rasterization, mask packing, split assignment, and digest helpers. |
 | `mosaic_hydrology.py` | Builds continuous Savinja or Ljubljana DTMs, compares conditioning/D8/MFD/threshold sensitivities without locked-test access, exports exact receiver/connectivity/terrain features and tile windows, and records QA/provenance. |
 | `connectivity_flood.py` | Computes minimax access elevation, required channel-stage rise, applicability/uncertainty, and explicit scenario depth/classes in physical units. |
-| `domain_inventory.py` | Identifies the central, Kamnik-event, and Koper components without treating envelope gaps as terrain. |
+| `domain_inventory.py` | Identifies the central, Upper Savinja event, and Koper components without treating envelope gaps as terrain. |
 | `input_digests.py` | Builds/reuses content hashes for all LAZ inputs and checkpoints after every file. |
 | `build_analysis_store.py` | Converts each LAZ once into chunked domain bands; preserves missing cells/tiles as explicit no-data and resumes by tile digest. |
 | `connectivity_gate.py` | Applies the frozen observed-event scientific selection thresholds before scenario publication. |
 | `prepare_connectivity_web.py` | Exports physical display/index tiles and refuses unapproved scenario publication by default. |
+| `prepare_pages_site.py` | Builds the bounded GitHub Pages artifact and removes local-only NDVI/full-D19 raster families from its manifest. |
 | `benchmark_replacement.py` | Development-only B0/B1/B2/M1/M2 spatial benchmark with monotonic models, applicability masks, negative controls, shortcut audits, and a locked finalization guard. |
 | `hydroclimate.py` | ERA5-Land-style hydroclimate trigger pipeline. Builds fixture assets for V1 and can derive from local ERA5-Land NetCDF files with xarray. |
 | `download_tiles.py` | Downloads CLSS GKOT tiles from the CDN with region auto-discovery and a probe cache. `--center/--radius`, `--bbox`, `--tiles`, `--dry-run`, `--pipeline`. |
@@ -261,7 +262,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 
 ## Deployment
 
-The `web/` directory is published to GitHub Pages on every push to `main` via `.github/workflows/deploy-pages.yml`. No backend required.
+On every push to `main`, `.github/workflows/deploy-pages.yml` runs the Python and JavaScript checks, builds `_site/` with `prepare_pages_site.py`, enforces the Pages-size ceiling, and publishes that bounded artifact. The public build omits per-tile NDVI and full saturated D19 diagnostic rasters; both remain available when serving `web/` locally. No backend is required.
 
 ## Project context
 

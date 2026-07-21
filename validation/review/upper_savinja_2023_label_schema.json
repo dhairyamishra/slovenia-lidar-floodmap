@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "purpose": "Human-review decisions for the Kamnik/Kamniška Bistrica August-2023 observed-event evidence package.",
+  "purpose": "Human-review decisions for the Upper Savinja / Ljubno ob Savinji August-2023 observed-event evidence package.",
   "semantics": "Only explicitly reviewed flooded/not_flooded cells may enter later fitting. Pending and uncertain items are excluded.",
   "required_decision_fields": [
     "review_id",
@@ -15,7 +15,7 @@
     "uncertain"
   ],
   "decision_example": {
-    "review_id": "kamnik-2023-EXAMPLE",
+    "review_id": "upper-savinja-2023-EXAMPLE",
     "decision": "flooded",
     "reviewer": "initials-or-reviewer-id",
     "reviewed_at": "2026-07-13T00:00:00Z",

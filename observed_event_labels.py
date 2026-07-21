@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create and validate a conservative manual-review contract for Kamnik 2023.
+"""Create and validate a conservative Upper Savinja 2023 review contract.
 
 The input Copernicus polygons are *candidates for review*, not automatic
 positive training labels. A reviewer records only `flooded`, `not_flooded`, or
@@ -18,9 +18,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 EVENT_DIR = ROOT / "validation" / "data" / "event_evidence"
-CONTEXT_PATH = EVENT_DIR / "emsr680_kamnik_unreviewed_context.geojson"
-QUEUE_PATH = EVENT_DIR / "kamnik_2023_review_queue.geojson"
-SCHEMA_PATH = ROOT / "validation" / "review" / "kamnik_2023_label_schema.json"
+CONTEXT_PATH = EVENT_DIR / "emsr680_upper_savinja_unreviewed_context.geojson"
+LEGACY_CONTEXT_PATH = EVENT_DIR / "emsr680_kamnik_unreviewed_context.geojson"
+QUEUE_PATH = EVENT_DIR / "upper_savinja_2023_review_queue.geojson"
+SCHEMA_PATH = ROOT / "validation" / "review" / "upper_savinja_2023_label_schema.json"
 
 ALLOWED_DECISIONS = {"flooded", "not_flooded", "uncertain"}
 
@@ -38,7 +39,7 @@ def canonical_id(feature):
         "geometry": feature.get("geometry"),
     }
     digest = hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
-    return f"kamnik-2023-{digest[:16]}"
+    return f"upper-savinja-2023-{digest[:16]}"
 
 
 def review_priority(feature):
@@ -72,7 +73,7 @@ def build_queue(context):
     features.sort(key=lambda item: (item["properties"]["review_priority"], item["properties"]["review_id"]))
     return {
         "type": "FeatureCollection",
-        "name": "Kamnik/Kamniška Bistrica August-2023 manual review queue",
+        "name": "Upper Savinja / Ljubno ob Savinji August-2023 manual review queue",
         "semantics": "pending-review-candidates-not-training-labels",
         "features": features,
     }
@@ -118,11 +119,12 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("queue", "validate"))
     parser.add_argument("--decisions", type=Path,
-                        help="Reviewer decision JSON matching validation/review/kamnik_2023_label_schema.json")
+                        help="Reviewer decision JSON matching validation/review/upper_savinja_2023_label_schema.json")
     args = parser.parse_args(argv)
-    if not CONTEXT_PATH.exists():
+    context_path = CONTEXT_PATH if CONTEXT_PATH.exists() else LEGACY_CONTEXT_PATH
+    if not context_path.exists():
         raise SystemExit(f"Missing {CONTEXT_PATH}; run extract_emsr680_observed_events.py first")
-    queue = build_queue(read_json(CONTEXT_PATH))
+    queue = build_queue(read_json(context_path))
     queue_ids = {feature["properties"]["review_id"] for feature in queue["features"]}
     if args.command == "queue":
         write_json(QUEUE_PATH, queue)

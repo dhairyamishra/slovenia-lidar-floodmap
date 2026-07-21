@@ -17,7 +17,7 @@ class DomainInventoryTests(unittest.TestCase):
         counts = {component["id"]: component["tile_count"] for component in inventory["components"]}
         self.assertEqual(counts, {
             "central-validity": 345,
-            "kamnik-event": 25,
+            "upper-savinja-event": 25,
             "koper-coastal": 21,
         })
         central = next(item for item in inventory["components"] if item["id"] == "central-validity")

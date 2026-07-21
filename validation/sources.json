@@ -79,7 +79,7 @@
   ],
   "pending_sources": [
     {
-      "id": "kamnik_2023_observed_extent",
+      "id": "upper_savinja_2023_observed_extent",
       "kind": "observed_event_extent",
       "date": "2023-08-04",
       "status": "not_acquired",
@@ -101,10 +101,11 @@
       "date_captured": "2023-08-07/2023-08-08",
       "url": "https://drsv.b-cdn.net/Podatki/Pore%C4%8Dje%20Save/Mreza_listov/Mreza_listov_Kamniska_Bistrica_in_Psata_s_Savo.zip",
       "estimated_size_bytes": 51200,
-      "download_priority": "required-first",
+      "download_priority": "excluded",
+      "status": "excluded_wrong_geography",
       "license": "Verify source portal terms at acquisition time",
-      "use": "Find the small subset of post-event imagery sheets intersecting the Kamnik/Kamniška Bistrica review area.",
-      "limitation": "Sheet index is coverage metadata, not a flood-extent label."
+      "use": "Do not use for the current study block.",
+      "limitation": "This archive covers Kamniška Bistrica/Pšata, not the current Upper Savinja / Ljubno ob Savinji study block. Retained only to document the corrected provenance error."
     },
     {
       "id": "kamnik_2023_ortho_rgb",
@@ -113,10 +114,11 @@
       "date_captured": "2023-08-07/2023-08-08",
       "url": "https://drsv.b-cdn.net/Podatki/Pore%C4%8Dje%20Save/ORTO_RGB/Orto_RGB_Kamniska_Bistrica_in_Psata_s_Savo.zip",
       "estimated_size_bytes": 7516192768,
-      "download_priority": "subset-after-sheet-index",
+      "download_priority": "excluded",
+      "status": "excluded_wrong_geography",
       "license": "Verify source portal terms at acquisition time",
-      "use": "Primary visual evidence for a conservative, human-reviewed observed footprint.",
-      "limitation": "Captured after the flood peak; shadows, sediment, vegetation, and receded water require review."
+      "use": "Do not use for the current study block.",
+      "limitation": "This archive covers Kamniška Bistrica/Pšata, not the current Upper Savinja / Ljubno ob Savinji study block. Retained only to document the corrected provenance error."
     },
     {
       "id": "kamnik_2023_ortho_cir",
@@ -125,10 +127,11 @@
       "date_captured": "2023-08-07/2023-08-08",
       "url": "https://drsv.b-cdn.net/Podatki/Pore%C4%8Dje%20Save/ORTO_CIR/Orto_CIR_Kamniska_Bistrica_in_Psata_s_Savo.zip",
       "estimated_size_bytes": 6979321856,
-      "download_priority": "subset-after-sheet-index",
+      "download_priority": "excluded",
+      "status": "excluded_wrong_geography",
       "license": "Verify source portal terms at acquisition time",
-      "use": "False-colour context to distinguish water and vegetation during review.",
-      "limitation": "Captured after the flood peak; do not use an automatic index as ground truth."
+      "use": "Do not use for the current study block.",
+      "limitation": "This archive covers Kamniška Bistrica/Pšata, not the current Upper Savinja / Ljubno ob Savinji study block. Retained only to document the corrected provenance error."
     },
     {
       "id": "emsr680_products",
@@ -168,7 +171,7 @@
       "url": "https://www.arso.gov.si/en/water/data/",
       "catalogue": "https://podatki.gov.si/dataset/hidroloske-meritve-na-povrsinskih-vodah",
       "download_priority": "manual-archive-discovery",
-      "use": "Gauge/stage/discharge timing and event context for relevant Kamniška Bistrica catchments.",
+      "use": "Gauge/stage/discharge timing and event context for relevant Upper Savinja catchments.",
       "limitation": "The public XML page is current-state oriented; historical series must retain station, units, timezone, and provenance."
     },
     {

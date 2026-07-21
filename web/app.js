@@ -7,7 +7,7 @@ function optionalJson(url) {
 }
 
 Promise.all([
-  fetch('data/manifest.json?v=14').then(r => r.json()),
+  fetch('data/manifest.json?v=16').then(r => r.json()),
   fetch('data/risk_points.geojson').then(r => r.json()),
   optionalJson('data/validation/manifest.json'),
 ])
@@ -24,6 +24,8 @@ Promise.all([
 
 function initMap(manifest, riskPoints, validationManifest) {
   const ub = manifest.union_bounds;
+  document.getElementById('topbar-meta').textContent =
+    `${manifest.tile_count} tiles · CLSS GKOT · 2 m grid`;
 
   const map = window._map = new maplibregl.Map({
     container: 'map',
@@ -33,6 +35,16 @@ function initMap(manifest, riskPoints, validationManifest) {
     maxZoom: 20,
     minZoom: 5,
     attributionControl: false,
+  });
+
+  map.on('styleimagemissing', event => {
+    if (!map.hasImage(event.id)) {
+      map.addImage(event.id, {
+        width: 1,
+        height: 1,
+        data: new Uint8Array([0, 0, 0, 0]),
+      });
+    }
   });
 
   map.addControl(new maplibregl.NavigationControl(), 'bottom-right');
@@ -74,6 +86,61 @@ const OFFICIAL_SCENARIOS = [
   { key: 'q100', label: 'Q100' },
   { key: 'q500', label: 'Q500' },
 ];
+
+const VIEWPORT_LAYER_LIMITS = {
+  d19_review: 48,
+  d19_diagnostic: 16,
+  q100_comparison: 48,
+  ndvi: 16,
+  classification: 32,
+};
+
+function tileIntersectsBounds(tile, bounds) {
+  return tile.bounds.east >= bounds.getWest() &&
+    tile.bounds.west <= bounds.getEast() &&
+    tile.bounds.north >= bounds.getSouth() &&
+    tile.bounds.south <= bounds.getNorth();
+}
+
+function tilesForViewport(map, tiles, limit) {
+  const bounds = map.getBounds();
+  const center = map.getCenter();
+  const visible = tiles.filter(tile => tileIntersectsBounds(tile, bounds));
+  if (visible.length <= limit) return visible;
+  return visible
+    .map(tile => ({
+      tile,
+      distance: (tile.bounds.center[0] - center.lng) ** 2 +
+        (tile.bounds.center[1] - center.lat) ** 2,
+    }))
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, limit)
+    .map(item => item.tile);
+}
+
+function removeImageLayer(map, layerId, sourceId) {
+  if (map.getLayer(layerId)) map.removeLayer(layerId);
+  if (map.getSource(sourceId)) map.removeSource(sourceId);
+}
+
+function syncTileLayerViewport(map, tiles, key, active, opacity = null) {
+  const selected = active
+    ? new Set(tilesForViewport(map, tiles, VIEWPORT_LAYER_LIMITS[key]).map(tile => tile.name))
+    : new Set();
+  tiles.forEach(tile => {
+    const layerId = `layer-${key}-${tile.name}`;
+    const sourceId = `src-${key}-${tile.name}`;
+    if (selected.has(tile.name)) {
+      ensureTileLayer(map, tile, key);
+      if (map.getLayer(layerId)) {
+        map.setLayoutProperty(layerId, 'visibility', 'visible');
+        if (opacity != null) map.setPaintProperty(layerId, 'raster-opacity', opacity);
+      }
+    } else {
+      removeImageLayer(map, layerId, sourceId);
+    }
+  });
+}
 
 function ensureTileLayer(map, tile, key) {
   const layerId = `layer-${key}-${tile.name}`;
@@ -182,9 +249,9 @@ async function initOfficialValidation(map, validationManifest) {
   const byScenario = Object.fromEntries(
     validationManifest.scenarios.map(entry => [entry.scenario, entry])
   );
-  OFFICIAL_SCENARIOS.forEach(({ key }) => {
+  function ensureScenario(key) {
     const entry = byScenario[key];
-    if (!entry) return;
+    if (!entry || map.getSource(`src-official-${key}`)) return;
     map.addSource(`src-official-${key}`, {
       type: 'geojson',
       data: `data/validation/${entry.file}`,
@@ -200,10 +267,11 @@ async function initOfficialValidation(map, validationManifest) {
       },
       layout: { visibility: 'none' },
     });
-  });
+  }
   const extra = validationManifest.layers || {};
   const validity = extra.validity;
-  if (validity) {
+  function ensureValidity() {
+    if (!validity || map.getSource('src-official-validity')) return;
     map.addSource('src-official-validity', {
       type: 'geojson',
       data: `data/validation/${validity.file}`,
@@ -234,11 +302,13 @@ async function initOfficialValidation(map, validationManifest) {
     ['depth_0_5_to_1_5m', '#38bdf8'],
     ['depth_ge_1_5m', '#075985'],
   ];
-  const depthKeys = [];
-  depthSpecs.forEach(([key, color]) => {
+  const depthKeys = depthSpecs.filter(([key]) => extra[key]).map(([key]) => key);
+  function ensureDepth(key) {
+    const spec = depthSpecs.find(([candidate]) => candidate === key);
+    if (!spec || map.getSource(`src-official-${key}`)) return;
+    const color = spec[1];
     const entry = extra[key];
     if (!entry) return;
-    depthKeys.push(key);
     map.addSource(`src-official-${key}`, {
       type: 'geojson',
       data: `data/validation/${entry.file}`,
@@ -254,8 +324,16 @@ async function initOfficialValidation(map, validationManifest) {
       },
       layout: { visibility: 'none' },
     });
-  });
-  return { available: true, byScenario, validity: Boolean(validity), depthKeys };
+  }
+  return {
+    available: true,
+    byScenario,
+    validity: Boolean(validity),
+    depthKeys,
+    ensureScenario,
+    ensureValidity,
+    ensureDepth,
+  };
 }
 
 const KEY_ALIAS = { ndvi: 'ndvi', cls: 'classification' };
@@ -263,19 +341,21 @@ const KEY_ALIAS = { ndvi: 'ndvi', cls: 'classification' };
 function wireControls(map, manifest, validationState) {
   const tiles = manifest.tiles;
   const tileNames = tiles.map(t => t.name);
+  const hasNdvi = tiles.some(tile => tile.files.ndvi);
+  const hasD19Diagnostic = tiles.some(tile => tile.files.d19_diagnostic);
+  document.getElementById('layer-section-ndvi').hidden = !hasNdvi;
+  if (!hasD19Diagnostic) {
+    document.querySelector('#d19-display-mode option[value="d19_diagnostic"]')?.remove();
+    document.getElementById('d19-display-row').hidden = true;
+  }
 
   Object.entries(KEY_ALIAS).forEach(([alias, key]) => {
     const chk = document.getElementById(`toggle-${alias}`);
-    chk.addEventListener('change', () => {
-      const vis = chk.checked ? 'visible' : 'none';
-      tiles.forEach(tile => {
-        if (chk.checked) ensureTileLayer(map, tile, key);
-        const layerId = `layer-${key}-${tile.name}`;
-        if (map.getLayer(layerId)) map.setLayoutProperty(layerId, 'visibility', vis);
-      });
-    });
-
     const slider = document.getElementById(`opacity-${alias}`);
+    const update = () => syncTileLayerViewport(map, tiles, key, chk.checked, slider.value / 100);
+    chk.addEventListener('change', update);
+    map.on('moveend', update);
+
     const valEl  = document.getElementById(`val-${alias}`);
     slider.addEventListener('input', () => {
       const v = slider.value / 100;
@@ -302,16 +382,20 @@ function wireControls(map, manifest, validationState) {
   function setCoastalVisibility() {
     const activeKey = coastalScenario.value;
     const visible = coastalToggle.checked;
+    const selected = new Set(
+      (visible ? tilesForViewport(map, coastalTiles, coastalTiles.length) : [])
+        .map(tile => tile.name)
+    );
     coastalTiles.forEach(tile => {
       COASTAL_SCENARIOS.forEach(({ key }) => {
         if (!tile.files.coastal[key]) return;
-        if (visible && key === activeKey) ensureCoastalLayer(map, tile, key);
         const layerId = `layer-coastal-${key}-${tile.name}`;
-        if (map.getLayer(layerId)) {
-          map.setLayoutProperty(
-            layerId, 'visibility',
-            visible && key === activeKey ? 'visible' : 'none'
-          );
+        const sourceId = `src-coastal-${key}-${tile.name}`;
+        if (selected.has(tile.name) && key === activeKey) {
+          ensureCoastalLayer(map, tile, key);
+          if (map.getLayer(layerId)) map.setLayoutProperty(layerId, 'visibility', 'visible');
+        } else {
+          removeImageLayer(map, layerId, sourceId);
         }
       });
     });
@@ -324,6 +408,7 @@ function wireControls(map, manifest, validationState) {
   } else {
     coastalToggle.addEventListener('change', setCoastalVisibility);
     coastalScenario.addEventListener('change', setCoastalVisibility);
+    map.on('moveend', setCoastalVisibility);
     coastalOpacity.addEventListener('input', () => {
       const v = coastalOpacity.value / 100;
       coastalTiles.forEach(tile => {
@@ -338,6 +423,78 @@ function wireControls(map, manifest, validationState) {
   }
 
   wireOfficialValidationControls(map, validationState, manifest);
+  wireGuidedViews(map, manifest);
+}
+
+function setPanelOpen(open) {
+  document.body.classList.toggle('panel-collapsed', !open);
+  const button = document.getElementById('panel-toggle');
+  button.setAttribute('aria-expanded', String(open));
+  button.textContent = open ? 'Close layers' : 'Layers';
+}
+
+function setToggleState(id, checked) {
+  const control = document.getElementById(id);
+  if (!control || control.disabled || control.checked === checked) return;
+  control.checked = checked;
+  control.dispatchEvent(new Event('change'));
+}
+
+function presetTiles(manifest, preset) {
+  if (preset === 'savinja') {
+    return manifest.tiles.filter(tile => tile.files.connectivity?.required_stage);
+  }
+  if (preset === 'koper') {
+    return manifest.tiles.filter(tile => tile.files.coastal);
+  }
+  return manifest.tiles.filter(tile => {
+    const grid = tile.bounds.epsg3794;
+    return grid && grid.x0 >= 455000 && grid.x0 < 465000 &&
+      grid.y0 >= 96000 && grid.y0 < 106000;
+  });
+}
+
+function fitTiles(map, tiles) {
+  if (!tiles.length) return;
+  const west = Math.min(...tiles.map(tile => tile.bounds.west));
+  const east = Math.max(...tiles.map(tile => tile.bounds.east));
+  const south = Math.min(...tiles.map(tile => tile.bounds.south));
+  const north = Math.max(...tiles.map(tile => tile.bounds.north));
+  map.fitBounds([[west, south], [east, north]], {
+    padding: window.matchMedia('(max-width: 640px)').matches ? 28 : 70,
+    duration: 0,
+  });
+}
+
+function wireGuidedViews(map, manifest) {
+  const mobile = window.matchMedia('(max-width: 640px)');
+  setPanelOpen(!mobile.matches);
+  document.getElementById('panel-toggle').addEventListener('click', () => {
+    setPanelOpen(document.body.classList.contains('panel-collapsed'));
+  });
+  mobile.addEventListener('change', event => setPanelOpen(!event.matches));
+
+  document.querySelectorAll('[data-region-preset]').forEach(button => {
+    button.addEventListener('click', () => {
+      const preset = button.dataset.regionPreset;
+      [
+        'toggle-q100-comparison', 'toggle-susc', 'toggle-required-stage',
+        'toggle-scenario-depth', 'toggle-official', 'toggle-coastal',
+      ].forEach(id => setToggleState(id, false));
+      fitTiles(map, presetTiles(manifest, preset));
+      window.requestAnimationFrame(() => {
+        if (preset === 'ljubljana') {
+          document.getElementById('official-scenario').value = 'q100';
+          setToggleState('toggle-official', true);
+        } else if (preset === 'savinja') {
+          setToggleState('toggle-required-stage', true);
+        } else if (preset === 'koper') {
+          setToggleState('toggle-coastal', true);
+        }
+      });
+      if (mobile.matches) setPanelOpen(false);
+    });
+  });
 }
 
 function ensureConnectivityLayer(map, tile, key, path, opacity, resampling = 'linear') {
@@ -561,21 +718,15 @@ function wireD19Controls(map, tiles) {
 
   function updateVisibility() {
     keys.forEach(key => {
-      tiles.forEach(tile => {
-        if (toggle.checked && mode.value === key) ensureTileLayer(map, tile, key);
-        const layerId = `layer-${key}-${tile.name}`;
-        if (!map.getLayer(layerId)) return;
-        map.setLayoutProperty(
-          layerId,
-          'visibility',
-          toggle.checked && mode.value === key ? 'visible' : 'none'
-        );
-      });
+      syncTileLayerViewport(
+        map, tiles, key, toggle.checked && mode.value === key, opacity.value / 100
+      );
     });
   }
 
   toggle.addEventListener('change', updateVisibility);
   mode.addEventListener('change', updateVisibility);
+  map.on('moveend', updateVisibility);
   opacity.addEventListener('input', () => {
     const next = opacity.value / 100;
     keys.forEach(key => tileNames.forEach(name => {
@@ -776,37 +927,37 @@ function wireOfficialValidationControls(map, validationState, manifest) {
     const comparing = comparisonToggle.checked;
     OFFICIAL_SCENARIOS.forEach(({ key }) => {
       if (!validationState.byScenario[key]) return;
-      map.setLayoutProperty(
-        `layer-official-${key}`,
-        'visibility',
-        !comparing && toggle.checked && scenario.value === key ? 'visible' : 'none'
-      );
+      const active = !comparing && toggle.checked && scenario.value === key;
+      if (active) validationState.ensureScenario(key);
+      const layerId = `layer-official-${key}`;
+      if (map.getLayer(layerId)) {
+        map.setLayoutProperty(layerId, 'visibility', active ? 'visible' : 'none');
+      }
     });
     if (validationState.validity) {
       const visibility = validityToggle.checked ? 'visible' : 'none';
-      map.setLayoutProperty('layer-official-validity-fill', 'visibility', visibility);
-      map.setLayoutProperty('layer-official-validity-line', 'visibility', visibility);
+      if (validityToggle.checked) validationState.ensureValidity();
+      if (map.getLayer('layer-official-validity-fill')) {
+        map.setLayoutProperty('layer-official-validity-fill', 'visibility', visibility);
+        map.setLayoutProperty('layer-official-validity-line', 'visibility', visibility);
+      }
     }
     validationState.depthKeys.forEach(key => {
-      map.setLayoutProperty(
-        `layer-official-${key}`,
-        'visibility',
-        !comparing && toggle.checked && depthToggle.checked && scenario.value === 'q100' ? 'visible' : 'none'
-      );
-    });
-    tiles.forEach(tile => {
-      if (comparing) ensureTileLayer(map, tile, 'q100_comparison');
-      const layerId = `layer-q100_comparison-${tile.name}`;
+      const active = !comparing && toggle.checked && depthToggle.checked && scenario.value === 'q100';
+      if (active) validationState.ensureDepth(key);
+      const layerId = `layer-official-${key}`;
       if (map.getLayer(layerId)) {
-        map.setLayoutProperty(layerId, 'visibility', comparing ? 'visible' : 'none');
+        map.setLayoutProperty(layerId, 'visibility', active ? 'visible' : 'none');
       }
     });
+    syncTileLayerViewport(map, tiles, 'q100_comparison', comparing);
     comparisonSummary.hidden = !comparing;
   }
   toggle.addEventListener('change', updateVisibility);
   scenario.addEventListener('change', updateVisibility);
   validityToggle.addEventListener('change', updateVisibility);
   depthToggle.addEventListener('change', updateVisibility);
+  map.on('moveend', updateVisibility);
   comparisonToggle.addEventListener('change', () => {
     const enabled = comparisonToggle.checked;
     toggle.checked = false;
@@ -830,7 +981,7 @@ function wireOfficialValidationControls(map, validationState, manifest) {
   opacity.addEventListener('input', () => {
     const next = opacity.value / 100;
     OFFICIAL_SCENARIOS.forEach(({ key }) => {
-      if (validationState.byScenario[key]) {
+      if (validationState.byScenario[key] && map.getLayer(`layer-official-${key}`)) {
         map.setPaintProperty(`layer-official-${key}`, 'fill-opacity', next);
       }
     });

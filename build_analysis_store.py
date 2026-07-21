@@ -161,7 +161,7 @@ def build(domain_id, resolution_m=2, store_path=DEFAULT_STORE, limit=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--domain", choices=("central-validity", "kamnik-event", "koper-coastal"), required=True)
+    parser.add_argument("--domain", choices=("central-validity", "upper-savinja-event", "koper-coastal"), required=True)
     parser.add_argument("--resolution", type=int, choices=(2, 10), default=2)
     parser.add_argument("--store", type=Path, default=DEFAULT_STORE)
     parser.add_argument("--limit", type=int, help="Development smoke-test tile limit")

@@ -1,9 +1,9 @@
-# Kamnik/Kamniška Bistrica Observed-Event Enhancement Plan
+# Upper Savinja Observed-Event Enhancement Plan
 
 **Status:** Implementing. Phase A is complete with one documented source-access limitation; no model or public map claim changes until the gates below pass.
 
 **Prepared:** 2026-07-13
-**Study area:** Kamnik/Kamniška Bistrica, centred on the August 2023 flood event
+**Study area:** Upper Savinja Valley around Ljubno ob Savinji, centred on the August 2023 flood event
 **Purpose:** Replace the misleading "low and flat means doomed" behaviour with a tested, event-aware terrain-and-connectivity workflow. This plan does **not** authorize reweighting or cosmetically recolouring D19.
 
 ## 1. What problem this solves
@@ -20,9 +20,9 @@ The public app already handles this honestly: D19 is off by default and demoted 
 
 The first target is deliberately narrow:
 
-> For the August 2023 Kamnik/Kamniška Bistrica event, can drainage-relative terrain features plus public event evidence distinguish observed flood footprint from nearby non-flooded controls better than the current HAND-only baseline?
+> For the August 2023 Upper Savinja event, can drainage-relative terrain features plus public event evidence distinguish observed flood footprint from nearby non-flooded controls better than the current HAND-only baseline?
 
-Allowed result if successful: **an August-2023 Kamnik/Kamniška Bistrica hindcast screening model**, with published uncertainty and event/area limits.
+Allowed result if successful: **an August-2023 Upper Savinja hindcast screening model**, with published uncertainty and event/area limits.
 
 Not allowed without additional independent events and calibration:
 
@@ -52,14 +52,14 @@ Not allowed without additional independent events and calibration:
 script records source URL, licence, date, intended use, limitation, HTTP
 availability metadata, final URL, content metadata, and SHA-256 for acquired
 files. Copernicus EMSR680 was downloaded and verified (91,222,927 bytes) under
-ignored `validation/data/event_evidence/`. The official Kamniška Bistrica/Pšata orthophoto
-sheet-index endpoint returned HTTP 403 and the official hydrography download
-endpoint has a TLS hostname mismatch in this runtime. Both are retained as
-documented sources; neither is bypassed or silently treated as unavailable.
+ignored `validation/data/event_evidence/`. The previously recorded Kamniška
+Bistrica/Pšata orthophoto archives were later found to cover the wrong river
+basin and are now explicitly excluded. A matching Upper Savinja imagery source
+still has to be acquired before human review.
 
 **Build**
 
-- Scripted download/inventory for the Kamnik/Kamniška Bistrica-relevant DRSV hydrography, catchment, and water-structure layers.
+- Scripted download/inventory for Upper Savinja-relevant DRSV hydrography, catchment, and water-structure layers.
 - Scripted acquisition manifest for orthophotos, Copernicus products, ARSO series, CRS, dates, licences, checksums, and coverage.
 - Read-only map preview showing source coverage and image dates.
 
@@ -75,7 +75,7 @@ documented sources; neither is bypassed or silently treated as unavailable.
 
 **Implementation record (2026-07-13, partial):** Extracted 1,498 flood
 features from the acquired EMSR680 archive and found 156 that intersect the
-current Kamnik/Kamniška Bistrica mosaic (155 AOI07 photo-interpreted features, one AOI03
+current Upper Savinja mosaic (155 AOI07 photo-interpreted features, one AOI03
 semi-automatic feature). Added `extract_emsr680_observed_events.py` and
 `observed_event_labels.py`. The latter produces a deterministic 156-item
 review queue and validates the required flooded/not-flooded/uncertain decision
@@ -106,7 +106,7 @@ so this phase remains incomplete.
 
 **Build**
 
-- Reuse the existing continuous 5×5 mosaic routing, HAND, channel-distance, stream-order, local-relief, and valley-relative-elevation outputs. Its legacy on-disk identifier is `savinja`; its geographic study area is Kamnik/Kamniška Bistrica.
+- Reuse the existing continuous 5×5 Upper Savinja mosaic routing, HAND, channel-distance, stream-order, local-relief, and valley-relative-elevation outputs. Its on-disk identifier is `savinja`, matching the geographic basin.
 - Add measured distance/connectivity to mapped hydrography and, when trustworthy, mapped structures/embankments.
 - Add catchment and gauge linkage; use ARSO time series for event metadata and later forcing features.
 - Keep absolute elevation out of candidate scores by default. Treat it only as a diagnostic/control feature.
@@ -131,7 +131,7 @@ so this phase remains incomplete.
 **Evaluation discipline**
 
 - Spatially split by whole valley/easting blocks; keep adjacent blocks buffered to prevent near-duplicate terrain leaking across train/test.
-- Maintain a final held-out Kamnik/Kamniška Bistrica area that is not examined during feature selection.
+- Maintain a final held-out Upper Savinja area that is not examined during feature selection.
 - Report precision-recall, ROC-AUC, false-positive rate on nearby low/flat controls, recall, calibration only if justified, and score/elevation correlations.
 - Compare against the frozen D19 and existing mosaic HAND-only baselines, but do not tune D19.
 
@@ -151,7 +151,7 @@ A candidate may proceed only if it improves on HAND-only on held-out observed-ev
 
 **If a candidate passes:**
 
-- Add a separate layer named **"Kamnik/Kamniška Bistrica Aug-2023 observed-event hindcast (experimental)"**.
+- Add a separate layer named **"Upper Savinja Aug-2023 observed-event hindcast (experimental)"**.
 - Use restrained, categorical colours: confirmed observed water, model agreement, model-only review signal, observed-only miss, and unavailable/uncertain.
 - Require a click popup with data sources, applicability, and an explanation that it is not a live forecast or depth estimate.
 - Do not display a red-to-yellow continuous danger surface or uncalibrated percentages.

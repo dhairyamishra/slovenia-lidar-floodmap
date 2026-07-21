@@ -20,7 +20,7 @@ class EmsrExtractionTests(unittest.TestCase):
         self.assertEqual(actual[0]["properties"]["source_aoi"], "AOI03")
 
     def test_intersection_keeps_only_features_inside_bounds(self):
-        bounds = emsr.kamnik_bounds_wgs84()
+        bounds = emsr.upper_savinja_bounds_wgs84()
         inside = {"geometry": {"type": "Point", "coordinates": [bounds.centroid.x, bounds.centroid.y]}}
         outside = {"geometry": {"type": "Point", "coordinates": [10.0, 45.0]}}
         self.assertEqual(emsr.intersecting_features([inside, outside], bounds), [inside])

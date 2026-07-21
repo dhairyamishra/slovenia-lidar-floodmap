@@ -50,6 +50,19 @@ html, body {
   font-variant-numeric: tabular-nums;
 }
 
+.panel-toggle {
+  display: none;
+  min-height: 32px;
+  border: 1px solid rgba(147,197,253,0.35);
+  border-radius: 7px;
+  background: rgba(29,78,216,0.22);
+  color: #dbeafe;
+  font: inherit;
+  font-size: 12px;
+  padding: 0 11px;
+  cursor: pointer;
+}
+
 /* ── Map ─────────────────────────────────────────────────────────────────── */
 #map {
   position: fixed;
@@ -100,6 +113,30 @@ html, body {
   font-size: 11px;
   line-height: 1.5;
   color: #a8b2bd;
+}
+
+.region-presets {
+  display: grid;
+  gap: 6px;
+  margin: 11px 0;
+}
+
+.region-presets button {
+  min-height: 34px;
+  border: 1px solid rgba(96,165,250,0.24);
+  border-radius: 7px;
+  background: rgba(37,99,235,0.12);
+  color: #dbeafe;
+  font: inherit;
+  font-size: 11px;
+  text-align: left;
+  padding: 7px 9px;
+  cursor: pointer;
+}
+
+.region-presets button:hover {
+  background: rgba(37,99,235,0.22);
+  border-color: rgba(96,165,250,0.42);
 }
 
 .reading-steps {
@@ -210,7 +247,15 @@ html, body {
 
 /* Toggle switch */
 .layer-toggle { position: relative; display: inline-block; width: 34px; height: 18px; flex-shrink: 0; }
-.layer-toggle input { opacity: 0; width: 0; height: 0; }
+.layer-toggle input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
 .toggle-track {
   position: absolute; inset: 0;
   background: rgba(255,255,255,0.12);
@@ -229,6 +274,17 @@ html, body {
 }
 .layer-toggle input:checked + .toggle-track { background: #1d4ed8; }
 .layer-toggle input:checked + .toggle-track::after { transform: translateX(16px); background: #fff; }
+.layer-toggle input:focus-visible + .toggle-track {
+  outline: 2px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+button:focus-visible,
+select:focus-visible,
+.slider:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
 
 /* ── Legend bars ─────────────────────────────────────────────────────────── */
 .legend-bar { margin-bottom: 6px; }
@@ -435,9 +491,22 @@ html, body {
 
 @media (max-width: 640px) {
   .panel {
+    top: auto;
+    right: 8px;
+    bottom: 8px;
     left: 8px;
-    width: min(304px, calc(100vw - 16px));
+    width: auto;
+    max-height: calc(100vh - 68px);
+    transition: opacity 0.16s ease, translate 0.16s ease;
   }
+
+  body.panel-collapsed .panel {
+    pointer-events: none;
+    opacity: 0;
+    translate: 0 16px;
+  }
+
+  .panel-toggle { display: inline-flex; align-items: center; }
 
   .topbar-subtitle,
   .topbar-meta {

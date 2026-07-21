@@ -78,6 +78,9 @@ class ComparisonWebAssetTests(unittest.TestCase):
         app = (ROOT / "web/app.js").read_text(encoding="utf-8")
         self.assertIn("function ensureTileLayer", app)
         self.assertIn("function ensureCoastalLayer", app)
+        self.assertIn("function syncTileLayerViewport", app)
+        self.assertIn("function tilesForViewport", app)
+        self.assertIn("removeImageLayer(map, layerId, sourceId)", app)
         self.assertNotIn("manifest.tiles.forEach(tile => addTileLayers", app)
 
 

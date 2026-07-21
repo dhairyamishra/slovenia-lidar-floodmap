@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CLSS Slovenia — Flood Susceptibility &amp; Terrain Screening</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 
@@ -17,7 +18,8 @@
       <span class="topbar-subtitle">Flood Susceptibility &amp; Terrain Screening</span>
     </div>
     <div class="topbar-right">
-      <span class="topbar-meta">391 tiles &nbsp;&middot;&nbsp; CLSS GKOT &middot; 2 m grid</span>
+      <span class="topbar-meta" id="topbar-meta">Loading map inventory…</span>
+      <button type="button" id="panel-toggle" class="panel-toggle" aria-controls="panel" aria-expanded="true">Layers</button>
     </div>
   </header>
 
@@ -34,6 +36,11 @@
         <li><span>2</span><p><strong>Add the experimental terrain baseline.</strong> Use its sparse review mask to inspect agreement or disagreement.</p></li>
         <li><span>3</span><p><strong>Add the context layer for the question.</strong> Use land cover for local setting or coastal exposure for Koper.</p></li>
       </ol>
+      <div class="region-presets" aria-label="Guided map views">
+        <button type="button" data-region-preset="ljubljana">Official Q100 · Ljubljana</button>
+        <button type="button" data-region-preset="savinja">Minimum stage · Upper Savinja</button>
+        <button type="button" data-region-preset="koper">Coastal exposure · Koper</button>
+      </div>
       <p class="panel-tip"><strong>Opacity tip:</strong> 30&ndash;50% is best for comparing an overlay with roads and terrain beneath it.</p>
     </div>
 
@@ -52,16 +59,16 @@
         <div class="legend-gradient" style="background: linear-gradient(to right, rgba(237,233,254,0.15), #a78bfa, #581c87);"></div>
         <div class="legend-labels"><span>Lower experimental score</span><span>Higher</span></div>
       </div>
-      <div class="select-row">
-        <span class="slider-label">Display</span>
-        <select id="d19-display-mode" class="scenario-select">
+      <div class="select-row" id="d19-display-row">
+        <label class="slider-label" for="d19-display-mode">Display</label>
+        <select id="d19-display-mode" class="scenario-select" aria-label="D19 display mode">
           <option value="d19_review" selected>Sparse review mask</option>
           <option value="d19_diagnostic">Frozen red diagnostic surface</option>
         </select>
       </div>
       <div class="slider-row">
-        <span class="slider-label">Opacity</span>
-        <input type="range" id="opacity-susc" min="0" max="100" value="55" class="slider">
+        <label class="slider-label" for="opacity-susc">Opacity</label>
+        <input type="range" id="opacity-susc" min="0" max="100" value="55" class="slider" aria-valuetext="55 percent">
         <span class="slider-val" id="val-susc">55%</span>
       </div>
       <p class="layer-description"><strong>Shows:</strong> the frozen D19 experimental score. The default mask keeps only the upper 7.5% of its fixed regional display scale; that display cutoff is not a hazard threshold or an area percentile.</p>
@@ -85,7 +92,7 @@
         <span><i style="background:#94a3b8;opacity:.4"></i>&gt;3 m</span>
       </div>
       <div class="slider-row">
-        <span class="slider-label">Opacity</span>
+        <label class="slider-label" for="opacity-required-stage">Opacity</label>
         <input type="range" id="opacity-required-stage" min="0" max="100" value="70" class="slider" disabled>
         <span class="slider-val" id="val-required-stage">70%</span>
       </div>
@@ -101,13 +108,13 @@
         <span class="layer-name layer-name--secondary">Scenario inundation depth</span>
       </div>
       <div class="select-row">
-        <span class="slider-label">Scenario</span>
+        <label class="slider-label" for="connectivity-scenario">Scenario</label>
         <select id="connectivity-scenario" class="scenario-select" disabled>
           <option value="">No qualified scenario available</option>
         </select>
       </div>
       <div class="slider-row">
-        <span class="slider-label">Opacity</span>
+        <label class="slider-label" for="opacity-scenario-depth">Opacity</label>
         <input type="range" id="opacity-scenario-depth" min="0" max="100" value="75" class="slider" disabled>
         <span class="slider-val" id="val-scenario-depth">75%</span>
       </div>
@@ -133,15 +140,15 @@
         <div class="legend-labels"><span>Outside extent</span><span>Hazard extent</span></div>
       </div>
       <div class="select-row">
-        <span class="slider-label">Scenario</span>
-        <select id="official-scenario" class="scenario-select">
+        <label class="slider-label" for="official-scenario">Scenario</label>
+        <select id="official-scenario" class="scenario-select" aria-label="Official return-period scenario">
           <option value="q10">Q10 &mdash; more frequent</option>
           <option value="q100" selected>Q100 &mdash; planning reference</option>
           <option value="q500">Q500 &mdash; rarer, larger</option>
         </select>
       </div>
       <div class="slider-row">
-        <span class="slider-label">Opacity</span>
+        <label class="slider-label" for="opacity-official">Opacity</label>
         <input type="range" id="opacity-official" min="0" max="100" value="32" class="slider">
         <span class="slider-val" id="val-official">32%</span>
       </div>
@@ -186,8 +193,8 @@
       <p class="layer-hint"><span class="validity-line-sample"></span>Outside the dashed gray validity boundary, comparison is unavailable. Transparent “neither” cells are not proof of safety.</p>
       <div id="comparison-summary" class="comparison-summary" hidden>
         <div class="select-row">
-          <span class="slider-label">Area summary</span>
-          <select id="comparison-summary-region" class="scenario-select"></select>
+          <label class="slider-label" for="comparison-summary-region">Area summary</label>
+          <select id="comparison-summary-region" class="scenario-select" aria-label="Comparison summary region"></select>
         </div>
         <div class="comparison-summary-grid">
           <span>Official only</span><strong id="comparison-share-official-only">—</strong>
@@ -199,34 +206,36 @@
         <p class="layer-hint">Shares use only cells inside official validity where D19 terrain data exist.</p>
       </div>
 
-      <div class="divider"></div>
+      <section id="layer-section-ndvi">
+        <div class="divider"></div>
 
-      <!-- NDVI / Forest -->
-      <div class="layer-row">
+        <!-- LiDAR-derived vegetation greenness -->
+        <div class="layer-row">
         <label class="layer-toggle">
-          <input type="checkbox" id="toggle-ndvi">
+          <input type="checkbox" id="toggle-ndvi" aria-label="LiDAR-derived vegetation greenness">
           <span class="toggle-track"></span>
         </label>
-        <span class="layer-name">Forest Coverage (NDVI)</span>
-      </div>
-      <div class="legend-bar" id="legend-ndvi">
-        <div class="legend-gradient" style="background: linear-gradient(to right, #a50026, #f46d43, #fee08b, #d9ef8b, #66bd63, #1a9850);"></div>
-        <div class="legend-labels"><span>Stressed</span><span>Healthy</span></div>
-      </div>
-      <div class="slider-row">
-        <span class="slider-label">Opacity</span>
-        <input type="range" id="opacity-ndvi" min="0" max="100" value="75" class="slider">
-        <span class="slider-val" id="val-ndvi">75%</span>
-      </div>
-      <p class="layer-description"><strong>Shows:</strong> relative vegetation greenness from the LiDAR red and near-infrared returns. It is useful context for vegetation condition, not a flood-risk layer.</p>
-      <p class="layer-use"><strong>Use with:</strong> Land Classification to distinguish vegetation from built or bare surfaces. Compare within a tile; values are display-stretched per tile.</p>
+        <span class="layer-name">LiDAR-Derived Vegetation Greenness</span>
+        </div>
+        <div class="legend-bar" id="legend-ndvi">
+          <div class="legend-gradient" style="background: linear-gradient(to right, #a50026, #f46d43, #fee08b, #d9ef8b, #66bd63, #1a9850);"></div>
+          <div class="legend-labels"><span>Lower relative greenness</span><span>Higher</span></div>
+        </div>
+        <div class="slider-row">
+          <label class="slider-label" for="opacity-ndvi">Opacity</label>
+          <input type="range" id="opacity-ndvi" min="0" max="100" value="75" class="slider">
+          <span class="slider-val" id="val-ndvi">75%</span>
+        </div>
+        <p class="layer-description"><strong>Shows:</strong> relative vegetation greenness from the LiDAR red and near-infrared returns. It is useful context for vegetation condition, not a flood-risk layer.</p>
+        <p class="layer-use"><strong>Use with:</strong> Land Classification to distinguish vegetation from built or bare surfaces. Compare within a tile; values are display-stretched per tile.</p>
+      </section>
 
       <div class="divider"></div>
 
       <!-- Classification -->
       <div class="layer-row">
         <label class="layer-toggle">
-          <input type="checkbox" id="toggle-cls">
+          <input type="checkbox" id="toggle-cls" aria-label="Land Classification">
           <span class="toggle-track"></span>
         </label>
         <span class="layer-name">Land Classification</span>
@@ -239,7 +248,7 @@
         <div class="cls-item"><span class="cls-swatch" style="background:#e63333;"></span>Building</div>
       </div>
       <div class="slider-row">
-        <span class="slider-label">Opacity</span>
+        <label class="slider-label" for="opacity-cls">Opacity</label>
         <input type="range" id="opacity-cls" min="0" max="100" value="80" class="slider">
         <span class="slider-val" id="val-cls">80%</span>
       </div>
@@ -251,7 +260,7 @@
       <!-- Coastal sea-level rise -->
       <div class="layer-row">
         <label class="layer-toggle">
-          <input type="checkbox" id="toggle-coastal">
+          <input type="checkbox" id="toggle-coastal" aria-label="Connected Coastal Low-Land Exposure">
           <span class="toggle-track"></span>
         </label>
         <span class="layer-name">Connected Coastal Low-Land Exposure</span>
@@ -261,15 +270,15 @@
         <div class="legend-labels"><span>Not exposed</span><span>Connected low land</span></div>
       </div>
       <div class="select-row">
-        <span class="slider-label">Scenario</span>
-        <select id="coastal-scenario" class="scenario-select">
+        <label class="slider-label" for="coastal-scenario">Scenario</label>
+        <select id="coastal-scenario" class="scenario-select" aria-label="Coastal sea-level increment">
           <option value="slr_0_5m">+0.5 m</option>
           <option value="slr_1_0m">+1.0 m</option>
           <option value="slr_2_0m">+2.0 m</option>
         </select>
       </div>
       <div class="slider-row">
-        <span class="slider-label">Opacity</span>
+        <label class="slider-label" for="opacity-coastal">Opacity</label>
         <input type="range" id="opacity-coastal" min="0" max="100" value="70" class="slider">
         <span class="slider-val" id="val-coastal">70%</span>
       </div>
@@ -282,7 +291,7 @@
       <!-- Risk points -->
       <div class="layer-row">
         <label class="layer-toggle">
-          <input type="checkbox" id="toggle-risk">
+          <input type="checkbox" id="toggle-risk" aria-label="Experimental D19 Review Points">
           <span class="toggle-track"></span>
         </label>
         <span class="layer-name">Experimental D19 Review Points</span>
@@ -316,6 +325,6 @@
   <div id="popup-content" style="display:none;"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=14"></script>
+  <script src="app.js?v=17"></script>
 </body>
 </html>

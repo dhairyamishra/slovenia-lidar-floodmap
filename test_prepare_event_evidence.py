@@ -26,15 +26,11 @@ class FakeResponse:
 
 
 class EventEvidenceTests(unittest.TestCase):
-    def test_sheet_index_is_small_and_selected_before_imagery(self):
-        source = evidence.event_sources()["kamnik_2023_sheet_index"]
-        self.assertEqual(source["download_priority"], "required-first")
-        self.assertLess(source["estimated_size_bytes"], evidence.LARGE_DOWNLOAD_BYTES)
-
-    def test_large_archive_requires_explicit_opt_in(self):
-        source = evidence.event_sources()["kamnik_2023_ortho_rgb"]
-        with self.assertRaisesRegex(RuntimeError, "sheet index"):
-            evidence.download_source(source, allow_large=False)
+    def test_wrong_geography_archives_are_not_available_for_acquisition(self):
+        available = evidence.event_sources()
+        self.assertNotIn("kamnik_2023_sheet_index", available)
+        self.assertNotIn("kamnik_2023_ortho_rgb", available)
+        self.assertIn("emsr680_products", available)
 
     def test_metadata_preserves_final_url_and_length(self):
         response = FakeResponse(headers={"Content-Length": "123", "ETag": "abc"})

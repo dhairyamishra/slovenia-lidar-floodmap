@@ -1,4 +1,4 @@
-# Kamnik/Kamniška Bistrica August-2023 manual review contract
+# Upper Savinja / Ljubno ob Savinji August-2023 manual review contract
 
 This directory contains the versioned schema for human review decisions. It is
 deliberately separate from `validation/data/`: raw imagery, Copernicus source
@@ -17,7 +17,7 @@ and marks every item `pending`.
 
 ## Record decisions
 
-Copy `kamnik_2023_label_schema.json` to a dated decision file and replace its
+Copy `upper_savinja_2023_label_schema.json` to a dated decision file and replace its
 empty `decisions` array with only reviewed items. Every `flooded` or
 `not_flooded` decision must name the evidence source/sheet and rationale. Use
 `uncertain` if the imagery is ambiguous. Never infer dry land merely because a
@@ -26,9 +26,9 @@ source has no polygon.
 Validate before any later data preparation:
 
 ```powershell
-.venv\Scripts\python.exe observed_event_labels.py validate --decisions validation/review/kamnik_2023_reviewed_labels.json
+.venv\Scripts\python.exe observed_event_labels.py validate --decisions validation/review/upper_savinja_2023_reviewed_labels.json
 ```
 
-No decision file is included yet because the official post-event imagery sheet
-index is not currently accessible through the automated endpoint. A reviewer
-must use an approved image source before creating labels.
+No decision file is included yet because a geographically matching, supported
+post-event imagery source has not been acquired. A reviewer must use approved
+Upper Savinja imagery before creating labels.
