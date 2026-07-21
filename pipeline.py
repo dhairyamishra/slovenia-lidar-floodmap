@@ -48,7 +48,8 @@ OUT_SIZE = 1000   # pixels per exported PNG side
 # genuine large gaps (open water / sea). Tuned on real tiles (D19).
 NODATA_FILL_CELLS = 8   # 16 m at 2 m resolution
 TOP_N    = 20     # globally-ranked risk points to emit
-SEP_M    = 50     # minimum separation between risk points (metres)
+CANDIDATE_SEP_M = 50   # local spacing in the retained candidate pool (metres)
+REVIEW_POINT_SEP_M = 750  # public review-point spacing for broad map coverage
 REGION_CAP = 7    # max risk points from any one CDN region. Scores are per-region
                   # normalised (D17), so the global top-N otherwise floods with the
                   # region holding the largest maximally-low-flat patch (e.g. Koper
@@ -527,7 +528,7 @@ def export_tile(f: dict, const: dict, display: dict, region: str = "default") ->
     # so the same terrain scores the same regardless of which tile it sits in.
     order      = np.argsort(-susc.ravel())
     used       = np.zeros(susc.shape, dtype=bool)
-    sep_cells  = max(1, int(SEP_M / GRID_RES))
+    sep_cells  = max(1, int(CANDIDATE_SEP_M / GRID_RES))
     candidates = []
     for flat_idx in order:
         r_i, c_i = flat_idx // cols, flat_idx % cols
@@ -824,6 +825,37 @@ def calibrate(sample_frac: float = 0.05, workers: int | None = None,
 
 # ── Orchestrator ──────────────────────────────────────────────────────────────
 
+def select_review_candidates(candidates: list[dict], cache: dict,
+                             top_n: int = TOP_N,
+                             region_cap: int = REGION_CAP,
+                             separation_m: float = REVIEW_POINT_SEP_M) -> list[dict]:
+    """Select high-scoring review points without repeating one local hotspot.
+
+    The 50 m-spaced candidate pool preserves local alternatives for subset-run
+    safety. Public markers use a broader separation so twenty labels describe
+    geographically distinct places rather than adjacent cells in one patch.
+    """
+    selected: list[dict] = []
+    region_counts: dict[str, int] = {}
+    separation_sq = separation_m ** 2
+    for cand in sorted(candidates, key=lambda c: c["score"], reverse=True):
+        region = tile_region(cand["tile"], cache)
+        if region_counts.get(region, 0) >= region_cap:
+            continue
+        too_close = any(
+            (cand["easting_3794"] - sel["easting_3794"]) ** 2 +
+            (cand["northing_3794"] - sel["northing_3794"]) ** 2 < separation_sq
+            for sel in selected
+        )
+        if too_close:
+            continue
+        selected.append(cand)
+        region_counts[region] = region_counts.get(region, 0) + 1
+        if len(selected) >= top_n:
+            break
+    return selected
+
+
 def main(tile_ids: list[str] | None = None, workers: int | None = None):
     TILES.mkdir(parents=True, exist_ok=True)
 
@@ -916,23 +948,7 @@ def main(tile_ids: list[str] | None = None, workers: int | None = None):
     # Global risk ranking — sort by score, de-duplicate across tile boundaries,
     # and cap per CDN region (REGION_CAP) so per-region-normalised scores don't
     # let one region's large flat-low patch monopolise the global top-N.
-    all_candidates.sort(key=lambda c: c["score"], reverse=True)
-    selected = []
-    region_counts: dict[str, int] = {}
-    for cand in all_candidates:
-        region = tile_region(cand["tile"], cache)
-        if region_counts.get(region, 0) >= REGION_CAP:
-            continue
-        too_close = any(
-            (cand["easting_3794"]  - sel["easting_3794"])**2 +
-            (cand["northing_3794"] - sel["northing_3794"])**2 < SEP_M**2
-            for sel in selected
-        )
-        if not too_close:
-            selected.append(cand)
-            region_counts[region] = region_counts.get(region, 0) + 1
-        if len(selected) >= TOP_N:
-            break
+    selected = select_review_candidates(all_candidates, cache)
 
     features = [
         {

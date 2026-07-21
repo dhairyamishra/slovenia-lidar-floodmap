@@ -71,7 +71,8 @@ Koper has a separate coastal "bathtub" overlay for +0.5 m, +1.0 m, and +2.0 m se
 Caveat: this is first-order screening, not coastal hydraulics. It ignores surge, waves, drainage, defenses, groundwater, and cross-tile connectivity. A stitched Koper DEM should replace the per-tile connection test when higher credibility is needed.
 
 ## Risk-point selection (D19)
-`risk_points.geojson` is the global top-20 by raw `susc`, de-duplicated at `SEP_M` (50 m)
+`risk_points.geojson` is the global top-20 by raw `susc`, selected from a locally
+50 m-spaced candidate pool with `REVIEW_POINT_SEP_M` (750 m) public spacing
 and **capped at `REGION_CAP` (7) per CDN region** — per-region normalisation makes scores
 non-cross-comparable, so without the cap one region's largest flat-low patch (Koper port)
 monopolised the list. Capped split is balanced (Savinja 6 / Koper 7 / Ljubljana 7), Savinja

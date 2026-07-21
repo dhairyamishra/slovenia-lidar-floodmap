@@ -10,6 +10,18 @@
 > The active observed-event enhancement tracker is
 > `UPPER_SAVINJA_OBSERVED_EVENT_ENHANCEMENT_PLAN.md`.
 
+## D42 Spatially distributed D19 review points (2026-07-21)
+
+- Split local candidate spacing (`CANDIDATE_SEP_M = 50`) from public marker
+  spacing (`REVIEW_POINT_SEP_M = 750`). The final selector remains score-first
+  and region-capped, but skips candidates representing the same local hotspot.
+- Regenerated `web/data/risk_points.geojson` from the retained 500 candidates:
+  20 points now cover 19 tiles, with an actual minimum spacing of 823 m. Only
+  one point remains in the previously clustered Koper port patch.
+- D19 scores and model outputs are unchanged. These remain experimental review
+  locations—not probabilities, forecasts, or independently confirmed critical
+  risks.
+
 ## D41 Mobile bottom-sheet controls (2026-07-21)
 
 - Mobile and coarse-pointer browsers now open with the map unobstructed and a
@@ -429,7 +441,8 @@ Each factor is normalised by CDN region, not globally. `calibration.json` is `mo
 Risk points:
 
 - Global candidate pool is capped at 500.
-- Final top-20 is deduplicated at 50 m.
+- The retained candidate pool is locally spaced at 50 m; the final top-20 uses
+  750 m public-marker spacing so adjacent cells in one hotspot do not dominate.
 - `REGION_CAP = 7` prevents one per-region-normalised region from monopolising the list. Current split is balanced by design, not because cross-region scores are absolute probabilities.
 
 Coastal D20 model:

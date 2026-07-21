@@ -83,6 +83,9 @@ class FrontendDeliveryTests(unittest.TestCase):
         anchor_rule = self.css.split(".risk-marker-anchor {", 1)[1].split("}", 1)[0]
         self.assertNotIn("transform", anchor_rule)
 
+    def test_review_point_artifact_is_cache_versioned(self):
+        self.assertIn("risk_points.geojson?v=2", self.app)
+
 
 if __name__ == "__main__":
     unittest.main()

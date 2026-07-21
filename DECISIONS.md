@@ -668,6 +668,30 @@ panel at 12 px left / 58 px top with no mobile-only elements visible.
 then restore the simple 640 px drawer query and `setPanelOpen` behavior. The
 layer markup and MapLibre implementation do not otherwise depend on the sheet.
 
+### D42 — Separate candidate density from public review-point coverage
+
+**Decision:** Keep the internal D19 candidate pool locally spaced at 50 m, but
+select the public top-20 review markers with a separate 750 m minimum spacing.
+Continue ranking eligible locations by the frozen D19 score and retain the
+seven-marker per-region cap.
+
+**Why:** A 50 m public spacing allowed seven markers to cluster around the same
+Koper port patch, even though they represented essentially one place to a map
+reader. Increasing the candidate-pool spacing would remove useful alternatives
+and make subset processing less robust. Separating the two scales preserves
+the analytical candidate pool while making the presentation cover distinct
+locations.
+
+**Result:** The current 20 markers span 19 tiles instead of repeatedly marking
+the Koper waterfront. Their measured minimum separation is 823 m; the port
+cluster shown in review now contains one marker. Region balancing remains in
+effect, and neither marker rank nor spacing changes D19's frozen score.
+
+**Reversible:** Set `REVIEW_POINT_SEP_M` back to 50, or replace the greedy
+score-first selector with a documented coverage policy. Keep
+`CANDIDATE_SEP_M` independent unless candidate generation itself is being
+changed and the full pipeline will be rerun.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

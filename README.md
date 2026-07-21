@@ -80,7 +80,34 @@ The source is a three-dimensional CLSS LiDAR point cloud: individual returns rec
 | Connected Coastal Low-Land Exposure | Koper-only bathtub screen for +0.5 m / +1.0 m / +2.0 m scenarios; not surge or hydraulic inundation |
 | Forest NDVI | Per-cell NDVI from 16-bit NIR/R channels — red (stressed) → green (healthy) |
 | Land Classification | Ground, low/med/high vegetation, building returns |
-| Review Points | Top-20 D19 susceptibility candidates, capped at 7 per CDN region for presentation balance; scores remain non-comparable across regions |
+| Review Points | Top-20 D19 susceptibility candidates with 750 m public spacing and a cap of 7 per CDN region for presentation balance; scores remain non-comparable across regions |
+
+### How the categorical Q100 comparison works
+
+The categorical view is a calculated 2 m grid, not a transparency blend. For
+each cell inside the official DRSV hydraulic-study validity boundary, it asks
+whether the cell belongs to the static official Q100 extent and whether it is
+visible in the frozen D19 review mask.
+
+| Display | Official Q100 | D19 review signal | Interpretation |
+|---|---:|---:|---|
+| Cyan | Yes | No | Official Q100 only; D19 did not identify the cell |
+| Orange | No | Yes | D19 only; experimental disagreement or possible overprediction to review |
+| White | Yes | Yes | Both sources identify the cell |
+| Transparent | No | No | Neither identifies the cell; this is not proof of safety |
+| Sparse gray hatch | Either | No D19 data | Comparison cannot be completed at this cell |
+
+Outside the dashed official validity boundary, comparison is unavailable—not
+negative. D19 “Yes” uses the frozen `0.925` review-display cutoff on its fixed
+regional scale; that cutoff is not a validated hazard threshold, probability,
+or land-area percentile. Q100 is a static return-period planning reference,
+not a live forecast or an observed-event footprint.
+
+Enabling comparison mode turns off the separate official and D19 fills, forces
+the validity boundary on, and displays only the derived categories. Clicking a
+cell reports its official, D19, validity, and tile classification. Regional
+percentages use only cells inside official validity where D19 data exists, so
+they are area shares rather than flood probabilities.
 
 ## Dataset
 
@@ -197,7 +224,7 @@ Each susceptibility factor is normalised against a **fixed [p2, p98] range deriv
 | `web/data/tiles/<name>/classification.png` | Land-cover classes |
 | `web/data/manifest.json` | Tile registry (bounds + file paths) consumed by the web app |
 | `web/data/candidates.json` | Top-500 D19 susceptibility review candidates; not global probabilities |
-| `web/data/risk_points.geojson` | Top-20 review points (de-duplicated at 50 m, presentation-capped at 7 per region) |
+| `web/data/risk_points.geojson` | Top-20 review points (750 m public spacing, presentation-capped at 7 per region) |
 | `web/data/hydroclimate/*.geojson` | Retained hydroclimate calculation artifacts; intentionally not loaded or visualized by the public map |
 | `calibration.json` | Per-region normalisation constants + dataset fingerprint |
 | `output/diagnostics/samples/*.npz` | Ignored deterministic full-grid factor/score samples emitted by the pipeline |
