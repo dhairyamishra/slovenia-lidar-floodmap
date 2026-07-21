@@ -692,6 +692,35 @@ score-first selector with a documented coverage policy. Keep
 `CANDIDATE_SEP_M` independent unless candidate generation itself is being
 changed and the full pipeline will be rerun.
 
+### D43 — Bound decoded map memory only on mobile
+
+**Decision:** Preserve D40's complete active overlays on desktop. On narrow or
+coarse-pointer devices, allow one heavy analytical layer family at a time,
+keep at most 12 raster tiles intersecting a padded viewport, refresh that set
+after map movement, and remove images that leave it. Also remove inactive
+official GeoJSON sources, bound the two click-index canvas caches to three
+entries, cap MapLibre's pixel ratio at 1.5, and limit its basemap tile cache to
+24 tiles and one zoom level.
+
+**Why:** A compressed PNG is not its in-memory size. Each 1000 × 1000 overlay
+decodes to roughly 4 MB before WebGL overhead, so one 391-tile family can
+approach 1.5 GB and multiple families can exceed iOS's device-dependent web
+process budget. The former all-or-nothing behavior therefore caused Safari to
+terminate and reload the page. Mobile navigation needs bounded working memory;
+desktop users explicitly retain complete active coverage.
+
+**Result:** Mobile holds roughly 48 MB of decoded analytical tile pixels for a
+normal one-image layer (or about 96 MB for connectivity plus applicability),
+plus the basemap and current reference data, rather than loading up to 391
+images per family. Panning or zooming swaps in the local tiles, so all data is
+still reachable. A mobile-only note makes this behavior explicit. Desktop
+rendering and controls are unchanged.
+
+**Reversible:** Remove the mobile tile selector, exclusive-toggle handler,
+source-release branches, cache bounds, and mobile MapLibre options. Doing so
+restores D40 everywhere but also restores the measured multi-gigabyte iOS
+failure mode.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

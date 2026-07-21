@@ -4,6 +4,19 @@ const BASEMAP_STYLE = 'https://tiles.openfreemap.org/styles/dark';
 const MOBILE_LAYOUT = window.matchMedia(
   '(max-width: 768px), (hover: none) and (pointer: coarse)'
 );
+const MOBILE_TILE_LIMIT = 12;
+const MOBILE_INDEX_CACHE_LIMIT = 3;
+const MOBILE_HEAVY_TOGGLE_IDS = [
+  'toggle-susc',
+  'toggle-required-stage',
+  'toggle-scenario-depth',
+  'toggle-official',
+  'toggle-q100-comparison',
+  'toggle-ndvi',
+  'toggle-cls',
+  'toggle-coastal',
+];
+const mobileLayerRefreshers = new Set();
 const GURS_ORTHOPHOTO_URL =
   'https://ipi.eprostor.gov.si/wms-si-gurs-dts/wms?' +
   'SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&' +
@@ -36,7 +49,7 @@ function initMap(manifest, riskPoints, validationManifest) {
   document.getElementById('topbar-meta').textContent =
     `${manifest.tile_count} tiles · CLSS GKOT · 2 m grid`;
 
-  const map = window._map = new maplibregl.Map({
+  const mapOptions = {
     container: 'map',
     style: BASEMAP_STYLE,
     center: ub.center,
@@ -44,7 +57,13 @@ function initMap(manifest, riskPoints, validationManifest) {
     maxZoom: 20,
     minZoom: 5,
     attributionControl: false,
-  });
+  };
+  if (MOBILE_LAYOUT.matches) {
+    mapOptions.pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+    mapOptions.maxTileCacheSize = 24;
+    mapOptions.maxTileCacheZoomLevels = 1;
+  }
+  const map = window._map = new maplibregl.Map(mapOptions);
 
   map.on('styleimagemissing', event => {
     if (!map.hasImage(event.id)) {
@@ -138,11 +157,56 @@ function removeImageLayer(map, layerId, sourceId) {
   if (map.getSource(sourceId)) map.removeSource(sourceId);
 }
 
+function tileIntersectsBounds(tile, bounds) {
+  return tile.bounds.east >= bounds.west && tile.bounds.west <= bounds.east &&
+    tile.bounds.north >= bounds.south && tile.bounds.south <= bounds.north;
+}
+
+function tilesForMobileViewport(map, tiles) {
+  if (!MOBILE_LAYOUT.matches) return tiles;
+  const visible = map.getBounds();
+  const lngPadding = (visible.getEast() - visible.getWest()) * 0.15;
+  const latPadding = (visible.getNorth() - visible.getSouth()) * 0.15;
+  const padded = {
+    west: visible.getWest() - lngPadding,
+    east: visible.getEast() + lngPadding,
+    south: visible.getSouth() - latPadding,
+    north: visible.getNorth() + latPadding,
+  };
+  const center = map.getCenter();
+  return tiles
+    .filter(tile => tileIntersectsBounds(tile, padded))
+    .sort((a, b) => {
+      const aLng = (a.bounds.west + a.bounds.east) / 2 - center.lng;
+      const aLat = (a.bounds.south + a.bounds.north) / 2 - center.lat;
+      const bLng = (b.bounds.west + b.bounds.east) / 2 - center.lng;
+      const bLat = (b.bounds.south + b.bounds.north) / 2 - center.lat;
+      return aLng * aLng + aLat * aLat - bLng * bLng - bLat * bLat;
+    })
+    .slice(0, MOBILE_TILE_LIMIT);
+}
+
+function registerMobileLayerRefresher(map, refresh) {
+  mobileLayerRefreshers.add(refresh);
+  if (map._mobileLayerRefreshWired) return;
+  map._mobileLayerRefreshWired = true;
+  map.on('moveend', () => {
+    if (MOBILE_LAYOUT.matches) mobileLayerRefreshers.forEach(callback => callback());
+  });
+}
+
+function refreshForLayoutChange() {
+  mobileLayerRefreshers.forEach(callback => callback());
+}
+
 function syncTileLayerSet(map, tiles, key, active, opacity = null) {
+  const selected = new Set(
+    active ? tilesForMobileViewport(map, tiles.filter(tile => tile.files[key])) : []
+  );
   tiles.forEach(tile => {
     const layerId = `layer-${key}-${tile.name}`;
     const sourceId = `src-${key}-${tile.name}`;
-    if (active && tile.files[key]) {
+    if (active && tile.files[key] && selected.has(tile)) {
       ensureTileLayer(map, tile, key);
       if (map.getLayer(layerId)) {
         map.setLayoutProperty(layerId, 'visibility', 'visible');
@@ -288,6 +352,9 @@ async function initOfficialValidation(map, validationManifest) {
       layout: { visibility: 'none' },
     });
   }
+  function removeScenario(key) {
+    removeImageLayer(map, `layer-official-${key}`, `src-official-${key}`);
+  }
   const extra = validationManifest.layers || {};
   const validity = extra.validity;
   function ensureValidity() {
@@ -315,6 +382,14 @@ async function initOfficialValidation(map, validationManifest) {
       },
       layout: { visibility: 'none' },
     });
+  }
+  function removeValidity() {
+    if (map.getLayer('layer-official-validity-line')) {
+      map.removeLayer('layer-official-validity-line');
+    }
+    removeImageLayer(
+      map, 'layer-official-validity-fill', 'src-official-validity'
+    );
   }
 
   const depthSpecs = [
@@ -345,14 +420,20 @@ async function initOfficialValidation(map, validationManifest) {
       layout: { visibility: 'none' },
     });
   }
+  function removeDepth(key) {
+    removeImageLayer(map, `layer-official-${key}`, `src-official-${key}`);
+  }
   return {
     available: true,
     byScenario,
     validity: Boolean(validity),
     depthKeys,
     ensureScenario,
+    removeScenario,
     ensureValidity,
+    removeValidity,
     ensureDepth,
+    removeDepth,
   };
 }
 
@@ -363,6 +444,7 @@ function wireControls(map, manifest, validationState) {
   const tileNames = tiles.map(t => t.name);
   const hasNdvi = tiles.some(tile => tile.files.ndvi);
   const hasD19Diagnostic = tiles.some(tile => tile.files.d19_diagnostic);
+  wireMobileLowMemoryControls();
   document.getElementById('layer-section-ndvi').hidden = !hasNdvi;
   if (!hasD19Diagnostic) {
     document.querySelector('#d19-display-mode option[value="d19_diagnostic"]')?.remove();
@@ -374,6 +456,7 @@ function wireControls(map, manifest, validationState) {
     const slider = document.getElementById(`opacity-${alias}`);
     const update = () => syncTileLayerSet(map, tiles, key, chk.checked, slider.value / 100);
     chk.addEventListener('change', update);
+    registerMobileLayerRefresher(map, update);
 
     const valEl  = document.getElementById(`val-${alias}`);
     slider.addEventListener('input', () => {
@@ -401,12 +484,13 @@ function wireControls(map, manifest, validationState) {
   function setCoastalVisibility() {
     const activeKey = coastalScenario.value;
     const visible = coastalToggle.checked;
+    const selected = new Set(visible ? tilesForMobileViewport(map, coastalTiles) : []);
     coastalTiles.forEach(tile => {
       COASTAL_SCENARIOS.forEach(({ key }) => {
         if (!tile.files.coastal[key]) return;
         const layerId = `layer-coastal-${key}-${tile.name}`;
         const sourceId = `src-coastal-${key}-${tile.name}`;
-        if (visible && key === activeKey) {
+        if (visible && key === activeKey && selected.has(tile)) {
           ensureCoastalLayer(map, tile, key);
           if (map.getLayer(layerId)) map.setLayoutProperty(layerId, 'visibility', 'visible');
         } else {
@@ -423,6 +507,7 @@ function wireControls(map, manifest, validationState) {
   } else {
     coastalToggle.addEventListener('change', setCoastalVisibility);
     coastalScenario.addEventListener('change', setCoastalVisibility);
+    registerMobileLayerRefresher(map, setCoastalVisibility);
     coastalOpacity.addEventListener('input', () => {
       const v = coastalOpacity.value / 100;
       coastalTiles.forEach(tile => {
@@ -438,6 +523,37 @@ function wireControls(map, manifest, validationState) {
 
   wireOfficialValidationControls(map, validationState, manifest);
   wireGuidedViews(map, manifest);
+}
+
+function wireMobileLowMemoryControls() {
+  let changing = false;
+  document.addEventListener('change', event => {
+    const control = event.target;
+    if (changing || !MOBILE_LAYOUT.matches || !control.checked ||
+        !MOBILE_HEAVY_TOGGLE_IDS.includes(control.id)) return;
+    changing = true;
+    MOBILE_HEAVY_TOGGLE_IDS.forEach(id => {
+      if (id === control.id) return;
+      const other = document.getElementById(id);
+      if (!other?.checked) return;
+      other.checked = false;
+      other.dispatchEvent(new Event('change'));
+    });
+    changing = false;
+  }, true);
+
+  MOBILE_LAYOUT.addEventListener('change', event => {
+    if (event.matches) {
+      const active = MOBILE_HEAVY_TOGGLE_IDS
+        .map(id => document.getElementById(id))
+        .filter(control => control?.checked);
+      active.slice(1).forEach(control => {
+        control.checked = false;
+        control.dispatchEvent(new Event('change'));
+      });
+    }
+    refreshForLayoutChange();
+  });
 }
 
 function setPanelOpen(open, manageFocus = false) {
@@ -564,8 +680,32 @@ function ensureConnectivityLayer(map, tile, key, path, opacity, resampling = 'li
 
 const connectivityIndexCache = new Map();
 
+function cacheCanvasPromise(cache, key, promise) {
+  cache.set(key, promise);
+  promise.catch(() => {
+    if (cache.get(key) === promise) cache.delete(key);
+  });
+  if (MOBILE_LAYOUT.matches) {
+    while (cache.size > MOBILE_INDEX_CACHE_LIMIT) {
+      cache.delete(cache.keys().next().value);
+    }
+  }
+  return promise;
+}
+
+function cachedCanvasPromise(cache, key) {
+  if (!cache.has(key)) return null;
+  const promise = cache.get(key);
+  if (MOBILE_LAYOUT.matches) {
+    cache.delete(key);
+    cache.set(key, promise);
+  }
+  return promise;
+}
+
 function loadConnectivityIndex(path) {
-  if (connectivityIndexCache.has(path)) return connectivityIndexCache.get(path);
+  const cached = cachedCanvasPromise(connectivityIndexCache, path);
+  if (cached) return cached;
   const promise = new Promise((resolve, reject) => {
     const image = new Image();
     image.onload = () => {
@@ -579,8 +719,7 @@ function loadConnectivityIndex(path) {
     image.onerror = reject;
     image.src = `data/${path}`;
   });
-  connectivityIndexCache.set(path, promise);
-  return promise;
+  return cacheCanvasPromise(connectivityIndexCache, path, promise);
 }
 
 function decodePhysicalIndex(pixel) {
@@ -703,6 +842,53 @@ function wireConnectivityControls(map, manifest) {
 
   function update() {
     const scenarioId = scenarioSelect.value;
+    if (MOBILE_LAYOUT.matches) {
+      const active = requiredToggle.checked || scenarioToggle.checked;
+      const selected = new Set(active ? tilesForMobileViewport(map, availableTiles) : []);
+      availableTiles.forEach(tile => {
+        const files = tile.files.connectivity;
+        const inView = selected.has(tile);
+        const requiredLayer = `layer-connectivity-required-stage-${tile.name}`;
+        const requiredSource = `src-connectivity-required-stage-${tile.name}`;
+        if (requiredToggle.checked && inView) {
+          ensureConnectivityLayer(
+            map, tile, 'required-stage', files.required_stage, requiredOpacity.value / 100
+          );
+          if (map.getLayer(requiredLayer)) {
+            map.setLayoutProperty(requiredLayer, 'visibility', 'visible');
+          }
+        } else {
+          removeImageLayer(map, requiredLayer, requiredSource);
+        }
+
+        Object.keys(files.scenarios || {}).forEach(id => {
+          const key = `scenario-${id}`;
+          const layer = `layer-connectivity-${key}-${tile.name}`;
+          const source = `src-connectivity-${key}-${tile.name}`;
+          const scenarioFiles = files.scenarios[id];
+          if (scenarioToggle.checked && inView && id === scenarioId && scenarioFiles.depth) {
+            ensureConnectivityLayer(
+              map, tile, key, scenarioFiles.depth, scenarioOpacity.value / 100
+            );
+            if (map.getLayer(layer)) map.setLayoutProperty(layer, 'visibility', 'visible');
+          } else {
+            removeImageLayer(map, layer, source);
+          }
+        });
+
+        const applicabilityLayer = `layer-connectivity-applicability-${tile.name}`;
+        const applicabilitySource = `src-connectivity-applicability-${tile.name}`;
+        if (active && inView) {
+          ensureConnectivityLayer(map, tile, 'applicability', files.applicability, 1.0, 'nearest');
+          if (map.getLayer(applicabilityLayer)) {
+            map.setLayoutProperty(applicabilityLayer, 'visibility', 'visible');
+          }
+        } else {
+          removeImageLayer(map, applicabilityLayer, applicabilitySource);
+        }
+      });
+      return;
+    }
     availableTiles.forEach(tile => {
       const files = tile.files.connectivity;
       if (requiredToggle.checked) {
@@ -734,6 +920,7 @@ function wireConnectivityControls(map, manifest) {
   requiredToggle.addEventListener('change', update);
   scenarioToggle.addEventListener('change', update);
   scenarioSelect.addEventListener('change', update);
+  registerMobileLayerRefresher(map, update);
   requiredOpacity.addEventListener('input', () => {
     availableTiles.forEach(tile => {
       const layer = `layer-connectivity-required-stage-${tile.name}`;
@@ -770,6 +957,7 @@ function wireD19Controls(map, tiles) {
 
   toggle.addEventListener('change', updateVisibility);
   mode.addEventListener('change', updateVisibility);
+  registerMobileLayerRefresher(map, updateVisibility);
   opacity.addEventListener('input', () => {
     const next = opacity.value / 100;
     keys.forEach(key => tileNames.forEach(name => {
@@ -811,7 +999,8 @@ function inverseBilinear(lng, lat, corners) {
 }
 
 function loadComparisonIndex(tile) {
-  if (comparisonIndexCache.has(tile.name)) return comparisonIndexCache.get(tile.name);
+  const cached = cachedCanvasPromise(comparisonIndexCache, tile.name);
+  if (cached) return cached;
   const promise = new Promise((resolve, reject) => {
     const image = new Image();
     image.onload = () => {
@@ -825,8 +1014,7 @@ function loadComparisonIndex(tile) {
     image.onerror = reject;
     image.src = `data/${tile.files.q100_comparison_index}`;
   });
-  comparisonIndexCache.set(tile.name, promise);
-  return promise;
+  return cacheCanvasPromise(comparisonIndexCache, tile.name, promise);
 }
 
 function comparisonCategoryCopy(code) {
@@ -973,14 +1161,18 @@ function wireOfficialValidationControls(map, validationState, manifest) {
       const active = !comparing && toggle.checked && scenario.value === key;
       if (active) validationState.ensureScenario(key);
       const layerId = `layer-official-${key}`;
-      if (map.getLayer(layerId)) {
+      if (MOBILE_LAYOUT.matches && !active) {
+        validationState.removeScenario(key);
+      } else if (map.getLayer(layerId)) {
         map.setLayoutProperty(layerId, 'visibility', active ? 'visible' : 'none');
       }
     });
     if (validationState.validity) {
       const visibility = validityToggle.checked ? 'visible' : 'none';
       if (validityToggle.checked) validationState.ensureValidity();
-      if (map.getLayer('layer-official-validity-fill')) {
+      if (MOBILE_LAYOUT.matches && !validityToggle.checked) {
+        validationState.removeValidity();
+      } else if (map.getLayer('layer-official-validity-fill')) {
         map.setLayoutProperty('layer-official-validity-fill', 'visibility', visibility);
         map.setLayoutProperty('layer-official-validity-line', 'visibility', visibility);
       }
@@ -989,7 +1181,9 @@ function wireOfficialValidationControls(map, validationState, manifest) {
       const active = !comparing && toggle.checked && depthToggle.checked && scenario.value === 'q100';
       if (active) validationState.ensureDepth(key);
       const layerId = `layer-official-${key}`;
-      if (map.getLayer(layerId)) {
+      if (MOBILE_LAYOUT.matches && !active) {
+        validationState.removeDepth(key);
+      } else if (map.getLayer(layerId)) {
         map.setLayoutProperty(layerId, 'visibility', active ? 'visible' : 'none');
       }
     });
@@ -1000,6 +1194,7 @@ function wireOfficialValidationControls(map, validationState, manifest) {
   scenario.addEventListener('change', updateVisibility);
   validityToggle.addEventListener('change', updateVisibility);
   depthToggle.addEventListener('change', updateVisibility);
+  registerMobileLayerRefresher(map, updateVisibility);
   comparisonToggle.addEventListener('change', () => {
     const enabled = comparisonToggle.checked;
     toggle.checked = false;

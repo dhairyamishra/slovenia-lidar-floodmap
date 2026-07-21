@@ -27,12 +27,25 @@ class FrontendDeliveryTests(unittest.TestCase):
         self.assertIn('name="basemap" value="aerial"', self.html)
         self.assertIn("Ortofoto Â© GURS (CC BY 4.0)", self.app)
 
-    def test_active_rasters_cover_the_complete_available_dataset(self):
+    def test_desktop_keeps_complete_overlays_while_mobile_is_bounded(self):
         self.assertIn("function syncTileLayerSet", self.app)
-        self.assertIn("if (active && tile.files[key])", self.app)
-        self.assertNotIn("VIEWPORT_LAYER_LIMITS", self.app)
-        self.assertNotIn("tilesForViewport", self.app)
-        self.assertNotIn("tileIntersectsBounds", self.app)
+        self.assertIn("if (!MOBILE_LAYOUT.matches) return tiles", self.app)
+        self.assertIn("const MOBILE_TILE_LIMIT = 12", self.app)
+        self.assertIn("function tilesForMobileViewport", self.app)
+        self.assertIn("function tileIntersectsBounds", self.app)
+        self.assertIn(".slice(0, MOBILE_TILE_LIMIT)", self.app)
+        self.assertIn("map.on('moveend'", self.app)
+
+    def test_mobile_low_memory_mode_releases_and_bounds_heavy_data(self):
+        self.assertIn("const MOBILE_INDEX_CACHE_LIMIT = 3", self.app)
+        self.assertIn("function cacheCanvasPromise", self.app)
+        self.assertIn("validationState.removeScenario(key)", self.app)
+        self.assertIn("validationState.removeValidity()", self.app)
+        self.assertIn("validationState.removeDepth(key)", self.app)
+        self.assertIn("const MOBILE_HEAVY_TOGGLE_IDS", self.app)
+        self.assertIn("mapOptions.maxTileCacheSize = 24", self.app)
+        self.assertIn("mapOptions.pixelRatio", self.app)
+        self.assertIn("Mobile low-memory mode", self.html)
 
     def test_guided_views_and_mobile_panel_are_accessible(self):
         for preset in ("ljubljana", "savinja", "koper"):
@@ -58,6 +71,8 @@ class FrontendDeliveryTests(unittest.TestCase):
         self.assertIn("left: 12px", desktop_panel)
         self.assertIn("width: 304px", desktop_panel)
         self.assertIn("max-height: calc(100vh - 70px)", desktop_panel)
+        memory_rule = self.css.split(".mobile-memory-note {", 1)[1].split("}", 1)[0]
+        self.assertIn("display: none", memory_rule)
 
     def test_context_controls_have_accessible_names(self):
         for label in (

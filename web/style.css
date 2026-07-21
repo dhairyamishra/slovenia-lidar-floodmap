@@ -283,6 +283,10 @@ html, body {
   margin-bottom: 2px;
 }
 
+.mobile-memory-note {
+  display: none;
+}
+
 .layer-description,
 .layer-use {
   font-size: 11px;
@@ -552,6 +556,18 @@ select:focus-visible,
 }
 
 @media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  .mobile-memory-note {
+    display: block;
+    margin: 8px 0 12px;
+    padding: 9px 10px;
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 6px;
+    background: rgba(56, 189, 248, 0.08);
+    color: #bae6fd;
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
   .topbar {
     height: calc(48px + env(safe-area-inset-top));
     padding: env(safe-area-inset-top) max(12px, env(safe-area-inset-right)) 0

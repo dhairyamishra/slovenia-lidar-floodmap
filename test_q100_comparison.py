@@ -74,12 +74,13 @@ class ComparisonWebAssetTests(unittest.TestCase):
         self.assertIn("Official study validity:", app)
         self.assertNotIn("visual overlap", html.lower())
 
-    def test_tile_rasters_load_on_demand_without_viewport_culling(self):
+    def test_tile_rasters_keep_desktop_coverage_with_mobile_memory_bound(self):
         app = (ROOT / "web/app.js").read_text(encoding="utf-8")
         self.assertIn("function ensureTileLayer", app)
         self.assertIn("function ensureCoastalLayer", app)
         self.assertIn("syncTileLayerSet(map, tiles, 'q100_comparison', comparing)", app)
-        self.assertNotIn("tilesForViewport", app)
+        self.assertIn("if (!MOBILE_LAYOUT.matches) return tiles", app)
+        self.assertIn("tilesForMobileViewport", app)
         self.assertIn("removeImageLayer(map, layerId, sourceId)", app)
         self.assertNotIn("manifest.tiles.forEach(tile => addTileLayers", app)
 

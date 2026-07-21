@@ -24,6 +24,13 @@ class ConnectivityFrontendTests(unittest.TestCase):
         self.assertIn("Minimum stage rise:", app)
         self.assertIn("not proof of safety", app)
 
+    def test_mobile_connectivity_releases_offscreen_images(self):
+        app = (ROOT / "web/app.js").read_text(encoding="utf-8")
+        self.assertIn("if (MOBILE_LAYOUT.matches)", app)
+        self.assertIn("tilesForMobileViewport(map, availableTiles)", app)
+        self.assertIn("removeImageLayer(map, requiredLayer, requiredSource)", app)
+        self.assertIn("registerMobileLayerRefresher(map, update)", app)
+
 
 if __name__ == "__main__":
     unittest.main()

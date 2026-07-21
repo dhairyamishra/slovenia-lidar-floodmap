@@ -8,6 +8,15 @@ An interactive web map overlaying riverine flood susceptibility, official DRSV s
 
 The interface lets you combine derived screening layers and adjust opacity. The experimental D19 baseline and its region-capped review points are off by default. Its normal display is a sparse purple review mask; the original saturated red surface remains available only for technical audit. Neither is probability, modeled depth, or official flood hazard.
 
+On desktop, an enabled overlay continues to cover every available tile. On
+phones and coarse-pointer devices, low-memory mode keeps one large data layer
+active and loads at most 12 nearby raster tiles; pan or zoom to explore the
+rest. Off-screen image sources and inactive official-reference data are
+released, click-inspection image caches are bounded, and the basemap uses a
+smaller tile cache and capped pixel ratio. This prevents the multi-gigabyte
+decoded texture load that can make iOS reload the page without changing the
+desktop experience.
+
 ### Flood susceptibility
 
 The default D19 view shows only the upper band of its fixed regional display scale in purple. This is an unvalidated display cutoff for sparse review—not a hazard class or area percentile. The original blue-to-red D19 surface is retained as a selectable frozen diagnostic because a Phase-0 audit found that it saturates most valid land with warm/red colors. Numbered points are region-capped review candidates, not a globally comparable probability ranking.

@@ -10,6 +10,20 @@
 > The active observed-event enhancement tracker is
 > `UPPER_SAVINJA_OBSERVED_EVENT_ENHANCEMENT_PLAN.md`.
 
+## D43 Mobile low-memory map mode (2026-07-21)
+
+- Desktop retains D40's complete active-overlay behavior with all available
+  tiles rendered for every enabled layer.
+- Mobile/coarse-pointer browsers load at most 12 analytical raster tiles near
+  the current padded viewport and rebuild that bounded set after navigation.
+  Only one heavy analytical toggle is active at a time; off-screen image
+  sources and inactive official GeoJSON are removed instead of merely hidden.
+- Mobile MapLibre uses a 1.5 pixel-ratio cap, 24-tile basemap cache, and one
+  cache zoom level. Connectivity and Q100 click-index canvases use three-entry
+  LRU-style caches. The UI explains that panning or zooming reveals the full
+  available coverage.
+- Cache versions: `style.css?v=12`, `app.js?v=23`.
+
 ## D42 Spatially distributed D19 review points (2026-07-21)
 
 - Split local candidate spacing (`CANDIDATE_SEP_M = 50`) from public marker
