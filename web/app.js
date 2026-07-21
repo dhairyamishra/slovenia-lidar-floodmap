@@ -1,6 +1,9 @@
 'use strict';
 
 const BASEMAP_STYLE = 'https://tiles.openfreemap.org/styles/dark';
+const MOBILE_LAYOUT = window.matchMedia(
+  '(max-width: 768px), (hover: none) and (pointer: coarse)'
+);
 const GURS_ORTHOPHOTO_URL =
   'https://ipi.eprostor.gov.si/wms-si-gurs-dts/wms?' +
   'SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&' +
@@ -130,50 +133,16 @@ const OFFICIAL_SCENARIOS = [
   { key: 'q500', label: 'Q500' },
 ];
 
-const VIEWPORT_LAYER_LIMITS = {
-  d19_review: 48,
-  d19_diagnostic: 16,
-  q100_comparison: 48,
-  ndvi: 16,
-  classification: 32,
-};
-
-function tileIntersectsBounds(tile, bounds) {
-  return tile.bounds.east >= bounds.getWest() &&
-    tile.bounds.west <= bounds.getEast() &&
-    tile.bounds.north >= bounds.getSouth() &&
-    tile.bounds.south <= bounds.getNorth();
-}
-
-function tilesForViewport(map, tiles, limit) {
-  const bounds = map.getBounds();
-  const center = map.getCenter();
-  const visible = tiles.filter(tile => tileIntersectsBounds(tile, bounds));
-  if (visible.length <= limit) return visible;
-  return visible
-    .map(tile => ({
-      tile,
-      distance: (tile.bounds.center[0] - center.lng) ** 2 +
-        (tile.bounds.center[1] - center.lat) ** 2,
-    }))
-    .sort((a, b) => a.distance - b.distance)
-    .slice(0, limit)
-    .map(item => item.tile);
-}
-
 function removeImageLayer(map, layerId, sourceId) {
   if (map.getLayer(layerId)) map.removeLayer(layerId);
   if (map.getSource(sourceId)) map.removeSource(sourceId);
 }
 
-function syncTileLayerViewport(map, tiles, key, active, opacity = null) {
-  const selected = active
-    ? new Set(tilesForViewport(map, tiles, VIEWPORT_LAYER_LIMITS[key]).map(tile => tile.name))
-    : new Set();
+function syncTileLayerSet(map, tiles, key, active, opacity = null) {
   tiles.forEach(tile => {
     const layerId = `layer-${key}-${tile.name}`;
     const sourceId = `src-${key}-${tile.name}`;
-    if (selected.has(tile.name)) {
+    if (active && tile.files[key]) {
       ensureTileLayer(map, tile, key);
       if (map.getLayer(layerId)) {
         map.setLayoutProperty(layerId, 'visibility', 'visible');
@@ -241,11 +210,19 @@ function addRiskPoints(map, riskPoints) {
     const p = f.properties;
     const [lng, lat] = f.geometry.coordinates;
 
-    const el = document.createElement('div');
+    // MapLibre owns the anchor transform. Animate only a nested element so
+    // hover cannot compose with the geographic position.
+    const anchor = document.createElement('div');
+    anchor.className = 'risk-marker-anchor';
+    const el = document.createElement('button');
+    el.type = 'button';
     el.className = 'risk-marker';
     el.textContent = p.rank;
+    el.setAttribute('aria-label', `Open experimental D19 review point ${p.rank}`);
+    anchor.appendChild(el);
 
-    el.addEventListener('click', () => {
+    el.addEventListener('click', event => {
+      event.stopPropagation();
       const tileLabel = p.tile ? `<div class="popup-row">
           <span class="popup-key">Tile</span>
           <span class="popup-val">${p.tile}</span></div>` : '';
@@ -274,7 +251,7 @@ function addRiskPoints(map, riskPoints) {
       ).addTo(map);
     });
 
-    const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
+    const marker = new maplibregl.Marker({ element: anchor, anchor: 'center' })
       .setLngLat([lng, lat])
       .addTo(map);
     riskMarkers.push(marker);
@@ -395,9 +372,8 @@ function wireControls(map, manifest, validationState) {
   Object.entries(KEY_ALIAS).forEach(([alias, key]) => {
     const chk = document.getElementById(`toggle-${alias}`);
     const slider = document.getElementById(`opacity-${alias}`);
-    const update = () => syncTileLayerViewport(map, tiles, key, chk.checked, slider.value / 100);
+    const update = () => syncTileLayerSet(map, tiles, key, chk.checked, slider.value / 100);
     chk.addEventListener('change', update);
-    map.on('moveend', update);
 
     const valEl  = document.getElementById(`val-${alias}`);
     slider.addEventListener('input', () => {
@@ -425,16 +401,12 @@ function wireControls(map, manifest, validationState) {
   function setCoastalVisibility() {
     const activeKey = coastalScenario.value;
     const visible = coastalToggle.checked;
-    const selected = new Set(
-      (visible ? tilesForViewport(map, coastalTiles, coastalTiles.length) : [])
-        .map(tile => tile.name)
-    );
     coastalTiles.forEach(tile => {
       COASTAL_SCENARIOS.forEach(({ key }) => {
         if (!tile.files.coastal[key]) return;
         const layerId = `layer-coastal-${key}-${tile.name}`;
         const sourceId = `src-coastal-${key}-${tile.name}`;
-        if (selected.has(tile.name) && key === activeKey) {
+        if (visible && key === activeKey) {
           ensureCoastalLayer(map, tile, key);
           if (map.getLayer(layerId)) map.setLayoutProperty(layerId, 'visibility', 'visible');
         } else {
@@ -451,7 +423,6 @@ function wireControls(map, manifest, validationState) {
   } else {
     coastalToggle.addEventListener('change', setCoastalVisibility);
     coastalScenario.addEventListener('change', setCoastalVisibility);
-    map.on('moveend', setCoastalVisibility);
     coastalOpacity.addEventListener('input', () => {
       const v = coastalOpacity.value / 100;
       coastalTiles.forEach(tile => {
@@ -469,11 +440,30 @@ function wireControls(map, manifest, validationState) {
   wireGuidedViews(map, manifest);
 }
 
-function setPanelOpen(open) {
+function setPanelOpen(open, manageFocus = false) {
+  const mobile = MOBILE_LAYOUT.matches;
+  const panel = document.getElementById('panel');
   document.body.classList.toggle('panel-collapsed', !open);
   const button = document.getElementById('panel-toggle');
   button.setAttribute('aria-expanded', String(open));
   button.textContent = open ? 'Close layers' : 'Layers';
+
+  panel.inert = mobile && !open;
+  if (mobile) {
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-modal', 'true');
+    panel.setAttribute('aria-hidden', String(!open));
+  } else {
+    panel.removeAttribute('role');
+    panel.removeAttribute('aria-modal');
+    panel.removeAttribute('aria-hidden');
+  }
+
+  if (manageFocus) {
+    window.requestAnimationFrame(() => {
+      (open ? document.getElementById('panel-close') : button).focus();
+    });
+  }
 }
 
 function setToggleState(id, checked) {
@@ -504,18 +494,29 @@ function fitTiles(map, tiles) {
   const south = Math.min(...tiles.map(tile => tile.bounds.south));
   const north = Math.max(...tiles.map(tile => tile.bounds.north));
   map.fitBounds([[west, south], [east, north]], {
-    padding: window.matchMedia('(max-width: 640px)').matches ? 28 : 70,
+    padding: MOBILE_LAYOUT.matches ? 28 : 70,
     duration: 0,
   });
 }
 
 function wireGuidedViews(map, manifest) {
-  const mobile = window.matchMedia('(max-width: 640px)');
-  setPanelOpen(!mobile.matches);
+  setPanelOpen(!MOBILE_LAYOUT.matches);
   document.getElementById('panel-toggle').addEventListener('click', () => {
-    setPanelOpen(document.body.classList.contains('panel-collapsed'));
+    setPanelOpen(document.body.classList.contains('panel-collapsed'), true);
   });
-  mobile.addEventListener('change', event => setPanelOpen(!event.matches));
+  document.getElementById('panel-close').addEventListener('click', () => {
+    setPanelOpen(false, true);
+  });
+  document.getElementById('panel-backdrop').addEventListener('click', () => {
+    setPanelOpen(false, true);
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && MOBILE_LAYOUT.matches &&
+        !document.body.classList.contains('panel-collapsed')) {
+      setPanelOpen(false, true);
+    }
+  });
+  MOBILE_LAYOUT.addEventListener('change', event => setPanelOpen(!event.matches));
 
   document.querySelectorAll('[data-region-preset]').forEach(button => {
     button.addEventListener('click', () => {
@@ -535,7 +536,7 @@ function wireGuidedViews(map, manifest) {
           setToggleState('toggle-coastal', true);
         }
       });
-      if (mobile.matches) setPanelOpen(false);
+      if (MOBILE_LAYOUT.matches) setPanelOpen(false, true);
     });
   });
 }
@@ -761,7 +762,7 @@ function wireD19Controls(map, tiles) {
 
   function updateVisibility() {
     keys.forEach(key => {
-      syncTileLayerViewport(
+      syncTileLayerSet(
         map, tiles, key, toggle.checked && mode.value === key, opacity.value / 100
       );
     });
@@ -769,7 +770,6 @@ function wireD19Controls(map, tiles) {
 
   toggle.addEventListener('change', updateVisibility);
   mode.addEventListener('change', updateVisibility);
-  map.on('moveend', updateVisibility);
   opacity.addEventListener('input', () => {
     const next = opacity.value / 100;
     keys.forEach(key => tileNames.forEach(name => {
@@ -993,14 +993,13 @@ function wireOfficialValidationControls(map, validationState, manifest) {
         map.setLayoutProperty(layerId, 'visibility', active ? 'visible' : 'none');
       }
     });
-    syncTileLayerViewport(map, tiles, 'q100_comparison', comparing);
+    syncTileLayerSet(map, tiles, 'q100_comparison', comparing);
     comparisonSummary.hidden = !comparing;
   }
   toggle.addEventListener('change', updateVisibility);
   scenario.addEventListener('change', updateVisibility);
   validityToggle.addEventListener('change', updateVisibility);
   depthToggle.addEventListener('change', updateVisibility);
-  map.on('moveend', updateVisibility);
   comparisonToggle.addEventListener('change', () => {
     const enabled = comparisonToggle.checked;
     toggle.checked = false;

@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>CLSS Slovenia — Flood Susceptibility &amp; Terrain Screening</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="style.css?v=9">
+  <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 
@@ -26,8 +26,17 @@
   <!-- Map -->
   <div id="map"></div>
 
+  <div class="panel-backdrop" id="panel-backdrop" aria-hidden="true"></div>
+
   <!-- Side panel -->
-  <aside class="panel" id="panel">
+  <aside class="panel" id="panel" aria-label="Map layers and guided views">
+    <div class="mobile-sheet-header">
+      <div class="mobile-sheet-title">
+        <span>Map controls</span>
+        <strong>Layers &amp; views</strong>
+      </div>
+      <button type="button" id="panel-close" class="mobile-sheet-close" aria-label="Close map controls">Done</button>
+    </div>
     <div class="panel-section panel-section--guide">
       <h3 class="panel-heading">How to read the map</h3>
       <p class="panel-intro">Each switch adds a different kind of evidence. They are screens for exploration, not a flood forecast or a single combined score.</p>
@@ -342,6 +351,6 @@
   <div id="popup-content" style="display:none;"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=18"></script>
+  <script src="app.js?v=21"></script>
 </body>
 </html>

@@ -10,6 +10,39 @@
 > The active observed-event enhancement tracker is
 > `UPPER_SAVINJA_OBSERVED_EVENT_ENHANCEMENT_PLAN.md`.
 
+## D41 Mobile bottom-sheet controls (2026-07-21)
+
+- Mobile and coarse-pointer browsers now open with the map unobstructed and a
+  44 px Layers button. It opens the existing controls in an 82dvh bottom sheet
+  with a sticky header, backdrop, safe-area padding, and contained scrolling.
+- Done, backdrop click, Escape, and the top-bar action close the sheet. Hidden
+  controls are inert and focus returns to Layers. Guided presets also close the
+  sheet after changing the view.
+- Mobile form controls and D19 review markers have larger touch targets, and
+  16 px select text avoids iOS focus zoom. Secondary reading steps are hidden
+  only on mobile to put guided presets and layers closer to the top.
+- Desktop CSS and behavior remain unchanged: browser verification measured the
+  original panel at 304 px wide, 12 px left, and 58 px top, with the mobile
+  header, backdrop, and top-bar toggle hidden.
+- Verification: `node --check web/app.js`, all 90 `.venv` unit tests, live
+  390x844 responsive checks (zero horizontal overflow, focus/Escape behavior,
+  44 px targets), and a reset 1280x720 desktop check.
+
+## D40 Complete active overlay coverage (2026-07-21)
+
+- Reversed D37's viewport-based raster culling. When a raster toggle is active,
+  every available tile for that layer is registered and visible across the
+  complete dataset; panning no longer removes distant overlay sources.
+- Inactive overlays remain unloaded, and official GeoJSON remains on-demand.
+  Connectivity already used full-domain activation and required no change.
+
+## D39 Stable D19 review-point hover (2026-07-21)
+
+- MapLibre now positions an inert `.risk-marker-anchor`; hover/focus scaling is
+  applied only to its nested button. This prevents CSS transform composition
+  from moving a review point away from its geographic coordinate.
+- Review points are keyboard-focusable and have rank-specific accessible names.
+
 ## D38 Optional Slovenia aerial basemap (2026-07-21)
 
 - Added an off-by-default Dark map / Aerial imagery selector using the official

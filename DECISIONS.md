@@ -598,6 +598,76 @@ the same bounded way as an ordinary raster base layer.
 **Reversible:** Remove `initAerialBasemap`, the GURS URL constant, and the base
 map selector. No pipeline output or manifest migration is involved.
 
+### D39 — Isolate review-marker animation from MapLibre positioning
+
+**Decision:** Give each D19 review point a non-animated outer anchor owned by
+MapLibre and a nested button that owns hover/focus scaling. Never animate or
+apply individual transform properties to the MapLibre marker element itself.
+
+**Why:** MapLibre continuously positions DOM markers with a CSS `transform`.
+Applying the individual CSS `scale` property to that same element can compose
+with its translated position, making a point appear to shift as hover starts
+or ends. A nested visual element keeps geographic positioning and animation in
+separate transform contexts.
+
+**Result:** Hover enlarges the marker around its fixed centre without changing
+its coordinate. Using a button also adds native keyboard activation and an
+accessible rank-specific label.
+
+**Reversible:** Remove the anchor wrapper and restore the marker element only
+if the replacement hover treatment never changes any transform property on the
+MapLibre-owned element.
+
+### D40 — Prefer complete active overlays over viewport culling
+
+**Decision:** Reverse the raster viewport-culling portion of D37. When D19,
+NDVI, classification, Q100 comparison, or a coastal scenario is enabled,
+register and display every manifest-backed tile available for that layer.
+Remove the per-layer caps, viewport intersection selection, and `moveend`
+source rebuilding. Keep inactive raster families and official GeoJSON
+on-demand.
+
+**Why:** Viewport culling reduced requests but made an active overlay appear
+partial while navigating and could temporarily hide available results near the
+view boundary. For this application, a toggle should mean the complete known
+coverage is active everywhere, providing a more predictable exploration
+experience.
+
+**Trade-off:** Activating a large raster family now creates and downloads all
+of its available image sources, so the first activation can use substantially
+more network, memory, and MapLibre resources. This is an explicit UX-over-
+performance choice. The bounded Pages artifact and default startup remain
+unchanged because inactive layers are still not registered.
+
+**Reversible:** Restore viewport selection and movement synchronization around
+`ensureTileLayer`, together with explicit, tested limits for every raster
+family. Do not reintroduce it silently because it changes the meaning of an
+active toggle.
+
+### D41 — Use a touch-first bottom sheet on mobile
+
+**Decision:** Preserve the desktop sidebar exactly as-is, but present the same
+controls as a closed-by-default bottom sheet on narrow or coarse-pointer
+devices. Add a backdrop, sticky sheet header, explicit close button, Escape
+handling, focus return, inert hidden content, 44 px touch targets, dynamic
+viewport sizing, overscroll containment, and device safe-area padding.
+
+**Why:** The previous mobile treatment only moved the desktop panel near the
+bottom of the screen. It could occupy almost the whole viewport, left lengthy
+instructions ahead of the controls, and did not isolate focus or account for
+phone notches and home indicators. A bottom sheet keeps the map usable as the
+primary surface while making layer controls comfortable to operate by touch.
+
+**Result:** Mobile opens to the full map with one visible Layers action. The
+sheet uses at most 82% of the dynamic viewport, hides secondary reading steps,
+has no horizontal overflow at 390 px, and can be dismissed by Done, the
+backdrop, Escape, or the top-bar action. Desktop retains its original 304 px
+panel at 12 px left / 58 px top with no mobile-only elements visible.
+
+**Reversible:** Remove the mobile sheet header/backdrop and D41 media block,
+then restore the simple 640 px drawer query and `setPanelOpen` behavior. The
+layer markup and MapLibre implementation do not otherwise depend on the sheet.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*
