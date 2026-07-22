@@ -11,6 +11,8 @@ threshold. Outside official validity is unavailable rather than negative.
 from __future__ import annotations
 
 import json
+import os
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -40,9 +42,9 @@ CATEGORY = {
     "d19_unavailable_official_yes": 6,
 }
 VISUAL_COLORS = {
-    CATEGORY["official_only"]: (56, 189, 248, 220),
-    CATEGORY["d19_only"]: (249, 115, 22, 225),
-    CATEGORY["overlap"]: (192, 132, 252, 240),
+    CATEGORY["official_only"]: (186, 222, 253, 150),
+    CATEGORY["d19_only"]: (67, 56, 202, 225),
+    CATEGORY["overlap"]: (249, 115, 22, 240),
 }
 REGION_LABELS = {
     "01-koper": "Koper",
@@ -116,6 +118,21 @@ def visual_rgba(category):
     return rgba
 
 
+def save_png(image, path):
+    """Write through a temporary file so local preview reads cannot interrupt export."""
+    temporary = path.with_name(f".{path.name}.tmp")
+    image.save(temporary, format="PNG", optimize=True)
+    for attempt in range(10):
+        try:
+            os.replace(temporary, path)
+            return
+        except OSError:
+            if attempt == 9:
+                temporary.unlink(missing_ok=True)
+                raise
+            time.sleep(0.1)
+
+
 def empty_counts():
     return {name: 0 for name in CATEGORY}
 
@@ -168,12 +185,14 @@ def main():
         tile_dir = ROOT / "web" / "data" / "tiles" / tile_name
         visual_path = tile_dir / "q100_d19_comparison.png"
         index_path = tile_dir / "q100_d19_comparison_index.png"
-        Image.fromarray(visual_rgba(category), "RGBA").resize(
+        visual = Image.fromarray(visual_rgba(category), "RGBA").resize(
             (WEB_TILE_SIZE, WEB_TILE_SIZE), Image.Resampling.NEAREST
-        ).save(visual_path, optimize=True)
-        Image.fromarray(category, "L").resize(
+        )
+        index = Image.fromarray(category, "L").resize(
             (WEB_TILE_SIZE, WEB_TILE_SIZE), Image.Resampling.NEAREST
-        ).save(index_path, optimize=True)
+        )
+        save_png(visual, visual_path)
+        save_png(index, index_path)
         prefix = f"tiles/{tile_name}"
         tile["files"]["q100_comparison"] = f"{prefix}/{visual_path.name}"
         tile["files"]["q100_comparison_index"] = f"{prefix}/{index_path.name}"
@@ -193,9 +212,9 @@ def main():
         "official_semantics": "DRSV-IKPN-Q100-static-planning-reference-not-observed-event",
         "categories": CATEGORY,
         "colors": {
-            "official_only": "#38bdf8",
-            "d19_only": "#f97316",
-            "overlap": "#c084fc",
+            "official_only": "#badefd",
+            "d19_only": "#4338ca",
+            "overlap": "#f97316",
             "neither": "transparent",
             "outside_validity": "transparent-with-dashed-validity-boundary",
             "d19_unavailable_official_no": "sparse-gray-hatch",

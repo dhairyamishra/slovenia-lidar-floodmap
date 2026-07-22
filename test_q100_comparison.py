@@ -51,17 +51,25 @@ class ComparisonClassificationTests(unittest.TestCase):
         self.assertEqual(summary["shares_percent"]["official_only"], 30.0)
         self.assertEqual(summary["comparable_coverage_of_validity_percent"], 95.24)
 
-    def test_overlap_uses_contrasting_purple(self):
-        category = np.array([[comparison.CATEGORY["overlap"]]], dtype=np.uint8)
+    def test_comparison_categories_use_distinct_requested_colors(self):
+        category = np.array([[
+            comparison.CATEGORY["official_only"],
+            comparison.CATEGORY["d19_only"],
+            comparison.CATEGORY["overlap"],
+        ]], dtype=np.uint8)
         rgba = comparison.visual_rgba(category)
-        self.assertEqual(tuple(rgba[0, 0]), (192, 132, 252, 240))
+        self.assertEqual(tuple(rgba[0, 0]), (186, 222, 253, 150))
+        self.assertEqual(tuple(rgba[0, 1]), (67, 56, 202, 225))
+        self.assertEqual(tuple(rgba[0, 2]), (249, 115, 22, 240))
 
 
 class ComparisonWebAssetTests(unittest.TestCase):
     def test_all_tiles_register_visual_and_click_index_assets(self):
         manifest = json.loads((ROOT / "web/data/manifest.json").read_text(encoding="utf-8"))
         self.assertEqual(manifest["q100_comparison"]["schema_version"], 2)
-        self.assertEqual(manifest["q100_comparison"]["colors"]["overlap"], "#c084fc")
+        self.assertEqual(manifest["q100_comparison"]["colors"]["official_only"], "#badefd")
+        self.assertEqual(manifest["q100_comparison"]["colors"]["d19_only"], "#4338ca")
+        self.assertEqual(manifest["q100_comparison"]["colors"]["overlap"], "#f97316")
         self.assertEqual(set(manifest["q100_comparison"]["regions"]), {
             "01-koper", "05-ljubljana", "08-kamnik",
         })

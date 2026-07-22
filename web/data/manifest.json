@@ -19149,7 +19149,7 @@
   ],
   "q100_comparison": {
     "schema_version": 2,
-    "generated": "2026-07-22T14:46:11.268013+00:00",
+    "generated": "2026-07-22T15:37:03.630352+00:00",
     "semantics": "categorical-frozen-d19-review-mask-versus-official-static-q100",
     "resolution_m": 2,
     "d19_review_threshold": 0.925,
@@ -19165,9 +19165,9 @@
       "d19_unavailable_official_yes": 6
     },
     "colors": {
-      "official_only": "#38bdf8",
-      "d19_only": "#f97316",
-      "overlap": "#c084fc",
+      "official_only": "#badefd",
+      "d19_only": "#4338ca",
+      "overlap": "#f97316",
       "neither": "transparent",
       "outside_validity": "transparent-with-dashed-validity-boundary",
       "d19_unavailable_official_no": "sparse-gray-hatch",

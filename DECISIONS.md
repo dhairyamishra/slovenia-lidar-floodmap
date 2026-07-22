@@ -749,20 +749,21 @@ active coverage.
 `wireControls`, then re-enable the old guided presets. No data regeneration is
 needed because this decision changes presentation only.
 
-### D45 — Use purple for agreement in the Q100 comparison
+### D45 — Use distinct colors for the Q100 comparison
 
-**Decision:** Display the **Both** category in light purple (`#c084fc`) instead
-of near-white. Keep official-only blue and experimental-only orange unchanged.
+**Decision:** Use light blue (`#badefd`) at 59% opacity for official-only, dark
+indigo-purple (`#4338ca`) for experimental-only, and orange (`#f97316`) for
+**Both**.
 
-**Why:** White visually dominated the map and clashed with the bright official
-blue. Purple is distinct from both source colors and remains easy to see on the
-dark basemap.
+**Why:** White visually dominated the map, while light purple remained too
+close in lightness to the official blue. The final assignment gives each class
+a distinct hue and makes agreement orange rather than another cool color.
 
 **Result:** The comparison display images and matching sidebar legend use the
-new color. Category indices, area counts, thresholds, and model results are
+new colors. Category indices, area counts, thresholds, and model results are
 unchanged.
 
-**Reversible:** Restore the former overlap color in
+**Reversible:** Restore the former category colors in
 `prepare_q100_comparison.py` and `web/style.css`, then rerun the comparison
 generator.
 

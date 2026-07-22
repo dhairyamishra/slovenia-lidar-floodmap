@@ -9,8 +9,8 @@ An interactive web map overlaying riverine flood susceptibility, official DRSV s
 The public interface has three simple choices: compare the experimental result
 with the official Q100 planning map, show land and buildings, or show spaced
 places selected for review. The comparison switch automatically adds the
-official-study boundary and uses blue for the official map, orange for the
-experimental result, and purple where both mark the same place. Specialist
+official-study boundary and uses blue for the official map, dark purple for
+the experimental result, and orange where both mark the same place. Specialist
 research outputs remain in the project data but are not shown in the main
 sidebar. Neither the experiment nor the review points are flood predictions.
 

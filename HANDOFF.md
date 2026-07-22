@@ -10,13 +10,15 @@
 > The active observed-event enhancement tracker is
 > `UPPER_SAVINJA_OBSERVED_EVENT_ENHANCEMENT_PLAN.md`.
 
-## D45 Purple comparison overlap (2026-07-22)
+## D45 Distinct comparison palette (2026-07-22)
 
-- Changed the **Both** category from white to light purple (`#c084fc`) so it
-  remains bright on the dark map without clashing with the official blue.
+- The final comparison palette uses official-only light blue (`#badefd`) at
+  59% map opacity,
+  experimental-only dark indigo-purple (`#4338ca`), and **Both** orange
+  (`#f97316`). This keeps all three categories visually separate.
 - Regenerated only the comparison display images. Category indices, area
   counts, thresholds, and model results are unchanged.
-- Cache versions: `style.css?v=14`, `app.js?v=24`.
+- Cache versions: `style.css?v=19`, `app.js?v=24`.
 
 ## D44 Three-choice public sidebar (2026-07-22)
 
