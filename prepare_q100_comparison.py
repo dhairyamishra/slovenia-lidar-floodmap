@@ -42,7 +42,7 @@ CATEGORY = {
 VISUAL_COLORS = {
     CATEGORY["official_only"]: (56, 189, 248, 220),
     CATEGORY["d19_only"]: (249, 115, 22, 225),
-    CATEGORY["overlap"]: (248, 250, 252, 240),
+    CATEGORY["overlap"]: (192, 132, 252, 240),
 }
 REGION_LABELS = {
     "01-koper": "Koper",
@@ -195,7 +195,7 @@ def main():
         "colors": {
             "official_only": "#38bdf8",
             "d19_only": "#f97316",
-            "overlap": "#f8fafc",
+            "overlap": "#c084fc",
             "neither": "transparent",
             "outside_validity": "transparent-with-dashed-validity-boundary",
             "d19_unavailable_official_no": "sparse-gray-hatch",
@@ -215,7 +215,7 @@ def main():
             "outside-validity-is-comparison-unavailable",
         ],
     }
-    WEB_MANIFEST.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    WEB_MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(f"Wrote {WEB_MANIFEST}")
     print(json.dumps(region_summaries, indent=2))
 
