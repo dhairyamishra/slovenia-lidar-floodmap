@@ -721,6 +721,34 @@ source-release branches, cache bounds, and mobile MapLibre options. Doing so
 restores D40 everywhere but also restores the measured multi-gigabyte iOS
 failure mode.
 
+## 2026-07-22
+
+### D44 — Make the public map a three-choice experience
+
+**Decision:** Show exactly three analytical switches in the public sidebar:
+the derived official-Q100 comparison, land and buildings, and spaced review
+points. Make the comparison one complete action that also shows the official
+study boundary. Remove separate public controls for D19, official return
+periods, validity, depth, connectivity, scenarios, NDVI, coastal exposure, and
+opacity. Keep their data and calculation code for research and reproducibility.
+
+**Why:** The former sidebar exposed the history of the research instead of the
+main question. A first-time visitor had to understand many specialist terms
+and could easily miss the most useful comparison. The derived comparison
+already contains the official map, experimental result, agreement, disagreement,
+and the boundary where the comparison is valid.
+
+**Result:** The first switch directly answers where the two maps agree or
+disagree. One Ljubljana start button moves to the useful area and enables that
+switch. Land/building context and review points remain optional. Public labels,
+legends, About text, and popups use short plain English, with no sliders or
+scenario selectors. Mobile keeps D43's bounded loading and desktop keeps full
+active coverage.
+
+**Reversible:** Restore the removed HTML controls and their wiring in
+`wireControls`, then re-enable the old guided presets. No data regeneration is
+needed because this decision changes presentation only.
+
 ---
 
 *Append new entries as: `### D<N> — <short title>` under a `## YYYY-MM-DD` heading.*

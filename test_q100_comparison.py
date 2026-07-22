@@ -66,19 +66,19 @@ class ComparisonWebAssetTests(unittest.TestCase):
     def test_sidebar_and_app_use_derived_categories_not_blended_source_layers(self):
         html = (ROOT / "web/index.html").read_text(encoding="utf-8")
         app = (ROOT / "web/app.js").read_text(encoding="utf-8")
-        for label in ("Official Q100 only", "D19 only", "Both", "Neither"):
+        for label in ("Official map only", "Experimental result only", "Both", "Neither"):
             self.assertIn(label, html)
         self.assertIn("q100_comparison", app)
         self.assertIn("q100_comparison_index", app)
-        self.assertIn("Official Q100:", app)
-        self.assertIn("Official study validity:", app)
+        self.assertIn("Official map:", app)
+        self.assertIn("Comparison area:", app)
         self.assertNotIn("visual overlap", html.lower())
 
     def test_tile_rasters_keep_desktop_coverage_with_mobile_memory_bound(self):
         app = (ROOT / "web/app.js").read_text(encoding="utf-8")
         self.assertIn("function ensureTileLayer", app)
         self.assertIn("function ensureCoastalLayer", app)
-        self.assertIn("syncTileLayerSet(map, tiles, 'q100_comparison', comparing)", app)
+        self.assertIn("syncTileLayerSet(map, tiles, 'q100_comparison', active)", app)
         self.assertIn("if (!MOBILE_LAYOUT.matches) return tiles", app)
         self.assertIn("tilesForMobileViewport", app)
         self.assertIn("removeImageLayer(map, layerId, sourceId)", app)

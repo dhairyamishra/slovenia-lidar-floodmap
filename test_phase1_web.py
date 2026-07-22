@@ -84,15 +84,13 @@ class OfficialWebContractTests(unittest.TestCase):
         for entry in manifest["layers"].values():
             self.assertTrue((path.parent / entry["file"]).exists())
 
-    def test_sidebar_exposes_phase1_controls(self):
+    def test_sidebar_exposes_only_the_combined_public_comparison(self):
         html = (ROOT / "web/index.html").read_text(encoding="utf-8")
+        self.assertIn('id="toggle-q100-comparison"', html)
         for control_id in (
-            "d19-display-mode",
-            "toggle-official-validity",
-            "toggle-official-depth",
-            "toggle-q100-comparison",
+            "d19-display-mode", "toggle-official-validity", "toggle-official-depth",
         ):
-            self.assertIn(f'id="{control_id}"', html)
+            self.assertNotIn(f'id="{control_id}"', html)
 
 
 if __name__ == "__main__":

@@ -10,6 +10,20 @@
 > The active observed-event enhancement tracker is
 > `UPPER_SAVINJA_OBSERVED_EVENT_ENHANCEMENT_PLAN.md`.
 
+## D44 Three-choice public sidebar (2026-07-22)
+
+- Replaced the research-heavy sidebar with exactly three switches: **Compare
+  with official Q100 flood map**, **Show land and buildings**, and **Show
+  places to review**.
+- The comparison switch now handles the derived Q100 categories and official
+  comparison boundary together. The separate D19, official scenario,
+  validity, depth, connectivity, NDVI, coastal, scenario, and opacity controls
+  are no longer shown publicly; their calculations and files remain intact.
+- The only guided action is **Start with the Ljubljana comparison**, which
+  moves to Ljubljana and enables the comparison. Labels, legends, About copy,
+  and both map popups now use short plain-English explanations.
+- Cache versions: `style.css?v=13`, `app.js?v=24`.
+
 ## D43 Mobile low-memory map mode (2026-07-21)
 
 - Desktop retains D40's complete active-overlay behavior with all available

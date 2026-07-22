@@ -13,10 +13,10 @@ class FrontendDeliveryTests(unittest.TestCase):
         cls.css = (ROOT / "web/style.css").read_text(encoding="utf-8")
 
     def test_official_geojson_is_registered_on_demand(self):
-        self.assertIn("function ensureScenario(key)", self.app)
         self.assertIn("function ensureValidity()", self.app)
-        self.assertIn("function ensureDepth(key)", self.app)
-        self.assertIn("if (active) validationState.ensureScenario(key)", self.app)
+        self.assertIn("if (active) {", self.app)
+        self.assertIn("validationState.ensureValidity()", self.app)
+        self.assertIn("validationState.removeValidity()", self.app)
 
     def test_aerial_basemap_is_off_by_default_and_slovenia_bounded(self):
         self.assertIn("SI.GURS.ZPDZ%3ADOF025", self.app)
@@ -39,19 +39,19 @@ class FrontendDeliveryTests(unittest.TestCase):
     def test_mobile_low_memory_mode_releases_and_bounds_heavy_data(self):
         self.assertIn("const MOBILE_INDEX_CACHE_LIMIT = 3", self.app)
         self.assertIn("function cacheCanvasPromise", self.app)
-        self.assertIn("validationState.removeScenario(key)", self.app)
         self.assertIn("validationState.removeValidity()", self.app)
-        self.assertIn("validationState.removeDepth(key)", self.app)
         self.assertIn("const MOBILE_HEAVY_TOGGLE_IDS", self.app)
         self.assertIn("mapOptions.maxTileCacheSize = 24", self.app)
         self.assertIn("mapOptions.pixelRatio", self.app)
-        self.assertIn("Mobile low-memory mode", self.html)
+        self.assertIn("On phones, the map loads nearby data", self.html)
 
     def test_guided_views_and_mobile_panel_are_accessible(self):
-        for preset in ("ljubljana", "savinja", "koper"):
-            self.assertIn(f'data-region-preset="{preset}"', self.html)
+        self.assertIn('data-region-preset="ljubljana"', self.html)
+        self.assertNotIn('data-region-preset="savinja"', self.html)
+        self.assertNotIn('data-region-preset="koper"', self.html)
         self.assertIn('aria-controls="panel"', self.html)
         self.assertIn("function wireGuidedViews", self.app)
+        self.assertIn("setToggleState('toggle-q100-comparison', true)", self.app)
 
     def test_mobile_panel_is_an_accessible_touch_bottom_sheet(self):
         self.assertIn("viewport-fit=cover", self.html)
@@ -76,17 +76,13 @@ class FrontendDeliveryTests(unittest.TestCase):
 
     def test_context_controls_have_accessible_names(self):
         for label in (
-            "LiDAR-derived vegetation greenness",
-            "Land Classification",
-            "Connected Coastal Low-Land Exposure",
-            "Experimental D19 Review Points",
+            "Compare with official Q100 flood map",
+            "Show land and buildings",
+            "Show places to review",
         ):
             self.assertIn(f'aria-label="{label}"', self.html)
-        for slider in (
-            "opacity-susc", "opacity-required-stage", "opacity-official",
-            "opacity-ndvi", "opacity-cls", "opacity-coastal",
-        ):
-            self.assertIn(f'for="{slider}"', self.html)
+        self.assertEqual(self.html.count('type="checkbox"'), 3)
+        self.assertNotIn('type="range"', self.html)
 
     def test_marker_hover_does_not_transform_maplibre_anchor(self):
         self.assertIn("anchor.className = 'risk-marker-anchor'", self.app)

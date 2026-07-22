@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CLSS Slovenia — Flood Susceptibility &amp; Terrain Screening</title>
+  <title>Slovenia Flood Map and Terrain Explorer</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="style.css?v=12">
+  <link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
 
@@ -15,7 +15,7 @@
     <div class="topbar-left">
       <span class="topbar-logo">&#9650;</span>
       <span class="topbar-title">CLSS Slovenia</span>
-      <span class="topbar-subtitle">Flood Susceptibility &amp; Terrain Screening</span>
+      <span class="topbar-subtitle">Compare flood maps and terrain</span>
     </div>
     <div class="topbar-right">
       <span class="topbar-meta" id="topbar-meta">Loading map inventory…</span>
@@ -29,321 +29,101 @@
   <div class="panel-backdrop" id="panel-backdrop" aria-hidden="true"></div>
 
   <!-- Side panel -->
-  <aside class="panel" id="panel" aria-label="Map layers and guided views">
+  <aside class="panel" id="panel" aria-label="Map choices">
     <div class="mobile-sheet-header">
       <div class="mobile-sheet-title">
-        <span>Map controls</span>
-        <strong>Layers &amp; views</strong>
+        <span>Explore</span>
+        <strong>Map choices</strong>
       </div>
       <button type="button" id="panel-close" class="mobile-sheet-close" aria-label="Close map controls">Done</button>
     </div>
     <div class="panel-section panel-section--guide">
-      <h3 class="panel-heading">How to read the map</h3>
-      <p class="panel-intro">Each switch adds a different kind of evidence. They are screens for exploration, not a flood forecast or a single combined score.</p>
-      <ol class="reading-steps">
-        <li><span>1</span><p><strong>Start with the official reference.</strong> Choose Q100 for a familiar planning comparison.</p></li>
-        <li><span>2</span><p><strong>Add the experimental terrain baseline.</strong> Use its sparse review mask to inspect agreement or disagreement.</p></li>
-        <li><span>3</span><p><strong>Add the context layer for the question.</strong> Use land cover for local setting or coastal exposure for Koper.</p></li>
-      </ol>
-      <div class="region-presets" aria-label="Guided map views">
-        <button type="button" data-region-preset="ljubljana">Official Q100 · Ljubljana</button>
-        <button type="button" data-region-preset="savinja">Minimum stage · Upper Savinja</button>
-        <button type="button" data-region-preset="koper">Coastal exposure · Koper</button>
+      <h3 class="panel-heading">Explore the map</h3>
+      <p class="panel-intro">Compare the experimental terrain result with Slovenia&rsquo;s official Q100 planning map.</p>
+      <div class="region-presets" aria-label="Start exploring">
+        <button type="button" data-region-preset="ljubljana">Start with the Ljubljana comparison</button>
       </div>
-      <p class="panel-tip"><strong>Opacity tip:</strong> 30&ndash;50% is best for comparing an overlay with roads and terrain beneath it.</p>
     </div>
 
     <div class="panel-section panel-section--basemap">
       <fieldset class="basemap-picker">
-        <legend class="panel-heading">Base map</legend>
+        <legend class="panel-heading">Map background</legend>
         <div class="basemap-options">
           <label>
             <input type="radio" name="basemap" value="dark" checked>
-            <span>Dark map</span>
+            <span>Street map</span>
           </label>
           <label>
             <input type="radio" name="basemap" value="aerial">
-            <span>Aerial imagery</span>
+            <span>Aerial photo</span>
           </label>
         </div>
       </fieldset>
-      <p class="layer-hint">Official Slovenia-wide DOF025 orthophoto from GURS. Imagery loads only for the visible map when selected; findings remain above it.</p>
+      <p class="layer-hint">The aerial photo comes from Slovenia&rsquo;s official GURS map service.</p>
     </div>
 
     <div class="panel-section">
-      <h3 class="panel-heading">Map layers</h3>
-      <p class="mobile-memory-note">Mobile low-memory mode shows one data layer at a time and loads it around the current view. Pan or zoom to explore all available coverage.</p>
+      <h3 class="panel-heading">What to show</h3>
+      <p class="mobile-memory-note">On phones, the map loads nearby data as you move. Pan or zoom to explore other places.</p>
 
-      <!-- Flood susceptibility -->
-      <div class="layer-row">
+      <div class="layer-row comparison-row">
         <label class="layer-toggle">
-          <input type="checkbox" id="toggle-susc" aria-label="Experimental D19 Terrain Baseline">
+          <input type="checkbox" id="toggle-q100-comparison" aria-label="Compare with official Q100 flood map">
           <span class="toggle-track"></span>
         </label>
-        <span class="layer-name">Experimental D19 Terrain Baseline</span>
-      </div>
-      <div class="legend-bar" id="legend-susc">
-        <div class="legend-gradient" style="background: linear-gradient(to right, rgba(237,233,254,0.15), #a78bfa, #581c87);"></div>
-        <div class="legend-labels"><span>Lower experimental score</span><span>Higher</span></div>
-      </div>
-      <div class="select-row" id="d19-display-row">
-        <label class="slider-label" for="d19-display-mode">Display</label>
-        <select id="d19-display-mode" class="scenario-select" aria-label="D19 display mode">
-          <option value="d19_review" selected>Sparse review mask</option>
-          <option value="d19_diagnostic">Frozen red diagnostic surface</option>
-        </select>
-      </div>
-      <div class="slider-row">
-        <label class="slider-label" for="opacity-susc">Opacity</label>
-        <input type="range" id="opacity-susc" min="0" max="100" value="55" class="slider" aria-valuetext="55 percent">
-        <span class="slider-val" id="val-susc">55%</span>
-      </div>
-      <p class="layer-description"><strong>Shows:</strong> the frozen D19 experimental score. The default mask keeps only the upper 7.5% of its fixed regional display scale; that display cutoff is not a hazard threshold or an area percentile.</p>
-      <p class="layer-use"><strong>Use with:</strong> Q100 Comparison to inspect overlap and overprediction inside the official study domain. The frozen red diagnostic mode exposes the original saturated artifact only for technical audit.</p>
-      <p class="layer-hint layer-warning">D19 failed the current selection gate and is retained as a comparison baseline. Purple does not mean flood probability, danger, damage, or depth.</p>
-
-      <div class="divider"></div>
-
-      <!-- Connectivity-first physical river stage -->
-      <div class="layer-row">
-        <label class="layer-toggle">
-          <input type="checkbox" id="toggle-required-stage" aria-label="Minimum River Stage to Reach" disabled>
-          <span class="toggle-track"></span>
-        </label>
-        <span class="layer-name">Minimum River Stage to Reach</span>
-      </div>
-      <div class="depth-legend">
-        <span><i style="background:#075985"></i>&le;0.5 m</span>
-        <span><i style="background:#0284c7"></i>0.5&ndash;1 m</span>
-        <span><i style="background:#38bdf8"></i>1&ndash;2 m</span>
-        <span><i style="background:#94a3b8;opacity:.4"></i>&gt;3 m</span>
-      </div>
-      <div class="slider-row">
-        <label class="slider-label" for="opacity-required-stage">Opacity</label>
-        <input type="range" id="opacity-required-stage" min="0" max="100" value="70" class="slider" disabled>
-        <span class="slider-val" id="val-required-stage">70%</span>
-      </div>
-      <p class="layer-description"><strong>Shows:</strong> the physical rise above the associated channel needed for water to reach each cell through the lowest connected terrain path. Darker blue means less rise is required; faint slate means more than 3 m.</p>
-      <p class="layer-use"><strong>Interpretation:</strong> low or flat terrain is not marked unless it connects to a drainage source. Gray hatching means unavailable or edge-contaminated; amber means barrier or culvert uncertainty.</p>
-      <p class="layer-hint">This is a minimum-stage diagnostic, not probability, a live forecast, or proof that the stated river stage will occur.</p>
-
-      <div class="layer-row layer-row--compact">
-        <label class="layer-toggle">
-          <input type="checkbox" id="toggle-scenario-depth" aria-label="Scenario Inundation Depth" disabled>
-          <span class="toggle-track"></span>
-        </label>
-        <span class="layer-name layer-name--secondary">Scenario inundation depth</span>
-      </div>
-      <div class="select-row">
-        <label class="slider-label" for="connectivity-scenario">Scenario</label>
-        <select id="connectivity-scenario" class="scenario-select" disabled>
-          <option value="">No qualified scenario available</option>
-        </select>
-      </div>
-      <div class="slider-row">
-        <label class="slider-label" for="opacity-scenario-depth">Opacity</label>
-        <input type="range" id="opacity-scenario-depth" min="0" max="100" value="75" class="slider" disabled>
-        <span class="slider-val" id="val-scenario-depth">75%</span>
-      </div>
-      <div class="depth-legend">
-        <span><i style="background:#bae6fd"></i>&lt;0.5 m</span>
-        <span><i style="background:#38bdf8"></i>0.5&ndash;1.5 m</span>
-        <span><i style="background:#075985"></i>&ge;1.5 m</span>
-      </div>
-      <p class="layer-hint">Scenario controls remain disabled until a versioned stage/flow input and its scientific publication gate are present in the generated manifest.</p>
-
-      <div class="divider"></div>
-
-      <!-- Official DRSV hazard reference -->
-      <div class="layer-row">
-        <label class="layer-toggle">
-          <input type="checkbox" id="toggle-official" aria-label="Official DRSV Hazard Reference">
-          <span class="toggle-track"></span>
-        </label>
-        <span class="layer-name">Official DRSV Hazard Reference</span>
-      </div>
-      <div class="legend-bar" id="legend-official">
-        <div class="legend-gradient" style="background: linear-gradient(to right, rgba(56,189,248,0.18), rgba(56,189,248,0.85));"></div>
-        <div class="legend-labels"><span>Outside extent</span><span>Hazard extent</span></div>
-      </div>
-      <div class="select-row">
-        <label class="slider-label" for="official-scenario">Scenario</label>
-        <select id="official-scenario" class="scenario-select" aria-label="Official return-period scenario">
-          <option value="q10">Q10 &mdash; more frequent</option>
-          <option value="q100" selected>Q100 &mdash; planning reference</option>
-          <option value="q500">Q500 &mdash; rarer, larger</option>
-        </select>
-      </div>
-      <div class="slider-row">
-        <label class="slider-label" for="opacity-official">Opacity</label>
-        <input type="range" id="opacity-official" min="0" max="100" value="32" class="slider">
-        <span class="slider-val" id="val-official">32%</span>
-      </div>
-      <p class="layer-description"><strong>Shows:</strong> published static IKPN / DRSV hazard extent where it overlaps the study area. Q10, Q100, and Q500 are discharge-return-period scenarios, not live conditions.</p>
-      <p class="layer-use"><strong>Use with:</strong> switch Q10/Q100/Q500 to inspect the official study. For model-versus-reference interpretation, use the categorical comparison below instead of stacking this fill with D19.</p>
-      <p class="layer-hint">This is not the observed August 2023 event extent.</p>
-      <div class="layer-row layer-row--compact">
-        <label class="layer-toggle">
-          <input type="checkbox" id="toggle-official-validity" aria-label="Show hydraulic-study validity">
-          <span class="toggle-track"></span>
-        </label>
-        <span class="layer-name layer-name--secondary">Show hydraulic-study validity</span>
-      </div>
-      <p class="layer-hint">A missing official polygon is evidence of “outside extent” only inside this dashed validity boundary.</p>
-      <div class="layer-row layer-row--compact">
-        <label class="layer-toggle">
-          <input type="checkbox" id="toggle-official-depth" aria-label="Show Q100 depth classes">
-          <span class="toggle-track"></span>
-        </label>
-        <span class="layer-name layer-name--secondary">Show Q100 depth classes</span>
-      </div>
-      <div class="depth-legend">
-        <span><i style="background:#bae6fd"></i>&lt;0.5 m</span>
-        <span><i style="background:#38bdf8"></i>0.5&ndash;1.5 m</span>
-        <span><i style="background:#075985"></i>&ge;1.5 m</span>
-      </div>
-      <div class="layer-row layer-row--compact comparison-row">
-        <label class="layer-toggle">
-          <input type="checkbox" id="toggle-q100-comparison" aria-label="Categorical Q100 comparison">
-          <span class="toggle-track"></span>
-        </label>
-        <span class="layer-name layer-name--secondary">Categorical Q100 comparison</span>
+        <span class="layer-name">Compare with official Q100 flood map</span>
       </div>
       <div class="comparison-legend">
-        <span><i class="swatch-official"></i>Official Q100 only</span>
-        <span><i class="swatch-d19"></i>D19 only</span>
+        <span><i class="swatch-official"></i>Official map only</span>
+        <span><i class="swatch-d19"></i>Experimental result only</span>
         <span><i class="swatch-overlap"></i>Both</span>
         <span><i class="swatch-neither"></i>Neither</span>
       </div>
-      <p class="layer-description"><strong>Shows:</strong> four calculated classes on the 2 m grid inside the official study domain. Orange is a D19-only experimental signal for review; it is not confirmed flooding.</p>
-      <p class="layer-use"><strong>Use:</strong> enable this mode by itself, then click any cell for its exact official/D19/validity interpretation.</p>
-      <p class="layer-hint"><span class="validity-line-sample"></span>Outside the dashed gray validity boundary, comparison is unavailable. Transparent “neither” cells are not proof of safety.</p>
-      <div id="comparison-summary" class="comparison-summary" hidden>
-        <div class="select-row">
-          <label class="slider-label" for="comparison-summary-region">Area summary</label>
-          <select id="comparison-summary-region" class="scenario-select" aria-label="Comparison summary region"></select>
-        </div>
-        <div class="comparison-summary-grid">
-          <span>Official only</span><strong id="comparison-share-official-only">—</strong>
-          <span>D19 only</span><strong id="comparison-share-d19-only">—</strong>
-          <span>Both</span><strong id="comparison-share-overlap">—</strong>
-          <span>Neither</span><strong id="comparison-share-neither">—</strong>
-        </div>
-        <p id="comparison-coverage" class="layer-hint"></p>
-        <p class="layer-hint">Shares use only cells inside official validity where D19 terrain data exist.</p>
-      </div>
-
-      <section id="layer-section-ndvi">
-        <div class="divider"></div>
-
-        <!-- LiDAR-derived vegetation greenness -->
-        <div class="layer-row">
-        <label class="layer-toggle">
-          <input type="checkbox" id="toggle-ndvi" aria-label="LiDAR-derived vegetation greenness">
-          <span class="toggle-track"></span>
-        </label>
-        <span class="layer-name">LiDAR-Derived Vegetation Greenness</span>
-        </div>
-        <div class="legend-bar" id="legend-ndvi">
-          <div class="legend-gradient" style="background: linear-gradient(to right, #a50026, #f46d43, #fee08b, #d9ef8b, #66bd63, #1a9850);"></div>
-          <div class="legend-labels"><span>Lower relative greenness</span><span>Higher</span></div>
-        </div>
-        <div class="slider-row">
-          <label class="slider-label" for="opacity-ndvi">Opacity</label>
-          <input type="range" id="opacity-ndvi" min="0" max="100" value="75" class="slider">
-          <span class="slider-val" id="val-ndvi">75%</span>
-        </div>
-        <p class="layer-description"><strong>Shows:</strong> relative vegetation greenness from the LiDAR red and near-infrared returns. It is useful context for vegetation condition, not a flood-risk layer.</p>
-        <p class="layer-use"><strong>Use with:</strong> Land Classification to distinguish vegetation from built or bare surfaces. Compare within a tile; values are display-stretched per tile.</p>
-      </section>
+      <p class="layer-description">Blue comes from the official map. Orange comes from the experimental terrain result. White means both mark the same place.</p>
+      <p class="layer-hint"><span class="validity-line-sample"></span>The dashed line shows where the comparison can be made. Click the map for a simple explanation.</p>
 
       <div class="divider"></div>
 
-      <!-- Classification -->
       <div class="layer-row">
         <label class="layer-toggle">
-          <input type="checkbox" id="toggle-cls" aria-label="Land Classification">
+          <input type="checkbox" id="toggle-cls" aria-label="Show land and buildings">
           <span class="toggle-track"></span>
         </label>
-        <span class="layer-name">Land Classification</span>
+        <span class="layer-name">Show land and buildings</span>
       </div>
       <div class="legend-cls" id="legend-cls">
         <div class="cls-item"><span class="cls-swatch" style="background:#c29a6c;"></span>Ground</div>
-        <div class="cls-item"><span class="cls-swatch" style="background:#9ae666;"></span>Low veg</div>
-        <div class="cls-item"><span class="cls-swatch" style="background:#33b433;"></span>Mid veg</div>
-        <div class="cls-item"><span class="cls-swatch" style="background:#006600;"></span>High veg</div>
-        <div class="cls-item"><span class="cls-swatch" style="background:#e63333;"></span>Building</div>
+        <div class="cls-item"><span class="cls-swatch" style="background:#9ae666;"></span>Low plants</div>
+        <div class="cls-item"><span class="cls-swatch" style="background:#33b433;"></span>Shrubs</div>
+        <div class="cls-item"><span class="cls-swatch" style="background:#006600;"></span>Trees</div>
+        <div class="cls-item"><span class="cls-swatch" style="background:#e63333;"></span>Buildings</div>
       </div>
-      <div class="slider-row">
-        <label class="slider-label" for="opacity-cls">Opacity</label>
-        <input type="range" id="opacity-cls" min="0" max="100" value="80" class="slider">
-        <span class="slider-val" id="val-cls">80%</span>
-      </div>
-      <p class="layer-description"><strong>Shows:</strong> LiDAR return classes: ground, low/mid/high vegetation, and buildings. It describes local surface context, not exposure or asset value.</p>
-      <p class="layer-use"><strong>Use with:</strong> the experimental D19 baseline or review points to check what a highlighted location contains before drawing conclusions.</p>
+      <p class="layer-description">Shows ground, plants, trees, and buildings found in the LiDAR data.</p>
 
       <div class="divider"></div>
 
-      <!-- Coastal sea-level rise -->
       <div class="layer-row">
         <label class="layer-toggle">
-          <input type="checkbox" id="toggle-coastal" aria-label="Connected Coastal Low-Land Exposure">
+          <input type="checkbox" id="toggle-risk" aria-label="Show places to review">
           <span class="toggle-track"></span>
         </label>
-        <span class="layer-name">Connected Coastal Low-Land Exposure</span>
+        <span class="layer-name">Show places to review</span>
       </div>
-      <div class="legend-bar" id="legend-coastal">
-        <div class="legend-gradient" style="background: linear-gradient(to right, rgba(56,189,248,0.25), rgba(56,189,248,0.9));"></div>
-        <div class="legend-labels"><span>Not exposed</span><span>Connected low land</span></div>
-      </div>
-      <div class="select-row">
-        <label class="slider-label" for="coastal-scenario">Scenario</label>
-        <select id="coastal-scenario" class="scenario-select" aria-label="Coastal sea-level increment">
-          <option value="slr_0_5m">+0.5 m</option>
-          <option value="slr_1_0m">+1.0 m</option>
-          <option value="slr_2_0m">+2.0 m</option>
-        </select>
-      </div>
-      <div class="slider-row">
-        <label class="slider-label" for="opacity-coastal">Opacity</label>
-        <input type="range" id="opacity-coastal" min="0" max="100" value="70" class="slider">
-        <span class="slider-val" id="val-coastal">70%</span>
-      </div>
-      <p class="layer-description"><strong>Shows:</strong> Koper land below the selected sea-level increment that is connected to mapped sea cells. It is a low-land exposure screen, separate from the riverine model.</p>
-      <p class="layer-use"><strong>Use with:</strong> Land Classification to inspect the affected surface. Compare +0.5 m, +1.0 m, and +2.0 m as scenarios; do not combine this score with terrain susceptibility.</p>
-      <p class="layer-hint">Bathtub connectivity only &mdash; not surge, tides, waves, drainage, or hydraulic inundation.</p>
-
-      <div class="divider"></div>
-
-      <!-- Risk points -->
-      <div class="layer-row">
-        <label class="layer-toggle">
-          <input type="checkbox" id="toggle-risk" aria-label="Experimental D19 Review Points">
-          <span class="toggle-track"></span>
-        </label>
-        <span class="layer-name">Experimental D19 Review Points</span>
-      </div>
-      <p class="layer-description"><strong>Shows:</strong> spaced locations with high terrain-screening scores, selected for review rather than prediction.</p>
-      <p class="layer-use"><strong>Use with:</strong> enable a context layer first, then click a point to inspect its terrain details. The list is capped per region, so it is not a national ranking.</p>
+      <p class="layer-description">Shows spaced-out places where the experimental terrain result suggests a closer look. These are not confirmed flood locations.</p>
     </div>
 
     <div class="panel-section panel-section--info">
       <h3 class="panel-heading">About</h3>
       <p class="info-text">
-        The optional connectivity-first model reports physical minimum river-stage
-        rise and explicit scenario depth where generated and qualified. Frozen D19
-        remains a separate weighted terrain baseline for audit, while Koper retains
-        its separate connected-low-land screen.
+        This map compares an experimental result made from detailed LiDAR terrain
+        data with Slovenia&rsquo;s official Q100 planning map.
       </p>
       <p class="info-text screening-notice">
-        <strong>Screening only:</strong> not a forecast, evacuation map, insurance
-        map, or official hazard map. A dated scenario depth is conditional on its
-        stated forcing, applicability and uncertainty.
+        <strong>For exploration only:</strong> not a forecast, evacuation map, insurance
+        map, or official hazard map.
       </p>
       <p class="info-text">
-        <strong>Data:</strong> Geodetska uprava RS &mdash; CLSS programme<br>
-        <strong>CRS:</strong> EPSG:3794 &rarr; EPSG:4326<br>
-        <strong>Grid:</strong> 2 m &times; 2 m &times; 2 m voxels
+        <strong>Data:</strong> Geodetska uprava RS &mdash; CLSS programme
       </p>
     </div>
   </aside>
@@ -352,6 +132,6 @@
   <div id="popup-content" style="display:none;"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=23"></script>
+  <script src="app.js?v=24"></script>
 </body>
 </html>

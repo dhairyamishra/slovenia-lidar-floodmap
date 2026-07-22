@@ -6,7 +6,13 @@ An interactive web map overlaying riverine flood susceptibility, official DRSV s
 
 ## Map layers in action
 
-The interface lets you combine derived screening layers and adjust opacity. The experimental D19 baseline and its region-capped review points are off by default. Its normal display is a sparse purple review mask; the original saturated red surface remains available only for technical audit. Neither is probability, modeled depth, or official flood hazard.
+The public interface has three simple choices: compare the experimental result
+with the official Q100 planning map, show land and buildings, or show spaced
+places selected for review. The comparison switch automatically adds the
+official-study boundary and uses blue for the official map, orange for the
+experimental result, and white where both mark the same place. Specialist
+research outputs remain in the project data but are not shown in the main
+sidebar. Neither the experiment nor the review points are flood predictions.
 
 On desktop, an enabled overlay continues to cover every available tile. On
 phones and coarse-pointer devices, low-memory mode keeps one large data layer

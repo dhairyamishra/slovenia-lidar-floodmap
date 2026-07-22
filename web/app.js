@@ -7,14 +7,8 @@ const MOBILE_LAYOUT = window.matchMedia(
 const MOBILE_TILE_LIMIT = 12;
 const MOBILE_INDEX_CACHE_LIMIT = 3;
 const MOBILE_HEAVY_TOGGLE_IDS = [
-  'toggle-susc',
-  'toggle-required-stage',
-  'toggle-scenario-depth',
-  'toggle-official',
   'toggle-q100-comparison',
-  'toggle-ndvi',
   'toggle-cls',
-  'toggle-coastal',
 ];
 const mobileLayerRefreshers = new Set();
 const GURS_ORTHOPHOTO_URL =
@@ -229,6 +223,9 @@ function ensureTileLayer(map, tile, key) {
     url: `data/${tile.files[key]}`,
     coordinates: tile.bounds.corners,
   });
+  const beforeComparison = key !== 'q100_comparison'
+    ? map.getStyle().layers.find(layer => layer.id.startsWith('layer-q100_comparison-'))?.id
+    : null;
   const beforeOfficial = map.getStyle().layers
     .find(layer => layer.id.startsWith('layer-official-'))?.id;
   map.addLayer({
@@ -240,7 +237,7 @@ function ensureTileLayer(map, tile, key) {
       'raster-resampling': config.resampling || 'linear',
     },
     layout: { visibility: 'none' },
-  }, beforeOfficial);
+  }, beforeComparison || beforeOfficial);
   return layerId;
 }
 
@@ -282,36 +279,22 @@ function addRiskPoints(map, riskPoints) {
     el.type = 'button';
     el.className = 'risk-marker';
     el.textContent = p.rank;
-    el.setAttribute('aria-label', `Open experimental D19 review point ${p.rank}`);
+    el.setAttribute('aria-label', `Open review point ${p.rank}`);
     anchor.appendChild(el);
 
     el.addEventListener('click', event => {
       event.stopPropagation();
-      const tileLabel = p.tile ? `<div class="popup-row">
-          <span class="popup-key">Tile</span>
-          <span class="popup-val">${p.tile}</span></div>` : '';
       popup.setLngLat([lng, lat]).setHTML(`
         <div class="popup-rank">Review point #${p.rank}</div>
         <div class="popup-row">
-          <span class="popup-key">Relative susceptibility</span>
+          <span class="popup-key">Experimental terrain score</span>
           <span class="popup-val">${Number(p.risk_score).toFixed(3)}</span>
         </div>
         <div class="popup-row">
           <span class="popup-key">Elevation</span>
           <span class="popup-val">${p.elevation_m} m</span>
         </div>
-        <div class="popup-row">
-          <span class="popup-key">Easting (3794)</span>
-          <span class="popup-val">${Number(p.easting_3794).toFixed(0)}</span>
-        </div>
-        <div class="popup-row">
-          <span class="popup-key">Northing (3794)</span>
-          <span class="popup-val">${Number(p.northing_3794).toFixed(0)}</span>
-        </div>
-        <div class="popup-row">
-          <span class="popup-key">WGS84</span>
-          <span class="popup-val">${lat.toFixed(5)}N, ${lng.toFixed(5)}E</span>
-        </div>${tileLabel}`
+        <p class="popup-interpretation">This place was selected for a closer look. It is not confirmed flooding.</p>`
       ).addTo(map);
     });
 
@@ -437,91 +420,21 @@ async function initOfficialValidation(map, validationManifest) {
   };
 }
 
-const KEY_ALIAS = { ndvi: 'ndvi', cls: 'classification' };
-
 function wireControls(map, manifest, validationState) {
   const tiles = manifest.tiles;
-  const tileNames = tiles.map(t => t.name);
-  const hasNdvi = tiles.some(tile => tile.files.ndvi);
-  const hasD19Diagnostic = tiles.some(tile => tile.files.d19_diagnostic);
   wireMobileLowMemoryControls();
-  document.getElementById('layer-section-ndvi').hidden = !hasNdvi;
-  if (!hasD19Diagnostic) {
-    document.querySelector('#d19-display-mode option[value="d19_diagnostic"]')?.remove();
-    document.getElementById('d19-display-row').hidden = true;
-  }
 
-  Object.entries(KEY_ALIAS).forEach(([alias, key]) => {
-    const chk = document.getElementById(`toggle-${alias}`);
-    const slider = document.getElementById(`opacity-${alias}`);
-    const update = () => syncTileLayerSet(map, tiles, key, chk.checked, slider.value / 100);
-    chk.addEventListener('change', update);
-    registerMobileLayerRefresher(map, update);
-
-    const valEl  = document.getElementById(`val-${alias}`);
-    slider.addEventListener('input', () => {
-      const v = slider.value / 100;
-      tileNames.forEach(name => {
-        const layerId = `layer-${key}-${name}`;
-        if (map.getLayer(layerId)) map.setPaintProperty(layerId, 'raster-opacity', v);
-      });
-      valEl.textContent = slider.value + '%';
-    });
-  });
-
-  wireD19Controls(map, tiles);
-  wireConnectivityControls(map, manifest);
+  const landToggle = document.getElementById('toggle-cls');
+  const updateLand = () => syncTileLayerSet(
+    map, tiles, 'classification', landToggle.checked, 0.80
+  );
+  landToggle.addEventListener('change', updateLand);
+  registerMobileLayerRefresher(map, updateLand);
 
   document.getElementById('toggle-risk')
     .addEventListener('change', e => setRiskVisible(e.target.checked));
 
-  const coastalTiles = tiles.filter(t => t.files.coastal);
-  const coastalToggle = document.getElementById('toggle-coastal');
-  const coastalScenario = document.getElementById('coastal-scenario');
-  const coastalOpacity = document.getElementById('opacity-coastal');
-  const coastalVal = document.getElementById('val-coastal');
-
-  function setCoastalVisibility() {
-    const activeKey = coastalScenario.value;
-    const visible = coastalToggle.checked;
-    const selected = new Set(visible ? tilesForMobileViewport(map, coastalTiles) : []);
-    coastalTiles.forEach(tile => {
-      COASTAL_SCENARIOS.forEach(({ key }) => {
-        if (!tile.files.coastal[key]) return;
-        const layerId = `layer-coastal-${key}-${tile.name}`;
-        const sourceId = `src-coastal-${key}-${tile.name}`;
-        if (visible && key === activeKey && selected.has(tile)) {
-          ensureCoastalLayer(map, tile, key);
-          if (map.getLayer(layerId)) map.setLayoutProperty(layerId, 'visibility', 'visible');
-        } else {
-          removeImageLayer(map, layerId, sourceId);
-        }
-      });
-    });
-  }
-
-  if (coastalTiles.length === 0) {
-    coastalToggle.disabled = true;
-    coastalScenario.disabled = true;
-    coastalOpacity.disabled = true;
-  } else {
-    coastalToggle.addEventListener('change', setCoastalVisibility);
-    coastalScenario.addEventListener('change', setCoastalVisibility);
-    registerMobileLayerRefresher(map, setCoastalVisibility);
-    coastalOpacity.addEventListener('input', () => {
-      const v = coastalOpacity.value / 100;
-      coastalTiles.forEach(tile => {
-        COASTAL_SCENARIOS.forEach(({ key }) => {
-          if (!tile.files.coastal[key]) return;
-          const layerId = `layer-coastal-${key}-${tile.name}`;
-          if (map.getLayer(layerId)) map.setPaintProperty(layerId, 'raster-opacity', v);
-        });
-      });
-      coastalVal.textContent = coastalOpacity.value + '%';
-    });
-  }
-
-  wireOfficialValidationControls(map, validationState, manifest);
+  wireSimpleComparisonControls(map, validationState, manifest);
   wireGuidedViews(map, manifest);
 }
 
@@ -562,7 +475,7 @@ function setPanelOpen(open, manageFocus = false) {
   document.body.classList.toggle('panel-collapsed', !open);
   const button = document.getElementById('panel-toggle');
   button.setAttribute('aria-expanded', String(open));
-  button.textContent = open ? 'Close layers' : 'Layers';
+  button.textContent = open ? 'Close' : 'Layers';
 
   panel.inert = mobile && !open;
   if (mobile) {
@@ -590,12 +503,6 @@ function setToggleState(id, checked) {
 }
 
 function presetTiles(manifest, preset) {
-  if (preset === 'savinja') {
-    return manifest.tiles.filter(tile => tile.files.connectivity?.required_stage);
-  }
-  if (preset === 'koper') {
-    return manifest.tiles.filter(tile => tile.files.coastal);
-  }
   return manifest.tiles.filter(tile => {
     const grid = tile.bounds.epsg3794;
     return grid && grid.x0 >= 455000 && grid.x0 < 465000 &&
@@ -637,20 +544,10 @@ function wireGuidedViews(map, manifest) {
   document.querySelectorAll('[data-region-preset]').forEach(button => {
     button.addEventListener('click', () => {
       const preset = button.dataset.regionPreset;
-      [
-        'toggle-q100-comparison', 'toggle-susc', 'toggle-required-stage',
-        'toggle-scenario-depth', 'toggle-official', 'toggle-coastal',
-      ].forEach(id => setToggleState(id, false));
+      setToggleState('toggle-cls', false);
       fitTiles(map, presetTiles(manifest, preset));
       window.requestAnimationFrame(() => {
-        if (preset === 'ljubljana') {
-          document.getElementById('official-scenario').value = 'q100';
-          setToggleState('toggle-official', true);
-        } else if (preset === 'savinja') {
-          setToggleState('toggle-required-stage', true);
-        } else if (preset === 'koper') {
-          setToggleState('toggle-coastal', true);
-        }
+        setToggleState('toggle-q100-comparison', true);
       });
       if (MOBILE_LAYOUT.matches) setPanelOpen(false, true);
     });
@@ -1021,31 +918,31 @@ function comparisonCategoryCopy(code) {
   return {
     0: {
       official: 'Unavailable', d19: 'Not compared', validity: 'Outside',
-      interpretation: 'Outside the official study domain — comparison unavailable.',
+      interpretation: 'This place is outside the area where the comparison can be made.',
     },
     1: {
       official: 'No', d19: 'No', validity: 'Inside',
-      interpretation: 'Neither layer marks this cell. This is not proof of safety.',
+      interpretation: 'Neither map marks this place. This does not prove that it is safe.',
     },
     2: {
       official: 'Yes', d19: 'No', validity: 'Inside',
-      interpretation: 'Official Q100-only reference area.',
+      interpretation: 'Only the official Q100 map marks this place.',
     },
     3: {
       official: 'No', d19: 'Yes', validity: 'Inside',
-      interpretation: 'D19-only experimental signal — potential overprediction for review.',
+      interpretation: 'Only the experimental result marks this place. It needs review and is not confirmed flooding.',
     },
     4: {
       official: 'Yes', d19: 'Yes', validity: 'Inside',
-      interpretation: 'Both the official Q100 reference and D19 review mask mark this cell.',
+      interpretation: 'The official map and the experimental result both mark this place.',
     },
     5: {
       official: 'No', d19: 'No data', validity: 'Inside',
-      interpretation: 'Outside official Q100, but D19 terrain data are unavailable for comparison.',
+      interpretation: 'The official map does not mark this place, but the terrain result is unavailable.',
     },
     6: {
       official: 'Yes', d19: 'No data', validity: 'Inside',
-      interpretation: 'Official Q100 marks this cell, but D19 terrain data are unavailable.',
+      interpretation: 'The official map marks this place, but the terrain result is unavailable.',
     },
   }[code] || {
     official: 'Unknown', d19: 'Unknown', validity: 'Unknown',
@@ -1080,12 +977,11 @@ function wireComparisonClick(map, tiles, comparisonToggle) {
       const code = index.context.getImageData(x, y, 1, 1).data[0];
       const copy = comparisonCategoryCopy(code);
       popup.setLngLat(event.lngLat).setHTML(`
-        <div class="popup-rank">Categorical Q100 comparison</div>
-        <div class="popup-row"><span class="popup-key">Official Q100:</span><span class="popup-val">${copy.official}</span></div>
-        <div class="popup-row"><span class="popup-key">D19 review signal:</span><span class="popup-val">${copy.d19}</span></div>
-        <div class="popup-row"><span class="popup-key">Official study validity:</span><span class="popup-val">${copy.validity}</span></div>
-        <div class="popup-row"><span class="popup-key">Tile:</span><span class="popup-val">${selected.name}</span></div>
-        <p class="popup-interpretation"><strong>Interpretation:</strong> ${copy.interpretation}</p>
+        <div class="popup-rank">Official Q100 comparison</div>
+        <div class="popup-row"><span class="popup-key">Official map:</span><span class="popup-val">${copy.official}</span></div>
+        <div class="popup-row"><span class="popup-key">Experimental result:</span><span class="popup-val">${copy.d19}</span></div>
+        <div class="popup-row"><span class="popup-key">Comparison area:</span><span class="popup-val">${copy.validity}</span></div>
+        <p class="popup-interpretation">${copy.interpretation}</p>
       `).addTo(map);
     } catch (error) {
       console.warn('Comparison class lookup failed', error);
@@ -1093,135 +989,34 @@ function wireComparisonClick(map, tiles, comparisonToggle) {
   });
 }
 
-function wireComparisonSummary(comparison) {
-  const panel = document.getElementById('comparison-summary');
-  const select = document.getElementById('comparison-summary-region');
-  if (!comparison || !comparison.regions) {
-    panel.hidden = true;
-    return;
-  }
-  Object.entries(comparison.regions).forEach(([region, summary]) => {
-    const option = document.createElement('option');
-    option.value = region;
-    option.textContent = summary.label;
-    select.appendChild(option);
-  });
-  if (comparison.regions['05-ljubljana']) select.value = '05-ljubljana';
-  function update() {
-    const summary = comparison.regions[select.value];
-    if (!summary) return;
-    Object.entries(summary.shares_percent).forEach(([name, value]) => {
-      const element = document.getElementById(`comparison-share-${name.replaceAll('_', '-')}`);
-      if (element) element.textContent = value == null ? 'n/a' : `${value.toFixed(2)}%`;
-    });
-    document.getElementById('comparison-coverage').textContent =
-      `${summary.comparable_coverage_of_validity_percent.toFixed(2)}% of official-validity cells have D19 data (${summary.comparable_area_km2.toFixed(3)} km² compared).`;
-  }
-  select.addEventListener('change', update);
-  update();
-}
-
-function wireOfficialValidationControls(map, validationState, manifest) {
+function wireSimpleComparisonControls(map, validationState, manifest) {
   const tiles = manifest.tiles;
-  const toggle = document.getElementById('toggle-official');
-  const scenario = document.getElementById('official-scenario');
-  const opacity = document.getElementById('opacity-official');
-  const value = document.getElementById('val-official');
-  const validityToggle = document.getElementById('toggle-official-validity');
-  const depthToggle = document.getElementById('toggle-official-depth');
   const comparisonToggle = document.getElementById('toggle-q100-comparison');
-  const comparisonSummary = document.getElementById('comparison-summary');
-  const d19Toggle = document.getElementById('toggle-susc');
-  const d19Mode = document.getElementById('d19-display-mode');
-  const d19Opacity = document.getElementById('opacity-susc');
   const comparisonAvailable = Boolean(
+    validationState?.available && validationState.validity &&
     manifest.q100_comparison && tiles.every(tile => tile.files.q100_comparison)
   );
 
-  if (!validationState || !validationState.available) {
-    toggle.disabled = true;
-    scenario.disabled = true;
-    opacity.disabled = true;
-    validityToggle.disabled = true;
-    depthToggle.disabled = true;
+  if (!comparisonAvailable) {
     comparisonToggle.disabled = true;
     return;
   }
 
-  validityToggle.disabled = !validationState.validity;
-  depthToggle.disabled = validationState.depthKeys.length === 0;
-  comparisonToggle.disabled = !comparisonAvailable;
-  wireComparisonSummary(manifest.q100_comparison);
-  if (comparisonAvailable) wireComparisonClick(map, tiles, comparisonToggle);
+  wireComparisonClick(map, tiles, comparisonToggle);
 
   function updateVisibility() {
-    const comparing = comparisonToggle.checked;
-    OFFICIAL_SCENARIOS.forEach(({ key }) => {
-      if (!validationState.byScenario[key]) return;
-      const active = !comparing && toggle.checked && scenario.value === key;
-      if (active) validationState.ensureScenario(key);
-      const layerId = `layer-official-${key}`;
-      if (MOBILE_LAYOUT.matches && !active) {
-        validationState.removeScenario(key);
-      } else if (map.getLayer(layerId)) {
-        map.setLayoutProperty(layerId, 'visibility', active ? 'visible' : 'none');
+    const active = comparisonToggle.checked;
+    syncTileLayerSet(map, tiles, 'q100_comparison', active);
+    if (active) {
+      validationState.ensureValidity();
+      if (map.getLayer('layer-official-validity-fill')) {
+        map.setLayoutProperty('layer-official-validity-fill', 'visibility', 'visible');
+        map.setLayoutProperty('layer-official-validity-line', 'visibility', 'visible');
       }
-    });
-    if (validationState.validity) {
-      const visibility = validityToggle.checked ? 'visible' : 'none';
-      if (validityToggle.checked) validationState.ensureValidity();
-      if (MOBILE_LAYOUT.matches && !validityToggle.checked) {
-        validationState.removeValidity();
-      } else if (map.getLayer('layer-official-validity-fill')) {
-        map.setLayoutProperty('layer-official-validity-fill', 'visibility', visibility);
-        map.setLayoutProperty('layer-official-validity-line', 'visibility', visibility);
-      }
+    } else {
+      validationState.removeValidity();
     }
-    validationState.depthKeys.forEach(key => {
-      const active = !comparing && toggle.checked && depthToggle.checked && scenario.value === 'q100';
-      if (active) validationState.ensureDepth(key);
-      const layerId = `layer-official-${key}`;
-      if (MOBILE_LAYOUT.matches && !active) {
-        validationState.removeDepth(key);
-      } else if (map.getLayer(layerId)) {
-        map.setLayoutProperty(layerId, 'visibility', active ? 'visible' : 'none');
-      }
-    });
-    syncTileLayerSet(map, tiles, 'q100_comparison', comparing);
-    comparisonSummary.hidden = !comparing;
   }
-  toggle.addEventListener('change', updateVisibility);
-  scenario.addEventListener('change', updateVisibility);
-  validityToggle.addEventListener('change', updateVisibility);
-  depthToggle.addEventListener('change', updateVisibility);
+  comparisonToggle.addEventListener('change', updateVisibility);
   registerMobileLayerRefresher(map, updateVisibility);
-  comparisonToggle.addEventListener('change', () => {
-    const enabled = comparisonToggle.checked;
-    toggle.checked = false;
-    d19Toggle.checked = false;
-    if (enabled) {
-      scenario.value = 'q100';
-      depthToggle.checked = false;
-      validityToggle.checked = true;
-    }
-    d19Toggle.dispatchEvent(new Event('change'));
-    toggle.disabled = enabled;
-    scenario.disabled = enabled;
-    opacity.disabled = enabled;
-    depthToggle.disabled = enabled || validationState.depthKeys.length === 0;
-    validityToggle.disabled = enabled || !validationState.validity;
-    d19Toggle.disabled = enabled;
-    d19Mode.disabled = enabled;
-    d19Opacity.disabled = enabled;
-    updateVisibility();
-  });
-  opacity.addEventListener('input', () => {
-    const next = opacity.value / 100;
-    OFFICIAL_SCENARIOS.forEach(({ key }) => {
-      if (validationState.byScenario[key] && map.getLayer(`layer-official-${key}`)) {
-        map.setPaintProperty(`layer-official-${key}`, 'fill-opacity', next);
-      }
-    });
-    value.textContent = opacity.value + '%';
-  });
 }
