@@ -6,7 +6,7 @@
   <title>Slovenia Flood Map and Terrain Explorer</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="style.css?v=19">
+  <link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 
@@ -25,6 +25,13 @@
 
   <!-- Map -->
   <div id="map"></div>
+
+  <div class="mobile-map-legend" id="mobile-map-legend" aria-label="Flood map color key" hidden>
+    <span><i class="swatch-official"></i>Official only</span>
+    <span><i class="swatch-d19"></i>Experimental only</span>
+    <span><i class="swatch-overlap"></i>Both</span>
+    <span><i class="swatch-neither"></i>Neither</span>
+  </div>
 
   <div class="panel-backdrop" id="panel-backdrop" aria-hidden="true"></div>
 
@@ -68,7 +75,7 @@
 
       <div class="layer-row comparison-row">
         <label class="layer-toggle">
-          <input type="checkbox" id="toggle-q100-comparison" aria-label="Compare with official Q100 flood map">
+          <input type="checkbox" id="toggle-q100-comparison" aria-label="Compare with official Q100 flood map" checked>
           <span class="toggle-track"></span>
         </label>
         <span class="layer-name">Compare with official Q100 flood map</span>
@@ -132,6 +139,6 @@
   <div id="popup-content" style="display:none;"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=24"></script>
+  <script src="app.js?v=25"></script>
 </body>
 </html>

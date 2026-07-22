@@ -42,7 +42,7 @@ CATEGORY = {
     "d19_unavailable_official_yes": 6,
 }
 VISUAL_COLORS = {
-    CATEGORY["official_only"]: (186, 222, 253, 150),
+    CATEGORY["official_only"]: (186, 222, 253, 102),
     CATEGORY["d19_only"]: (67, 56, 202, 225),
     CATEGORY["overlap"]: (249, 115, 22, 240),
 }

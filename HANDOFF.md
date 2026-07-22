@@ -13,12 +13,14 @@
 ## D45 Distinct comparison palette (2026-07-22)
 
 - The final comparison palette uses official-only light blue (`#badefd`) at
-  59% map opacity,
+  40% map opacity,
   experimental-only dark indigo-purple (`#4338ca`), and **Both** orange
   (`#f97316`). This keeps all three categories visually separate.
 - Regenerated only the comparison display images. Category indices, area
   counts, thresholds, and model results are unchanged.
-- Cache versions: `style.css?v=19`, `app.js?v=24`.
+- The comparison starts on by default. Mobile shows a compact top-right color
+  key while it is active; turning the comparison off also hides the key.
+- Cache versions: `style.css?v=20`, `app.js?v=25`.
 
 ## D44 Three-choice public sidebar (2026-07-22)
 

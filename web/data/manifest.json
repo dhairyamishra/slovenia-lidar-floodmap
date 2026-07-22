@@ -19149,7 +19149,7 @@
   ],
   "q100_comparison": {
     "schema_version": 2,
-    "generated": "2026-07-22T15:37:03.630352+00:00",
+    "generated": "2026-07-22T16:39:26.152089+00:00",
     "semantics": "categorical-frozen-d19-review-mask-versus-official-static-q100",
     "resolution_m": 2,
     "d19_review_threshold": 0.925,

@@ -58,7 +58,7 @@ class ComparisonClassificationTests(unittest.TestCase):
             comparison.CATEGORY["overlap"],
         ]], dtype=np.uint8)
         rgba = comparison.visual_rgba(category)
-        self.assertEqual(tuple(rgba[0, 0]), (186, 222, 253, 150))
+        self.assertEqual(tuple(rgba[0, 0]), (186, 222, 253, 102))
         self.assertEqual(tuple(rgba[0, 1]), (67, 56, 202, 225))
         self.assertEqual(tuple(rgba[0, 2]), (249, 115, 22, 240))
 
@@ -86,6 +86,11 @@ class ComparisonWebAssetTests(unittest.TestCase):
         self.assertIn("q100_comparison_index", app)
         self.assertIn("Official map:", app)
         self.assertIn("Comparison area:", app)
+        self.assertIn('id="toggle-q100-comparison"', html)
+        self.assertIn('aria-label="Compare with official Q100 flood map" checked', html)
+        self.assertIn('id="mobile-map-legend"', html)
+        self.assertIn("document.getElementById('mobile-map-legend').hidden = !active", app)
+        self.assertIn("registerMobileLayerRefresher(map, updateVisibility);\n  updateVisibility();", app)
         self.assertNotIn("visual overlap", html.lower())
 
     def test_tile_rasters_keep_desktop_coverage_with_mobile_memory_bound(self):

@@ -1006,6 +1006,7 @@ function wireSimpleComparisonControls(map, validationState, manifest) {
 
   function updateVisibility() {
     const active = comparisonToggle.checked;
+    document.getElementById('mobile-map-legend').hidden = !active;
     syncTileLayerSet(map, tiles, 'q100_comparison', active);
     if (active) {
       validationState.ensureValidity();
@@ -1019,4 +1020,5 @@ function wireSimpleComparisonControls(map, validationState, manifest) {
   }
   comparisonToggle.addEventListener('change', updateVisibility);
   registerMobileLayerRefresher(map, updateVisibility);
+  updateVisibility();
 }

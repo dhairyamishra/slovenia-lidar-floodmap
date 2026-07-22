@@ -416,6 +416,14 @@ select:focus-visible,
 .swatch-overlap { background: #f97316; }
 .swatch-neither { background: #0d1117; border: 1px solid #64748b; }
 
+.mobile-map-legend {
+  display: none;
+}
+
+.mobile-map-legend[hidden] {
+  display: none;
+}
+
 .validity-line-sample {
   display: inline-block;
   width: 18px;
@@ -556,6 +564,41 @@ select:focus-visible,
 }
 
 @media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  .mobile-map-legend {
+    position: fixed;
+    top: calc(58px + env(safe-area-inset-top));
+    right: max(10px, env(safe-area-inset-right));
+    z-index: 90;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(194px, calc(100vw - 20px));
+    gap: 5px 8px;
+    padding: 7px 8px;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 7px;
+    background: rgba(9, 13, 20, 0.88);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+  }
+
+  .mobile-map-legend span {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 4px;
+    color: #cbd5e1;
+    font-size: 8px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .mobile-map-legend i {
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    flex: 0 0 auto;
+  }
+
   .mobile-memory-note {
     display: block;
     margin: 8px 0 12px;

@@ -751,7 +751,7 @@ needed because this decision changes presentation only.
 
 ### D45 — Use distinct colors for the Q100 comparison
 
-**Decision:** Use light blue (`#badefd`) at 59% opacity for official-only, dark
+**Decision:** Use light blue (`#badefd`) at 40% opacity for official-only, dark
 indigo-purple (`#4338ca`) for experimental-only, and orange (`#f97316`) for
 **Both**.
 
@@ -760,8 +760,9 @@ close in lightness to the official blue. The final assignment gives each class
 a distinct hue and makes agreement orange rather than another cool color.
 
 **Result:** The comparison display images and matching sidebar legend use the
-new colors. Category indices, area counts, thresholds, and model results are
-unchanged.
+new colors. The comparison starts on, and mobile shows a small top-right color
+key whenever it is active. Category indices, area counts, thresholds, and model
+results are unchanged.
 
 **Reversible:** Restore the former category colors in
 `prepare_q100_comparison.py` and `web/style.css`, then rerun the comparison
